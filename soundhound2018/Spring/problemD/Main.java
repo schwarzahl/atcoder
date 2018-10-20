@@ -1,4 +1,4 @@
-package soundhound2018.Spring.problemD;
+package atcoder.soundhound2018.Spring.problemD;
 
 import java.util.ArrayList;
 import java.util.HashMap;

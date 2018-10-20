@@ -1,4 +1,4 @@
-package arc088;
+package atcoder.arc.arc088;
 
 import java.util.ArrayList;
 import java.util.HashMap;

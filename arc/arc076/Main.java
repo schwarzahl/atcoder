@@ -1,4 +1,4 @@
-package arc076;
+package atcoder.arc.arc076;
 
 import java.util.HashSet;
 import java.util.Scanner;

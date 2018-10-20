@@ -1,4 +1,4 @@
-package dwango04;
+package atcoder.dwango04;
 
 import java.util.ArrayList;
 import java.util.Arrays;

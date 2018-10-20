@@ -1,4 +1,4 @@
-package arc093.problemE;
+package atcoder.arc.arc093.problemE;
 
 import java.util.ArrayList;
 import java.util.Collections;

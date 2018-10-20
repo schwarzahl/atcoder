@@ -1,4 +1,4 @@
-package abc103.problemD;
+package atcoder.abc.abc103.problemD;
 
 import java.util.Scanner;
 

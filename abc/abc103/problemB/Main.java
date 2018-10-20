@@ -1,4 +1,4 @@
-package abc103.problemB;
+package atcoder.abc.abc103.problemB;
 
 import java.util.ArrayList;
 import java.util.Arrays;

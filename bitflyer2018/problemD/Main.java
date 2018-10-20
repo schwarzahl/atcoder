@@ -1,4 +1,4 @@
-package bitflyer2018.problemD;
+package atcoder.bitflyer2018.problemD;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package abc061;
+package atcoder.abc.abc061;
 
 import java.util.HashMap;
 import java.util.HashSet;

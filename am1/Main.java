@@ -1,4 +1,4 @@
-package am1;
+package atcoder.am1;
 
 import java.util.HashMap;
 import java.util.Map;

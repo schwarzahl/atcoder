@@ -1,4 +1,4 @@
-package arc084;
+package atcoder.arc.arc084;
 
 import java.util.Arrays;
 import java.util.Scanner;

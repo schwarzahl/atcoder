@@ -1,4 +1,4 @@
-package abc064;
+package atcoder.abc.abc064;
 
 import java.util.Scanner;
 

@@ -1,4 +1,4 @@
-package agc012;
+package atcoder.agc.agc012;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package colopl2018_final;
+package atcoder.colopl2018_final;
 
 import java.util.ArrayList;
 import java.util.HashMap;

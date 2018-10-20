@@ -1,4 +1,4 @@
-package soundhound2018.MastersTournament.problemC;
+package atcoder.soundhound2018.MastersTournament.problemC;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

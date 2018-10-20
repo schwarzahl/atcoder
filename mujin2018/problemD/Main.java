@@ -1,4 +1,4 @@
-package mujin2018.problemD;
+package atcoder.mujin2018.problemD;
 
 import java.util.ArrayList;
 import java.util.HashMap;

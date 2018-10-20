@@ -1,4 +1,4 @@
-package agc027.problemA;
+package atcoder.agc.agc027.problemA;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package soundhound2018.MastersTournament.problemE;
+package atcoder.soundhound2018.MastersTournament.problemE;
 
 import java.util.ArrayList;
 import java.util.HashMap;

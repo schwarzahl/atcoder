@@ -1,4 +1,4 @@
-package arc086;
+package atcoder.arc.arc086;
 
 import java.util.ArrayList;
 import java.util.Collections;

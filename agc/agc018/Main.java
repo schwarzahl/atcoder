@@ -1,4 +1,4 @@
-package agc018;
+package atcoder.agc.agc018;
 
 import java.util.HashSet;
 import java.util.Scanner;

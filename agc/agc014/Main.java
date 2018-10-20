@@ -1,4 +1,4 @@
-package agc014;
+package atcoder.agc.agc014;
 
 import java.util.ArrayList;
 import java.util.HashMap;

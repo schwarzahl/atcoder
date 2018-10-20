@@ -1,4 +1,4 @@
-package xmas_contest_2017;
+package atcoder.xmas_contest_2017;
 
 import java.util.Arrays;
 import java.util.HashSet;

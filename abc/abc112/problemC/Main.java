@@ -1,4 +1,4 @@
-package abc112.problemC;
+package atcoder.abc.abc112.problemC;
 
 import java.util.ArrayList;
 import java.util.HashMap;

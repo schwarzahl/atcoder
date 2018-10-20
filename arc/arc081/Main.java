@@ -1,4 +1,4 @@
-package arc081;
+package atcoder.arc.arc081;
 
 import java.util.Collections;
 import java.util.Map.Entry;

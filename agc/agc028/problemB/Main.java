@@ -1,4 +1,4 @@
-package agc028.problemB;
+package atcoder.agc.agc028.problemB;
 
 import java.util.ArrayList;
 import java.util.HashMap;

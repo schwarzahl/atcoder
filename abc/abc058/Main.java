@@ -1,4 +1,4 @@
-package abc058;
+package atcoder.abc.abc058;
 
 import java.math.BigInteger;
 import java.util.Scanner;

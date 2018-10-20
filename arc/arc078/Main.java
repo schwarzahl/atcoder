@@ -1,4 +1,4 @@
-package arc078;
+package atcoder.arc.arc078;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

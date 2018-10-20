@@ -1,4 +1,4 @@
-package agc016;
+package atcoder.agc.agc016;
 
 import java.util.Scanner;
 

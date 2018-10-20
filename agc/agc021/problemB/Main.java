@@ -1,4 +1,4 @@
-package agc021.problemB;
+package atcoder.agc.agc021.problemB;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

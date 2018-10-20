@@ -1,4 +1,4 @@
-package arc080;
+package atcoder.arc.arc080;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

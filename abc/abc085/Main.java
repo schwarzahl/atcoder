@@ -1,4 +1,4 @@
-package abc085;
+package atcoder.abc.abc085;
 
 import java.util.ArrayList;
 import java.util.Collections;

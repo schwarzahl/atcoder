@@ -1,4 +1,4 @@
-package soundhound2018.MastersTournament.problemD;
+package atcoder.soundhound2018.MastersTournament.problemD;
 
 import java.util.ArrayList;
 import java.util.Comparator;

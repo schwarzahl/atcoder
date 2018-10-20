@@ -1,4 +1,4 @@
-package arc092.problemE;
+package atcoder.arc.arc092.problemE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
