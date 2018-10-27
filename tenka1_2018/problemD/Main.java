@@ -19,8 +19,32 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		List<List<Integer>> list = new ArrayList<>();
+		list.add(new ArrayList<Integer>());
+		list.add(new ArrayList<Integer>());
+		list.get(0).add(1);
+		list.get(1).add(1);
+		int index = 1;
+		for (int size = 2; index < N; size++) {
+			list.add(new ArrayList<Integer>());
+			for (int tmp = 0; tmp < size; tmp++) {
+				index++;
+				list.get(tmp).add(index);
+				list.get(size).add(index);
+			}
+		}
+		if (index == N) {
+			System.out.println(list.size());
+			for (List<Integer> inner_list : list) {
+				System.out.print(inner_list.size());
+				for (int num : inner_list) {
+					System.out.print(" " + num);
+				}
+				System.out.println();
+			}
+		} else {
+			System.out.println("No");
+		}
 	}
 
 	interface CombCalculator {
