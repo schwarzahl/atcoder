@@ -1,6 +1,7 @@
 package atcoder.tenka1_2018.problemC;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,8 +20,46 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long[] A = new long[N];
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextLong();
+		}
+		Arrays.sort(A);
+		long ans = 0L;
+		for (int pattern = 0; pattern < 4; pattern += 3) {
+			long tmp = 0L;
+			int minus = 0;
+			int plus = 0;
+			int i = 0;
+			for (; i < (N - 1) / 2 - pattern % 2; i++) {
+				tmp -= A[i] * 2;
+				minus++;
+			}
+			int j = N - 1;
+			for (; j > (N + 1) / 2 - pattern / 2; j--) {
+				tmp += A[j] * 2;
+				plus++;
+			}
+			if (minus == plus) {
+				tmp -= A[i];
+				tmp += A[j];
+			}
+			if (minus < plus) {
+				tmp -= A[i];
+				tmp -= A[j];
+			}
+			if (minus > plus) {
+				tmp += A[i];
+				tmp += A[j];
+			}
+			if (ans < tmp) {
+				ans = tmp;
+			}
+			if (N % 2 == 0) {
+				break;
+			}
+		}
+		System.out.println(ans);
 	}
 
 	interface CombCalculator {
