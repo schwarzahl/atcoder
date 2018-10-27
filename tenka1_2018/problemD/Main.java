@@ -34,6 +34,7 @@ public class Main {
 			}
 		}
 		if (index == N) {
+			System.out.println("Yes");
 			System.out.println(list.size());
 			for (List<Integer> inner_list : list) {
 				System.out.print(inner_list.size());
