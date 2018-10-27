@@ -18,9 +18,45 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int H = sc.nextInt();
+		int W = sc.nextInt();
+		boolean[][] map = new boolean[H][];
+		for (int r = 0; r < H; r++) {
+			String str = sc.next();
+			map[r] = new boolean[W];
+			for (int c = 0; c < W; c++) {
+				if (str.charAt(c) == '#') {
+					map[r][c] = true;
+				}
+			}
+		}
+		long ans = 0L;
+		for (int r = 0; r < H; r++) {
+			for (int c = 0; c < W; c++) {
+				if (map[r][c]) {
+					for (int d = 2; r + c + d <= H + W - 2; d += 2) {
+						boolean[] array = new boolean[d * 2];
+						int index = 0;
+						for (int x = c + d; x >= 0 && x > c - d; x--) {
+							int y = x >= c ? r + c + d - x : r + x - c + d;
+							array[index++] = x >= 0 && y >= 0 && x < W && y < H && map[y][x];
+						}
+						for (int i = 0; i + d / 2 <= d; i++) {
+							if (array[i] && array[i + d / 2]) {
+								ans++;
+							}
+						}
+						// FIXME: 折り返し地点の前と後については組み合わせが爆発するのでこの計算方法では無理
+						for (int i = d + 1; i + d / 2 < d * 2; i++) {
+							if (array[i] && array[i + d / 2]) {
+								ans++;
+							}
+						}
+					}
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	interface CombCalculator {
