@@ -19,7 +19,7 @@ public class Main {
 
 	private void solve() {
 		long st = System.currentTimeMillis();
-		long LIMIT_TIME = 2800L;
+		long LIMIT_TIME = 2890L;
 
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
@@ -70,12 +70,13 @@ public class Main {
 				}
 			}
 
-			int change_r = random.nextInt(M - 2) + 1;
-			int change_c = random.nextInt(M - 2) + 1;
+			int change_r;
+			int change_c;
 			int change_k = random.nextInt(5) + 1;
-			if (change_r == M / 2 && change_c == M / 2) {
-				continue;
-			}
+			do {
+				change_r = random.nextInt(M - 2) + 1;
+				change_c = random.nextInt(M - 2) + 1;
+			} while (change_r == M / 2 && change_c == M / 2);
 			map[change_r][change_c] = (map[change_r][change_c] + change_k) % 6;
 
 			int[][] countMap = new int[M][];
@@ -118,18 +119,11 @@ public class Main {
 							}
 						} else {
 							int dsign = (asc == 'R') ? 1 : -1;
-							if (map[r][c] == 4) {
-								dsign = -1;
-							}
-							if (map[r][c] == 5) {
-								dsign = 1;
-							}
 							int num = 1;
-							if (map[r][c] == 2) {
-								num = 2;
-							}
-							if (map[r][c] == 3) {
-								num = 3;
+							if (map[r][c] > 3) {
+								dsign = map[r][c] * 2 - 9;
+							} else if (map[r][c] > 1) {
+								num = map[r][c];
 							}
 							d = (d + num * dsign + 4) % 4;
 						}
