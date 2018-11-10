@@ -19,7 +19,7 @@ public class Main {
 
 	private void solve() {
 		long st = System.currentTimeMillis();
-		long LIMIT_TIME = 2500L;
+		long LIMIT_TIME = 2800L;
 
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
