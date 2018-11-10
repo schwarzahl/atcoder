@@ -47,6 +47,7 @@ public class Main {
 		int[] dir_c = {0, 1, 0, -1};
 		int prev_score = 0;
 		int try_num = 0;
+		int rollback_num = 0;
 		Random random = new Random();
 		while (System.currentTimeMillis() - st < LIMIT_TIME) {
 			int[][] prev_map = new int[M][];
@@ -133,6 +134,7 @@ public class Main {
 						map[r][c] = prev_map[r][c];
 					}
 				}
+				rollback_num++;
 			}
 			try_num++;
 		}
@@ -143,6 +145,7 @@ public class Main {
 			System.out.println();
 		}
 		System.err.println("TRY_NUM = " + try_num);
+		System.err.println("ROLLBACK_NUM = " + rollback_num);
 		System.err.println("SCORE = " + prev_score);
 	}
 
