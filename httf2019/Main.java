@@ -30,28 +30,28 @@ public class Main {
 			S[i] = sc.next();
 		}
 
-		char[][] map = new char[M][];
+		char[] c_kind = {'.', '#', 'D', 'T', 'L', 'R'};
+		int[][] map = new int[M][];
 		for (int r = 0; r < M; r++) {
-			map[r] = new char[M];
+			map[r] = new int[M];
 			for (int c = 0; c < M; c++) {
 				if (r == 0 || r == M - 1 || c == 0 || c == M - 1) {
-					map[r][c] = '#';
+					map[r][c] = 1;
 				} else {
-					map[r][c] = '.';
+					map[r][c] = 0;
 				}
 			}
 		}
 
 		int[] dir_r = {-1, 0, 1, 0};
 		int[] dir_c = {0, 1, 0, -1};
-		char[] c_kind = {'.', '#', 'D', 'T', 'L', 'R'};
 		int prev_score = 0;
 		int try_num = 0;
 		Random random = new Random();
 		while (System.currentTimeMillis() - st < LIMIT_TIME) {
-			char[][] prev_map = new char[M][];
+			int[][] prev_map = new int[M][];
 			for (int r = 0; r < M; r++) {
-				prev_map[r] = new char[M];
+				prev_map[r] = new int[M];
 				for (int c = 0; c < M; c++) {
 					prev_map[r][c] = map[r][c];
 				}
@@ -60,11 +60,11 @@ public class Main {
 			{
 				int r = random.nextInt(M - 2) + 1;
 				int c = random.nextInt(M - 2) + 1;
-				int k = random.nextInt(6);
+				int k = random.nextInt(5) + 1;
 				if (r == M / 2 && c == M / 2) {
 					continue;
 				}
-				map[r][c] = c_kind[k];
+				map[r][c] = (map[r][c] + k) % 6;
 			}
 
 			int[][] countMap = new int[M][];
@@ -78,31 +78,31 @@ public class Main {
 				for (char asc : S[i].toCharArray()) {
 					if (asc == 'S') {
 						int num = 1;
-						if (map[r][c] == 'D') {
+						if (map[r][c] == 2) {
 							num = 2;
 						}
-						if (map[r][c] == 'T') {
+						if (map[r][c] == 3) {
 							num = 3;
 						}
 						for (int k = 0; k < num; k++) {
-							if (map[r + dir_r[d]][c + dir_c[d]] != '#') {
+							if (map[r + dir_r[d]][c + dir_c[d]] != 1) {
 								r += dir_r[d];
 								c += dir_c[d];
 							}
 						}
 					} else {
 						int dsign = (asc == 'R') ? 1 : -1;
-						if (map[r][c] == 'L') {
+						if (map[r][c] == 4) {
 							dsign = -1;
 						}
-						if (map[r][c] == 'R') {
+						if (map[r][c] == 5) {
 							dsign = 1;
 						}
 						int num = 1;
-						if (map[r][c] == 'D') {
+						if (map[r][c] == 2) {
 							num = 2;
 						}
-						if (map[r][c] == 'T') {
+						if (map[r][c] == 3) {
 							num = 3;
 						}
 						d = (d + num * dsign + 4) % 4;
@@ -138,7 +138,7 @@ public class Main {
 		}
 		for (int r = 0; r < M; r++) {
 			for (int c = 0; c < M; c++) {
-				System.out.print(map[r][c]);
+				System.out.print(c_kind[map[r][c]]);
 			}
 			System.out.println();
 		}
