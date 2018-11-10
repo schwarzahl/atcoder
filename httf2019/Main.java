@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -18,117 +19,131 @@ public class Main {
 
 	private void solve() {
 		long st = System.currentTimeMillis();
-		long LIMIT_TIME = 1000L;
+		long LIMIT_TIME = 2500L;
 
 		Scanner sc = new Scanner(System.in);
-		int N = 100;
-		int[][] A = new int[N][];
-		for (int r = 0; r < N; r++) {
-			A[r] = new int[N];
-			for (int c = 0; c < N; c++) {
-				A[r][c] = sc.nextInt();
+		int N = sc.nextInt();
+		int M = sc.nextInt();
+		int L = sc.nextInt();
+		String[] S = new String[N];
+		for (int i = 0; i < N; i++) {
+			S[i] = sc.next();
+		}
+
+		char[][] map = new char[M][];
+		for (int r = 0; r < M; r++) {
+			map[r] = new char[M];
+			for (int c = 0; c < M; c++) {
+				if (r == 0 || r == M - 1 || c == 0 || c == M - 1) {
+					map[r][c] = '#';
+				} else {
+					map[r][c] = '.';
+				}
 			}
 		}
 
-		int Q = 1000;
-		Set<Answer> set = new HashSet<>();
-		for (int try_num = 0; try_num < Q; try_num++) {
-			int max = 0;
-			int max_r = -1;
-			int max_c = -1;
-			for (int r = 0; r < N; r++) {
-				for (int c = 0; c < N; c++) {
-					if (max < A[r][c]) {
-						max = A[r][c];
-						max_r = r;
-						max_c = c;
-					}
+		int[] dir_r = {-1, 0, 1, 0};
+		int[] dir_c = {0, 1, 0, -1};
+		char[] c_kind = {'.', '#', 'D', 'T', 'L', 'R'};
+		int prev_score = 0;
+		int try_num = 0;
+		Random random = new Random();
+		while (System.currentTimeMillis() - st < LIMIT_TIME) {
+			char[][] prev_map = new char[M][];
+			for (int r = 0; r < M; r++) {
+				prev_map[r] = new char[M];
+				for (int c = 0; c < M; c++) {
+					prev_map[r][c] = map[r][c];
 				}
-			}
-			if (max == 0) {
-				break;
 			}
 
-			int X = max_c;
-			int Y = max_r;
-			int H = max;
-			int min = 0;
-			for (int r = 0; r < N; r++) {
-				for (int c = 0; c < N; c++) {
-					int diff = Math.abs(r - Y) + Math.abs(c - X);
-					if (H - diff > 0) {
-						if (min > A[r][c] - (H - diff)) {
-							min = A[r][c] - (H - diff);
-						}
-					}
+			{
+				int r = random.nextInt(M - 2) + 1;
+				int c = random.nextInt(M - 2) + 1;
+				int k = random.nextInt(6);
+				if (r == M / 2 && c == M / 2) {
+					continue;
 				}
+				map[r][c] = c_kind[k];
 			}
-			H += min;
-			int[] arr = {0, 1, 2, 4, 8};
-			int max_point = 0;
-			int max_gap = 0;
-			for (int gap : arr){
-				int tmp_H = H + gap;
-				int point = 0;
-				for (int r = 0; r < N; r++) {
-					for (int c = 0; c < N; c++) {
-						int diff = Math.abs(r - Y) + Math.abs(c - X);
-						if (tmp_H - diff > 0) {
-							if (A[r][c] - (tmp_H - diff) > 0) {
-								point += tmp_H - diff;
-							} else {
-								point += 2 * A[r][c] - (tmp_H - diff);
+
+			int[][] countMap = new int[M][];
+			for (int i = 0; i < M; i++) {
+				countMap[i] = new int[M];
+			}
+			for (int i = 0; i < N; i++) {
+				int r = M / 2;
+				int c = M / 2;
+				int d = 0;
+				for (char asc : S[i].toCharArray()) {
+					if (asc == 'S') {
+						int num = 1;
+						if (map[r][c] == 'D') {
+							num = 2;
+						}
+						if (map[r][c] == 'T') {
+							num = 3;
+						}
+						for (int k = 0; k < num; k++) {
+							if (map[r + dir_r[d]][c + dir_c[d]] != '#') {
+								r += dir_r[d];
+								c += dir_c[d];
 							}
 						}
+					} else {
+						int dsign = (asc == 'R') ? 1 : -1;
+						if (map[r][c] == 'L') {
+							dsign = -1;
+						}
+						if (map[r][c] == 'R') {
+							dsign = 1;
+						}
+						int num = 1;
+						if (map[r][c] == 'D') {
+							num = 2;
+						}
+						if (map[r][c] == 'T') {
+							num = 3;
+						}
+						d = (d + num * dsign + 4) % 4;
 					}
 				}
-				if (max_point < point) {
-					max_point = point;
-					max_gap = gap;
+				countMap[r][c]++;
+			}
+			int score = 0;
+			for (int r = 0; r < M; r++) {
+				for (int c = 0; c < M; c++) {
+					if (countMap[r][c] == 3) {
+						score += 1;
+					}
+					if (countMap[r][c] == 2) {
+						score += 3;
+					}
+					if (countMap[r][c] == 1) {
+						score += 10;
+					}
 				}
 			}
-			H += max_gap;
-			if (H > N) {
-				H = N;
-			}
-			if (H > 0) {
-				set.add(new Answer(X, Y, H));
+
+			if (prev_score < score) {
+				prev_score = score;
 			} else {
-				break;
-			}
-			for (int r = 0; r < N; r++) {
-				for (int c = 0; c < N; c++) {
-					int diff = Math.abs(r - Y) + Math.abs(c - X);
-					if (H - diff > 0) {
-						A[r][c] -= H - diff;
+				for (int r = 0; r < M; r++) {
+					for (int c = 0; c < M; c++) {
+						map[r][c] = prev_map[r][c];
 					}
 				}
 			}
+			try_num++;
 		}
-
-		System.out.println(set.size());
-		for (Answer a : set) {
-			System.out.println(a.toString());
+		for (int r = 0; r < M; r++) {
+			for (int c = 0; c < M; c++) {
+				System.out.print(map[r][c]);
+			}
+			System.out.println();
 		}
-	}
-
-	class Answer {
-		int X;
-		int Y;
-		int H;
-
-		public Answer(int X, int Y, int H) {
-			this.X = X;
-			this.Y = Y;
-			this.H = H;
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(X).append(' ').append(Y).append(' ').append(H);
-			return sb.toString();
-		}
+		System.err.println("TRY_NUM = " + try_num);
+		System.err.println("SCORE = " + prev_score);
 	}
 
 	interface CombCalculator {
