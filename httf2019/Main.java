@@ -49,6 +49,18 @@ public class Main {
 		int try_num = 0;
 		int rollback_num = 0;
 		Random random = new Random();
+		boolean[][][] prev_path = new boolean[M][][];
+		for (int r = 0; r < M; r++) {
+			prev_path[r] = new boolean[M][];
+			for (int c = 0; c < M; c++) {
+				prev_path[r][c] = new boolean[N];
+				for (int id = 0; id < N; id++) {
+					prev_path[r][c][id] = true;
+				}
+			}
+		}
+		int[] prev_r = new int[N];
+		int[] prev_c = new int[N];
 		while (System.currentTimeMillis() - st < LIMIT_TIME) {
 			int[][] prev_map = new int[M][];
 			for (int r = 0; r < M; r++) {
@@ -58,57 +70,75 @@ public class Main {
 				}
 			}
 
-			{
-				int r = random.nextInt(M - 2) + 1;
-				int c = random.nextInt(M - 2) + 1;
-				int k = random.nextInt(5) + 1;
-				if (r == M / 2 && c == M / 2) {
-					continue;
-				}
-				map[r][c] = (map[r][c] + k) % 6;
+			int change_r = random.nextInt(M - 2) + 1;
+			int change_c = random.nextInt(M - 2) + 1;
+			int change_k = random.nextInt(5) + 1;
+			if (change_r == M / 2 && change_c == M / 2) {
+				continue;
 			}
+			map[change_r][change_c] = (map[change_r][change_c] + change_k) % 6;
 
 			int[][] countMap = new int[M][];
 			for (int i = 0; i < M; i++) {
 				countMap[i] = new int[M];
 			}
+			boolean[][][] path = new boolean[M][][];
+			for (int r = 0; r < M; r++) {
+				path[r] = new boolean[M][];
+				for (int c = 0; c < M; c++) {
+					path[r][c] = new boolean[N];
+				}
+			}
+			int[] new_r = new int[N];
+			int[] new_c = new int[N];
+			boolean[] isChange = new boolean[N];
 			for (int i = 0; i < N; i++) {
 				int r = M / 2;
 				int c = M / 2;
 				int d = 0;
-				for (char asc : S[i].toCharArray()) {
-					if (asc == 'S') {
-						int num = 1;
-						if (map[r][c] == 2) {
-							num = 2;
-						}
-						if (map[r][c] == 3) {
-							num = 3;
-						}
-						for (int k = 0; k < num; k++) {
-							if (map[r + dir_r[d]][c + dir_c[d]] != 1) {
-								r += dir_r[d];
-								c += dir_c[d];
+				if (!prev_path[change_r][change_c][i]) {
+					r = prev_r[i];
+					c = prev_c[i];
+				} else {
+					path[r][c][i] = true;
+					for (char asc : S[i].toCharArray()) {
+						if (asc == 'S') {
+							int num = 1;
+							if (map[r][c] == 2) {
+								num = 2;
 							}
+							if (map[r][c] == 3) {
+								num = 3;
+							}
+							for (int k = 0; k < num; k++) {
+								if (map[r + dir_r[d]][c + dir_c[d]] != 1) {
+									r += dir_r[d];
+									c += dir_c[d];
+								}
+							}
+						} else {
+							int dsign = (asc == 'R') ? 1 : -1;
+							if (map[r][c] == 4) {
+								dsign = -1;
+							}
+							if (map[r][c] == 5) {
+								dsign = 1;
+							}
+							int num = 1;
+							if (map[r][c] == 2) {
+								num = 2;
+							}
+							if (map[r][c] == 3) {
+								num = 3;
+							}
+							d = (d + num * dsign + 4) % 4;
 						}
-					} else {
-						int dsign = (asc == 'R') ? 1 : -1;
-						if (map[r][c] == 4) {
-							dsign = -1;
-						}
-						if (map[r][c] == 5) {
-							dsign = 1;
-						}
-						int num = 1;
-						if (map[r][c] == 2) {
-							num = 2;
-						}
-						if (map[r][c] == 3) {
-							num = 3;
-						}
-						d = (d + num * dsign + 4) % 4;
+						path[r][c][i] = true;
 					}
+					isChange[i] = true;
 				}
+				new_r[i] = r;
+				new_c[i] = c;
 				countMap[r][c]++;
 			}
 			int score = 0;
@@ -128,6 +158,19 @@ public class Main {
 
 			if (prev_score < score) {
 				prev_score = score;
+				for (int r = 0; r < M; r++) {
+					for (int c = 0; c < M; c++) {
+						for (int id = 0; id < N; id++) {
+							if (isChange[id]) {
+								prev_path[r][c][id] = path[r][c][id];
+							}
+						}
+					}
+				}
+				for (int id = 0; id < N; id++) {
+					prev_r[id] = new_r[id];
+					prev_c[id] = new_c[id];
+				}
 			} else {
 				for (int r = 0; r < M; r++) {
 					for (int c = 0; c < M; c++) {
