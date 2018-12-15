@@ -1,6 +1,7 @@
 package atcoder.agc.agc029.problemB;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -19,8 +21,58 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		TreeMap<Long, Integer> map = new TreeMap<>();
+		for (int i = 0; i < N; i++) {
+			long key = sc.nextLong();
+			if (!map.containsKey(key)) {
+				map.put(key, 0);
+			}
+			map.put(key, map.get(key) + 1);
+		}
+		long[] array = new long[map.size()];
+		int[] num = new int[map.size()];
+		int index = 0;
+		for (Map.Entry<Long, Integer> entry : map.entrySet()) {
+			array[index] = entry.getKey();
+			num[index] = entry.getValue();
+			index++;
+		}
+		int ans = 0;
+		for (int i = map.size() - 1; i >= 0; i--) {
+			long up = upper(array[i]);
+			long want = up - array[i];
+			int low = 0;
+			int high = i + 1;
+			while (low + 1 < high) {
+				int mid = (low + high) / 2;
+				if (array[mid] <= want) {
+					low = mid;
+				} else {
+					high = mid;
+				}
+			}
+			if (num[low] > 0 && array[low] == want) {
+				if (low == i) {
+					ans += num[low] / 2;
+					num[low] %= 2;
+				} else {
+					if (num[low] < num[i]) {
+						ans += num[low];
+						num[low] = 0;
+					} else {
+						ans += num[i];
+						num[low] -= num[i];
+					}
+				}
+			}
+		}
+		System.out.println(ans);
+	}
+
+	private long upper(long base) {
+		long two = 2L;
+		for (; two <= base; two *= 2);
+		return two;
 	}
 
 	interface CombCalculator {
