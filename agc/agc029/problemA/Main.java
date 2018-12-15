@@ -18,9 +18,18 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		long B_sum = 0L;
+		long B_num = 0L;
+		long N = S.length();
+		for (int i = 0; i < N; i++) {
+			char c = S.charAt(i);
+			if (c == 'B') {
+				B_num++;
+				B_sum += N - B_num - i;
+			}
+		}
+		System.out.println(B_sum);
 	}
 
 	interface CombCalculator {
