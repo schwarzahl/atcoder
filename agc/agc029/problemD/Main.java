@@ -1,6 +1,7 @@
 package atcoder.agc.agc029.problemD;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,9 +19,36 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		int H = sc.nextInt();
+		int W = sc.nextInt();
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[] minY = new int[H + 2];
+		for (int x = 0; x <= H; x++) {
+			minY[x] = W + 1;
+		}
+		minY[H + 1] = 0;
+		for (int i = 1; i <= N; i++) {
+			int X = sc.nextInt();
+			int Y = sc.nextInt();
+			if (minY[X] > Y) {
+				minY[X] = Y;
+			}
+		}
+		int x = 1;
+		int max_y = 1;
+		for (; x <= H; x++) {
+			if (max_y >= minY[x]) {
+				x--;
+				break;
+			}
+			if (max_y >= minY[x + 1]) {
+				break;
+			}
+			if (minY[x + 1] > max_y + 1) {
+				max_y++;
+			}
+		}
+		System.out.println(x);
 	}
 
 	interface CombCalculator {
