@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -19,8 +20,56 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long[] A = new long[N];
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextLong();
+		}
+		int low_limit = 0;
+		int high_bound = N;
+		while (low_limit + 1 < high_bound) {
+			int use_kind = (low_limit + high_bound) / 2;
+			long[] keys = new long[N];
+			int[] values = new int[N];
+			int size = 0;
+			boolean solvable = true;
+			for (int i = 1; i < N; i++) {
+				if (A[i - 1] >= A[i]) {
+					boolean incr = false;
+					long prev = A[i];
+					for (int idx = size - 1; idx >= 0; idx--) {
+						if (keys[idx] > A[i]) {
+							size--;
+						} else {
+							if (keys[idx] == prev) {
+								if (values[idx] < use_kind - 1) {
+									values[idx]++;
+									incr = true;
+									break;
+								}
+								size--;
+								prev--;
+							}
+						}
+					}
+					if (!incr) {
+						if (prev > 0 && use_kind > 1) {
+							keys[size] = prev;
+							values[size] = 1;
+							size++;
+						} else {
+							solvable = false;
+							break;
+						}
+					}
+				}
+			}
+			if (solvable) {
+				high_bound = use_kind;
+			} else {
+				low_limit = use_kind;
+			}
+		}
+		System.out.println(high_bound);
 	}
 
 	interface CombCalculator {
