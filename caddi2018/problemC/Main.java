@@ -18,9 +18,43 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long N = sc.nextLong();
+		long P = sc.nextLong();
+		// 2^40 > 1e12
+		if (N > 40) {
+			System.out.println(1);
+		} else if (N == 1) {
+			System.out.println(P);
+		} else {
+			// 2 <= N <= 40
+			long low = 1L;
+			long high = 1000001L;
+			while (low + 1 < high) {
+				long mid = (low + high) / 2L;
+				long ans = 1L;
+				for (int i = 0; i < N; i++) {
+					ans *= mid;
+					if (ans > P) {
+						break;
+					}
+				}
+				if (ans > P) {
+					high = mid;
+				} else {
+					low = mid;
+				}
+			}
+			for (long ans = low; ans >= 1; ans--) {
+				long prod = 1L;
+				for (int i = 0; i < N; i++) {
+					prod *= ans;
+				}
+				if (P % prod == 0) {
+					System.out.println(ans);
+					break;
+				}
+			}
+		}
 	}
 
 	interface CombCalculator {
