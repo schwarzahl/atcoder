@@ -19,8 +19,42 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long[] A = new long[N];
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextLong();
+		}
+		long[] left = new long[N];
+		for (int i = 1; i < N; i++) {
+			if (A[i - 1] <= A[i]) {
+				left[i] = 0;
+			} else {
+				left[i] = ((A[i - 1] - 1) / A[i] / 4 + 1) * 2 * (N - i);
+			}
+		}
+		long[] right = new long[N];
+		for (int i = 1; i < N; i++) {
+			if (A[i - 1] >= A[i]) {
+				right[i] = 0;
+			} else {
+				right[i] = ((A[i] - 1) / A[i - 1] / 4 + 1) * 2 * i;
+			}
+		}
+		long[] leftSum = new long[N];
+		for (int i = N - 2; i >= 0; i--) {
+			leftSum[i] = leftSum[i + 1] + left[i + 1];
+		}
+		long[] rightSum = new long[N];
+		for (int i = 1; i < N; i++) {
+			rightSum[i] = rightSum[i - 1] + right[i - 1];
+		}
+		long min = Long.MAX_VALUE / 3;
+		for (int i = 0; i < N; i++) {
+			long tmp = i + rightSum[i] + leftSum[i];
+			if (min > tmp) {
+				min = tmp;
+			}
+		}
+		System.out.println(min);
 	}
 
 	interface CombCalculator {
