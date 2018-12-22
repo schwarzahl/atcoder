@@ -19,9 +19,53 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		System.out.println(isFirstWin(N, sc) ? "first" : "second");
+		/*
+		for (int a = 1; a <= 10; a++) {
+			for (int b = 1; b <= 10; b++) {
+				for (int c = 1; c <= 10; c++) {
+					System.out.println(a + "," + b + "," + c + "=" + func(a, b, c));
+				}
+			}
+		}
+		*/
 	}
+
+	private boolean isFirstWin(int N, Scanner sc) {
+		for (int i = 0; i < N; i++) {
+			int a = sc.nextInt();
+			if (a % 2 == 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+	/*
+	boolean func(int a, int b, int c) {
+		if (a <= 1 && b <= 1 && c <= 1) {
+			return true;
+		}
+		for (int ea = 0; ea <= 1; ea++) {
+			if (a - ea >= 0) {
+				for (int eb = 0; eb <= 1; eb++) {
+					if (b - eb >= 0) {
+						for (int ec = 0; ec <= 1; ec++) {
+							if (ea == 0 && eb == 0 && ec == 0) {
+								continue;
+							}
+							if (c - ec >= 0) {
+								if (!func(a - ea, b - eb, c - ec)) {
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	*/
 
 	interface CombCalculator {
 		long comb(int n, int m);
