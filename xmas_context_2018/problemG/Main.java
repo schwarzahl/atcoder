@@ -18,9 +18,60 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int T = sc.nextInt();
+		for (int try_num = 0; try_num < T; try_num++) {
+			int H = sc.nextInt();
+			int W = sc.nextInt();
+			int[][] map = new int[H][];
+			boolean[][] ok_map = new boolean[H][];
+			for (int r = 0; r < H; r++) {
+				map[r] = new int[W];
+				ok_map[r] = new boolean[W];
+			}
+			if (H * W % 2 == 0) {
+				System.out.println("Second");
+				System.out.flush();
+			} else {
+				System.out.println("First");
+				System.out.println("0 0");
+				map[0][0] = 1;
+				System.out.flush();
+			}
+			while (true) {
+				int er = sc.nextInt();
+				int ec = sc.nextInt();
+				if (er == -1 && ec == -1) {
+					break;
+				}
+				map[er][ec] = 2;
+				for (int r = er - 1; r <= er + 1; r++) {
+					if (r < 0 || H <= r) {
+						continue;
+					}
+					ok_map[r][ec] = true;
+				}
+				for (int c = ec - 1; c <= ec + 1; c++) {
+					if (c < 0 || W <= c) {
+						continue;
+					}
+					ok_map[er][c] = true;
+				}
+				think(map, ok_map, H, W);
+				System.out.flush();
+			}
+		}
+	}
+
+	void think(int[][] map, boolean[][] ok_map, int H, int W) {
+		for (int r = 0; r < H; r++) {
+			for (int c = 0; c < W; c++) {
+				if (map[r][c] == 0 && ok_map[r][c]) {
+					map[r][c] = 1;
+					System.out.println(r + " " + c);
+					return;
+				}
+			}
+		}
 	}
 
 	interface CombCalculator {

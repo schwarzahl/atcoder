@@ -18,9 +18,25 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		char[] ind2jap = {'〇', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '百', '千', '万', '億', 'の', '乗'};
+		int num = 0;
+		int prev = 1;
+		for (char c : S.toCharArray()) {
+			int input = 0;
+			for (int ind = 0; ind < ind2jap.length; ind++) {
+				if (ind2jap[ind] == c) {
+					input = ind;
+				}
+				break;
+			}
+			if (input < 10) {
+				prev = input;
+			} else if (input < 15) {
+
+			}
+			System.out.println(c);
+		}
 	}
 
 	interface CombCalculator {
