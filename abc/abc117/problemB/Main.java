@@ -19,8 +19,16 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int sum = 0;
+		int max = 0;
+		for (int i = 0; i < N; i++) {
+			int L = sc.nextInt();
+			sum += L;
+			if (max < L) {
+				max = L;
+			}
+		}
+		System.out.println(max < sum - max ? "Yes" : "No");
 	}
 
 	interface CombCalculator {

@@ -18,9 +18,9 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		double T = sc.nextDouble();
+		double X = sc.nextDouble();
+		System.out.println(T / X);
 	}
 
 	interface CombCalculator {
