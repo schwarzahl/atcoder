@@ -19,8 +19,61 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long K = sc.nextLong();
+		long[] A = new long[N];
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextLong();
+		}
+		// 2^40 > 10^12
+		long[] oneNum = new long[40];
+		{
+			long bit = 1L;
+			for (int bin = 0; bin < 40; bin++) {
+				for (int i = 0; i < N; i++) {
+					if ((A[i] & bit) > 0) {
+						oneNum[bin]++;
+					}
+				}
+				bit *= 2L;
+			}
+		}
+		long fix = 0L;
+		long max = 0L;
+		long[] best = new long[40];
+		{
+			long bit = 1L;
+			best[0] = Math.max(oneNum[0], N - oneNum[0]);
+			for (int bin = 1; bin < 40; bin++) {
+				bit *= 2L;
+				best[bin] = best[bin - 1] + bit * Math.max(oneNum[bin], N - oneNum[bin]);
+			}
+			for (int bin = 39; bin >= 0; bin--) {
+				if (bit > K) {
+					fix += oneNum[bin] * bit;
+				} else {
+					if ((K & bit) > 0) {
+						if (bin > 0) {
+							if (max < fix + bit * oneNum[bin] + best[bin - 1]) {
+								max = fix + bit * oneNum[bin] + best[bin - 1];
+							}
+							fix += bit * (N - oneNum[bin]);
+						} else {
+							long tmp = fix + best[0];
+							if (max < tmp) {
+								max = tmp;
+							}
+						}
+					} else {
+						fix += bit * oneNum[bin];
+					}
+				}
+				bit /= 2L;
+			}
+		}
+		if (max < fix) {
+			max = fix;
+		}
+		System.out.println(max);
 	}
 
 	interface CombCalculator {
