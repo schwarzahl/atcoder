@@ -19,8 +19,60 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		if (N == 3) {
+			System.out.println(61);
+			return;
+		}
+		Map<String, Long> map = new HashMap<>();
+		for (char f : "ACGT".toCharArray()) {
+			for (char s : "ACGT".toCharArray()) {
+				for (char t : "ACGT".toCharArray()) {
+					for (char o : "ACGT".toCharArray()) {
+						String key = "" + f + s + t + o;
+						map.put(key, isAGC(key) ? 0L : 1L);
+					}
+				}
+			}
+		}
+		for (int current = 5; current <= N; current++) {
+			Map<String, Long> nextMap = new HashMap<>();
+			for (String key : map.keySet()) {
+				for (char next : "ACGT".toCharArray()) {
+					String nextKey = (key + next).substring(1);
+					if (!isAGC(nextKey)) {
+						if (!nextMap.containsKey(nextKey)) {
+							nextMap.put(nextKey, 0L);
+						}
+						nextMap.put(nextKey, (nextMap.get(nextKey) + map.get(key)) % 1000000007L);
+					}
+				}
+			}
+			map = nextMap;
+		}
+		long ans = 0L;
+		for (long count : map.values()) {
+			ans = (ans + count) % 1000000007L;
+		}
+		System.out.println(ans);
+	}
+
+	boolean isAGC(String str) {
+		if (str.contains("ACG")) {
+			return true;
+		}
+		if (str.contains("AGC")) {
+			return true;
+		}
+		if (str.contains("GAC")) {
+			return true;
+		}
+		if (str.startsWith("A") && str.endsWith("GC")) {
+			return true;
+		}
+		if (str.startsWith("AG") && str.endsWith("C")) {
+			return true;
+		}
+		return false;
 	}
 
 	interface CombCalculator {
