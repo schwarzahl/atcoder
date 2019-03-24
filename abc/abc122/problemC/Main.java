@@ -19,8 +19,23 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int Q = sc.nextInt();
+		sc.nextLine();
+		String S = sc.nextLine();
+		int[] count = new int[N];
+		for (int i = 0; i < N - 1; i++) {
+			char a = S.charAt(i);
+			char c = S.charAt(i + 1);
+			count[i + 1] = count[i];
+			if (a == 'A' && c == 'C') {
+				count[i + 1]++;
+			}
+		}
+		for (int i = 0; i < Q; i++) {
+			int l = sc.nextInt() - 1;
+			int r = sc.nextInt() - 1;
+			System.out.println(count[r] - count[l]);
+		}
 	}
 
 	interface CombCalculator {
