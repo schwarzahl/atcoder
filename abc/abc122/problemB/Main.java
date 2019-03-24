@@ -18,9 +18,28 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		int ans = 0;
+		int tmp = 0;
+		for (char c : S.toCharArray()) {
+			if (isACGT(c)) {
+				tmp++;
+				if (ans < tmp) {
+					ans = tmp;
+				}
+			} else {
+				tmp = 0;
+			}
+		}
+		System.out.println(ans);
+	}
+
+	boolean isACGT(char c) {
+		if (c == 'A') return true;
+		if (c == 'C') return true;
+		if (c == 'G') return true;
+		if (c == 'T') return true;
+		return false;
 	}
 
 	interface CombCalculator {
