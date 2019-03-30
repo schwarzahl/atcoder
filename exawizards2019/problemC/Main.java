@@ -21,31 +21,30 @@ public class Main {
 		int N = sc.nextInt();
 		int Q = sc.nextInt();
 		String s = sc.next();
-		int[] count = new int[N + 2];
-		for (int i = 1; i <= N; i++) {
-			count[i] = 1;
-		}
+		String[] t = new String[Q];
+		String[] d = new String[Q];
 		for (int i = 0; i < Q; i++) {
-			String t = sc.next();
-			String d = sc.next();
-			if (d.equals("L")) {
-				for (int j = 1; j <= N; j++) {
-					if (t.charAt(0) == s.charAt(j - 1)) {
-						count[j - 1] += count[j];
-						count[j] = 0;
-					}
+			t[i] = sc.next();
+			d[i] = sc.next();
+		}
+		int left = -1;
+		int right = N;
+		for (int i = Q - 1; i >= 0; i--) {
+			if (left + 1 == right) {
+				break;
+			}
+			if (d[i].equals("L")) {
+				if (s.charAt(left + 1) == t[i].charAt(0)) {
+					left++;
 				}
 			}
-			if (d.equals("R")) {
-				for (int j = N; j >= 1; j--) {
-					if (t.charAt(0) == s.charAt(j - 1)) {
-						count[j + 1] += count[j];
-						count[j] = 0;
-					}
+			if (d[i].equals("R")) {
+				if (s.charAt(right - 1) == t[i].charAt(0)) {
+					right--;
 				}
 			}
 		}
-		System.out.println(N - (count[0] + count[N + 1]));
+		System.out.println(right - left - 1);
 	}
 
 	interface CombCalculator {
