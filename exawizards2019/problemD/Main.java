@@ -1,6 +1,7 @@
 package atcoder.exawizards2019.problemD;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,9 +19,30 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		long MOD = 1000000007L;
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int X = sc.nextInt();
+		int[] S = new int[N];
+		for (int i = 0; i < N; i++) {
+			S[i] = sc.nextInt();
+		}
+		Arrays.sort(S);
+		long[] count = new long[100001];
+		count[X] = 1L;
+		for (int i = N - 1; i >= 0; i--) {
+			long[] nextCount = new long[100001];
+			for (int j = 0; j < 100001; j++) {
+				nextCount[j % S[i]] += count[j];
+			}
+			for (int j = 0; j < 100001; j++) {
+				count[j] = (count[j] * i + nextCount[j]) % MOD;
+			}
+		}
+		long ans = 0L;
+		for (int i = 1; i < 100001; i++) {
+			ans = (ans + count[i] * i) % MOD;
+		}
+		System.out.println(ans);
 	}
 
 	interface CombCalculator {
