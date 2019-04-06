@@ -23,37 +23,52 @@ public class Main {
 		int Y = sc.nextInt();
 		int Z = sc.nextInt();
 		int K = sc.nextInt();
+		long[] ans = new long[K * 2];
 		List<Long> list = new ArrayList<>();
 		for (int i = 0; i < X; i++) {
-			list.add(sc.nextLong());
+			add(ans, sc.nextLong());
 		}
 		{
-			List<Long> nextList = new ArrayList<>();
+			long[] next = new long[K * 2];
 			for (int i = 0; i < Y; i++) {
 				long cake = sc.nextLong();
-				for (long prev : list) {
-					nextList.add(prev + cake);
+				for (long prev : ans) {
+					add(next, prev + cake);
 				}
 			}
-			list = nextList;
+			ans = next;
 		}
 		{
-			List<Long> nextList = new ArrayList<>();
+			long[] next = new long[K * 2];
 			for (int i = 0; i < Z; i++) {
 				long cake = sc.nextLong();
-				for (long prev : list) {
-					nextList.add(prev + cake);
+				for (long prev : ans) {
+					add(next, prev + cake);
 				}
 			}
-			list = nextList;
+			ans = next;
 		}
-		Collections.sort(list, Collections.reverseOrder());
-		for (long ans : list) {
-			System.out.println(ans);
-			K--;
-			if (K <= 0) {
-				break;
+		for (int i = 0; i < K; i++) {
+			System.out.println(ans[K * 2 - i - 1]);
+		}
+	}
+
+	public void add(long[] array, long value) {
+		int low = 0;
+		int high = array.length;
+		while (low + 1 < high) {
+			int mid = (low + high) / 2;
+			if (array[mid] <= value) {
+				low = mid;
+			} else {
+				high = mid;
 			}
+		}
+		long next = value;
+		for (int i = low; i >= 0; i--) {
+			long esc = array[i];
+			array[i] = next;
+			next = esc;
 		}
 	}
 
