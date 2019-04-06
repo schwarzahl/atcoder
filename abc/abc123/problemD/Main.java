@@ -23,37 +23,43 @@ public class Main {
 		int Y = sc.nextInt();
 		int Z = sc.nextInt();
 		int K = sc.nextInt();
-		long[] ans = new long[K * 2];
-		List<Long> list = new ArrayList<>();
+		long[] ans = new long[K];
 		for (int i = 0; i < X; i++) {
 			add(ans, sc.nextLong());
 		}
 		{
-			long[] next = new long[K * 2];
+			long[] next = new long[K];
 			for (int i = 0; i < Y; i++) {
 				long cake = sc.nextLong();
 				for (long prev : ans) {
-					add(next, prev + cake);
+					if (prev > 0) {
+						add(next, prev + cake);
+					}
 				}
 			}
 			ans = next;
 		}
 		{
-			long[] next = new long[K * 2];
+			long[] next = new long[K];
 			for (int i = 0; i < Z; i++) {
 				long cake = sc.nextLong();
 				for (long prev : ans) {
-					add(next, prev + cake);
+					if (prev > 0) {
+						add(next, prev + cake);
+					}
 				}
 			}
 			ans = next;
 		}
-		for (int i = 0; i < K; i++) {
-			System.out.println(ans[K * 2 - i - 1]);
+		for (int i = K - 1; i >= 0; i--) {
+			System.out.println(ans[i]);
 		}
 	}
 
 	public void add(long[] array, long value) {
+		if (array[0] > value) {
+			return;
+		}
 		int low = 0;
 		int high = array.length;
 		while (low + 1 < high) {
