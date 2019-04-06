@@ -1,6 +1,7 @@
 package atcoder.abc.abc123.problemD;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,9 +19,42 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int X = sc.nextInt();
+		int Y = sc.nextInt();
+		int Z = sc.nextInt();
+		int K = sc.nextInt();
+		List<Long> list = new ArrayList<>();
+		for (int i = 0; i < X; i++) {
+			list.add(sc.nextLong());
+		}
+		{
+			List<Long> nextList = new ArrayList<>();
+			for (int i = 0; i < Y; i++) {
+				long cake = sc.nextLong();
+				for (long prev : list) {
+					nextList.add(prev + cake);
+				}
+			}
+			list = nextList;
+		}
+		{
+			List<Long> nextList = new ArrayList<>();
+			for (int i = 0; i < Z; i++) {
+				long cake = sc.nextLong();
+				for (long prev : list) {
+					nextList.add(prev + cake);
+				}
+			}
+			list = nextList;
+		}
+		Collections.sort(list, Collections.reverseOrder());
+		for (long ans : list) {
+			System.out.println(ans);
+			K--;
+			if (K <= 0) {
+				break;
+			}
+		}
 	}
 
 	interface CombCalculator {

@@ -18,9 +18,14 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long N = sc.nextLong();
+		long lastTime = 0;
+		for (int i = 0; i < 5; i++) {
+			long cap = sc.nextLong();
+			long min = i + (N + cap - 1L) / cap;
+			lastTime = Math.max(lastTime + 1L, min);
+		}
+		System.out.println(lastTime);
 	}
 
 	interface CombCalculator {

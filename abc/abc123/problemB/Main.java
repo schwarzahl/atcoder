@@ -18,9 +18,19 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int min = 10;
+		int ans = 0;
+		for (int i = 0; i < 5; i++) {
+			int tmp = sc.nextInt();
+			if (tmp % 10 < min && tmp % 10 > 0) {
+				min = tmp % 10;
+			}
+			ans += tmp;
+			if (tmp % 10 > 0) {
+				ans += 10 - (tmp % 10);
+			}
+		}
+		System.out.println(ans - 10 + min);
 	}
 
 	interface CombCalculator {
