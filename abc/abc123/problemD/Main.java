@@ -1,12 +1,15 @@
 package atcoder.abc.abc123.problemD;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -23,59 +26,33 @@ public class Main {
 		int Y = sc.nextInt();
 		int Z = sc.nextInt();
 		int K = sc.nextInt();
-		long[] ans = new long[K];
-		for (int i = 0; i < X; i++) {
-			add(ans, sc.nextLong());
-		}
-		{
-			long[] next = new long[K];
-			for (int i = 0; i < Y; i++) {
-				long cake = sc.nextLong();
-				for (long prev : ans) {
-					if (prev > 0) {
-						add(next, prev + cake);
-					}
-				}
-			}
-			ans = next;
-		}
-		{
-			long[] next = new long[K];
-			for (int i = 0; i < Z; i++) {
-				long cake = sc.nextLong();
-				for (long prev : ans) {
-					if (prev > 0) {
-						add(next, prev + cake);
-					}
-				}
-			}
-			ans = next;
-		}
-		for (int i = K - 1; i >= 0; i--) {
-			System.out.println(ans[i]);
-		}
-	}
 
-	public void add(long[] array, long value) {
-		if (array[0] > value) {
-			return;
+		PriorityQueue<Long> queue = new PriorityQueue<>();
+		long[] xs = new long[X];
+		for (int i = 0; i < X; i++) {
+			xs[i] = sc.nextLong();
 		}
-		int low = 0;
-		int high = array.length;
-		while (low + 1 < high) {
-			int mid = (low + high) / 2;
-			if (array[mid] <= value) {
-				low = mid;
-			} else {
-				high = mid;
+		for (int i = 0; i < Y; i++) {
+			long cake = sc.nextLong();
+			for (int j = 0; j < X; j++) {
+				queue.add(cake + xs[j]);
+				if (queue.size() > K) {
+					queue.poll();
+				}
 			}
 		}
-		long next = value;
-		for (int i = low; i >= 0; i--) {
-			long esc = array[i];
-			array[i] = next;
-			next = esc;
+
+		PriorityQueue<Long> ans = new PriorityQueue<>();
+		for (int i = 0; i < Z; i++) {
+			long cake = sc.nextLong();
+			for (long prev : queue) {
+				ans.add(cake + prev);
+				if (ans.size() > K) {
+					ans.poll();
+				}
+			}
 		}
+		ans.stream().sorted(Collections.reverseOrder()).forEach(System.out::println);
 	}
 
 	interface CombCalculator {
