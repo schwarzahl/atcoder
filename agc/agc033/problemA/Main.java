@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -19,9 +20,56 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int H = sc.nextInt();
+		int W = sc.nextInt();
+
+		PriorityQueue<Node> queue = new PriorityQueue<>((o1, o2) -> o1.step - o2.step);
+		int[][] map = new int[H][];
+		for (int row = 0; row < H; row++) {
+			map[row] = new int[W];
+			String A = sc.next();
+			for (int col = 0; col < W; col++) {
+				map[row][col] = 2000;
+				if (A.charAt(col) == '#') {
+					queue.add(new Node(row, col, 0));
+				}
+			}
+		}
+		int[] dr = {-1, 0, 1, 0};
+		int[] dc = {0, -1, 0, 1};
+		while (!queue.isEmpty()) {
+			Node current = queue.poll();
+			if (map[current.r][current.c] > current.step) {
+				map[current.r][current.c] = current.step;
+				for (int dir = 0; dir < 4; dir++) {
+					int nr = current.r + dr[dir];
+					int nc = current.c + dc[dir];
+					if (0 <= nr && nr < H && 0 <= nc && nc < W) {
+						queue.add(new Node(nr, nc, current.step + 1));
+					}
+				}
+			}
+		}
+		int max = 0;
+		for (int row = 0; row < H; row++) {
+			for (int col = 0; col < W; col++) {
+				if (max < map[row][col]) {
+					max = map[row][col];
+				}
+			}
+		}
+		System.out.println(max);
+	}
+
+	class Node {
+		int r;
+		int c;
+		int step;
+		public Node(int r, int c, int step) {
+			this.r = r;
+			this.c = c;
+			this.step = step;
+		}
 	}
 
 	class Scanner {
