@@ -19,9 +19,40 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int H = sc.nextInt();
+		int W = sc.nextInt();
+		boolean[][] map = new boolean[H][];
+		int max = 0;
+		for (int i = 0; i < H; i++) {
+			map[i] = new boolean[W];
+			String A = sc.next();
+			int current = 0;
+			Boolean prev = null;
+			for (int j = 0; j < W; j++) {
+				map[i][j] = A.charAt(j) == '#';
+				if (prev == null || prev != map[i][j]) {
+					current++;
+				}
+				prev = map[i][j];
+			}
+			if (max < current) {
+				max = current;
+			}
+		}
+		for (int j = 0; j < W; j++) {
+			int current = 0;
+			Boolean prev = null;
+			for (int i = 0; i < H; i++) {
+				if (prev == null || prev != map[i][j]) {
+					current++;
+				}
+				prev = map[i][j];
+			}
+			if (max < current) {
+				max = current;
+			}
+		}
+		System.out.println(max);
 	}
 
 	class Scanner {
