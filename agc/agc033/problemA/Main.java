@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -23,49 +22,40 @@ public class Main {
 		int H = sc.nextInt();
 		int W = sc.nextInt();
 
-		Set<Integer> set = new HashSet<>();
-		int[][] map = new int[H][];
+		boolean[][] used = new boolean[H][];
+		int[] queue = new int[H * W + 1];
+		int idx = 0;
 		for (int row = 0; row < H; row++) {
-			map[row] = new int[W];
+			used[row] = new boolean[W];
 			String A = sc.next();
 			for (int col = 0; col < W; col++) {
-				map[row][col] = 2000;
 				if (A.charAt(col) == '#') {
-					set.add(row * W + col);
+					queue[idx++] = row * W + col;
+					used[row][col] = true;
 				}
 			}
 		}
 		int[] dr = {-1, 0, 1, 0};
 		int[] dc = {0, -1, 0, 1};
 		int step = 0;
-		while (!set.isEmpty()) {
-			Set<Integer> nextSet = new HashSet<>();
-			for (int current : set) {
-				int row = current / W;
-				int col = current % W;
-				if (map[row][col] > step) {
-					map[row][col] = step;
-					for (int dir = 0; dir < 4; dir++) {
-						int nr = row + dr[dir];
-						int nc = col + dc[dir];
-						if (0 <= nr && nr < H && 0 <= nc && nc < W && map[nr][nc] > step + 1) {
-							nextSet.add(nr * W + nc);
-						}
-					}
-				}
+		int stepEnd = idx;
+		for (int i = 0; i < idx; i++) {
+			if (stepEnd == i) {
+				step++;
+				stepEnd = idx;
 			}
-			set = nextSet;
-			step++;
-		}
-		int max = 0;
-		for (int row = 0; row < H; row++) {
-			for (int col = 0; col < W; col++) {
-				if (max < map[row][col]) {
-					max = map[row][col];
+			int row = queue[i] / W;
+			int col = queue[i] % W;
+			for (int dir = 0; dir < 4; dir++) {
+				int nr = row + dr[dir];
+				int nc = col + dc[dir];
+				if (0 <= nr && nr < H && 0 <= nc && nc < W && !used[nr][nc]) {
+					queue[idx++] = nr * W + nc;
+					used[nr][nc] = true;
 				}
 			}
 		}
-		System.out.println(max);
+		System.out.println(step);
 	}
 
 	class Scanner {
