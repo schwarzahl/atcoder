@@ -1,4 +1,4 @@
-package atcoder.agc.agc033.problemC;
+package problemC;
 
 import java.io.IOException;
 import java.io.InputStream;
