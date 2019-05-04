@@ -20,8 +20,82 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Map<Integer, List<Integer>> toMap = new HashMap<>();
+		for (int i = 1; i < N; i++) {
+			int a = sc.nextInt();
+			int b = sc.nextInt();
+			if (!toMap.containsKey(a)) {
+				toMap.put(a, new ArrayList<>());
+			}
+			if (!toMap.containsKey(b)) {
+				toMap.put(b, new ArrayList<>());
+			}
+			toMap.get(a).add(b);
+			toMap.get(b).add(a);
+		}
+		int maxId = 0;
+		{
+			int max = 0;
+			int[] dist = new int[N + 1];
+			for (int i = 0; i < N + 1; i++) {
+				dist[i] = N + 1;
+			}
+			Set<Integer> set = new HashSet<>();
+			set.add(1);
+			int currentDist = 0;
+			while (!set.isEmpty()) {
+				Set<Integer> newSet = new HashSet<>();
+				for (int next : set) {
+					if (dist[next] > currentDist) {
+						dist[next] = currentDist;
+					}
+					for (int to : toMap.get(next)) {
+						if (dist[to] > currentDist + 1) {
+							newSet.add(to);
+						}
+					}
+				}
+				currentDist++;
+				set = newSet;
+			}
+			for (int i = 1; i <= N; i++) {
+				if (max < dist[i]) {
+					max = dist[i];
+					maxId = i;
+				}
+			}
+		}
+		int max = 0;
+		{
+			int[] dist = new int[N + 1];
+			for (int i = 0; i < N + 1; i++) {
+				dist[i] = N + 1;
+			}
+			Set<Integer> set = new HashSet<>();
+			set.add(maxId);
+			int currentDist = 0;
+			while (!set.isEmpty()) {
+				Set<Integer> newSet = new HashSet<>();
+				for (int next : set) {
+					if (dist[next] > currentDist) {
+						dist[next] = currentDist;
+					}
+					for (int to : toMap.get(next)) {
+						if (dist[to] > currentDist + 1) {
+							newSet.add(to);
+						}
+					}
+				}
+				currentDist++;
+				set = newSet;
+			}
+			for (int i = 1; i <= N; i++) {
+				if (max < dist[i]) {
+					max = dist[i];
+				}
+			}
+		}
+		System.out.println(max % 3 == 1 ? "Second" : "First");
 	}
 
 	class Scanner {
