@@ -44,7 +44,7 @@ public class Main {
 				for (int dir = 0; dir < 4; dir++) {
 					int nr = current.r + dr[dir];
 					int nc = current.c + dc[dir];
-					if (0 <= nr && nr < H && 0 <= nc && nc < W) {
+					if (0 <= nr && nr < H && 0 <= nc && nc < W && map[nr][nc] > current.step + 1) {
 						queue.add(new Node(nr, nc, current.step + 1));
 					}
 				}
