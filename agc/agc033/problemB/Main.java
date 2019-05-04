@@ -19,9 +19,79 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		int H = sc.nextInt();
+		int W = sc.nextInt();
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int s_r = sc.nextInt();
+		int s_c = sc.nextInt();
+		String S = sc.next();
+		String T = sc.next();
+
+		int Umin = s_r;
+		int Umax = s_r;
+		int Dmin = s_r;
+		int Dmax = s_r;
+		int Lmin = s_c;
+		int Lmax = s_c;
+		int Rmin = s_c;
+		int Rmax = s_c;
+		for (int i = 0; i < N; i++) {
+			if (S.charAt(i) == 'L') {
+				Lmin--;
+				Lmax--;
+			}
+			if (S.charAt(i) == 'R') {
+				Rmin++;
+				Rmax++;
+			}
+			if (S.charAt(i) == 'U') {
+				Umin--;
+				Umax--;
+			}
+			if (S.charAt(i) == 'D') {
+				Dmin++;
+				Dmax++;
+			}
+
+			if (Lmax < 1 || W < Rmin || Umax < 1 || H < Dmin) {
+				System.out.println("NO");
+				return;
+			}
+
+			if (T.charAt(i) == 'L') {
+				if (Lmin > 1) {
+					Lmin--;
+				}
+				if (Rmin > 1) {
+					Rmin--;
+				}
+			}
+			if (T.charAt(i) == 'R') {
+				if (Lmax < W) {
+					Lmax++;
+				}
+				if (Rmax < W) {
+					Rmax++;
+				}
+			}
+			if (T.charAt(i) == 'U') {
+				if (Umin > 1) {
+					Umin--;
+				}
+				if (Dmin > 1) {
+					Dmin--;
+				}
+			}
+			if (T.charAt(i) == 'D') {
+				if (Umax < H) {
+					Umax++;
+				}
+				if (Dmax < H) {
+					Dmax++;
+				}
+			}
+		}
+		System.out.println("YES");
 	}
 
 	class Scanner {
