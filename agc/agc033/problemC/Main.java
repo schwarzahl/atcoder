@@ -20,6 +20,10 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
+		if (N == 1) {
+			System.out.println("First");
+			return;
+		}
 		Map<Integer, List<Integer>> toMap = new HashMap<>();
 		for (int i = 1; i < N; i++) {
 			int a = sc.nextInt();
