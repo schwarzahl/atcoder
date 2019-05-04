@@ -23,7 +23,7 @@ public class Main {
 		int H = sc.nextInt();
 		int W = sc.nextInt();
 
-		PriorityQueue<Node> queue = new PriorityQueue<>((o1, o2) -> o1.step - o2.step);
+		Set<Integer> set = new HashSet<>();
 		int[][] map = new int[H][];
 		for (int row = 0; row < H; row++) {
 			map[row] = new int[W];
@@ -31,24 +31,31 @@ public class Main {
 			for (int col = 0; col < W; col++) {
 				map[row][col] = 2000;
 				if (A.charAt(col) == '#') {
-					queue.add(new Node(row, col, 0));
+					set.add(row * W + col);
 				}
 			}
 		}
 		int[] dr = {-1, 0, 1, 0};
 		int[] dc = {0, -1, 0, 1};
-		while (!queue.isEmpty()) {
-			Node current = queue.poll();
-			if (map[current.r][current.c] > current.step) {
-				map[current.r][current.c] = current.step;
-				for (int dir = 0; dir < 4; dir++) {
-					int nr = current.r + dr[dir];
-					int nc = current.c + dc[dir];
-					if (0 <= nr && nr < H && 0 <= nc && nc < W && map[nr][nc] > current.step + 1) {
-						queue.add(new Node(nr, nc, current.step + 1));
+		int step = 0;
+		while (!set.isEmpty()) {
+			Set<Integer> nextSet = new HashSet<>();
+			for (int current : set) {
+				int row = current / W;
+				int col = current % W;
+				if (map[row][col] > step) {
+					map[row][col] = step;
+					for (int dir = 0; dir < 4; dir++) {
+						int nr = row + dr[dir];
+						int nc = col + dc[dir];
+						if (0 <= nr && nr < H && 0 <= nc && nc < W && map[nr][nc] > step + 1) {
+							nextSet.add(nr * W + nc);
+						}
 					}
 				}
 			}
+			set = nextSet;
+			step++;
 		}
 		int max = 0;
 		for (int row = 0; row < H; row++) {
@@ -59,17 +66,6 @@ public class Main {
 			}
 		}
 		System.out.println(max);
-	}
-
-	class Node {
-		int r;
-		int c;
-		int step;
-		public Node(int r, int c, int step) {
-			this.r = r;
-			this.c = c;
-			this.step = step;
-		}
 	}
 
 	class Scanner {
