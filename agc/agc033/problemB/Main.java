@@ -27,71 +27,42 @@ public class Main {
 		String S = sc.next();
 		String T = sc.next();
 
-		int Umin = s_r;
-		int Umax = s_r;
-		int Dmin = s_r;
-		int Dmax = s_r;
-		int Lmin = s_c;
-		int Lmax = s_c;
-		int Rmin = s_c;
-		int Rmax = s_c;
-		for (int i = 0; i < N; i++) {
-			if (S.charAt(i) == 'L') {
-				Lmin--;
-				Lmax--;
+		int leftLimit = 1;
+		int rightLimit = W;
+		int upLimit = 1;
+		int downLimit = H;
+		for (int i = N - 1; i >= 0; i--) {
+			if (T.charAt(i) == 'L' && rightLimit < W) {
+				rightLimit++;
 			}
-			if (S.charAt(i) == 'R') {
-				Rmin++;
-				Rmax++;
+			if (T.charAt(i) == 'R' && leftLimit > 1) {
+				leftLimit--;
 			}
-			if (S.charAt(i) == 'U') {
-				Umin--;
-				Umax--;
+			if (T.charAt(i) == 'U' && downLimit < H) {
+				downLimit++;
 			}
-			if (S.charAt(i) == 'D') {
-				Dmin++;
-				Dmax++;
+			if (T.charAt(i) == 'D' && upLimit > 1) {
+				upLimit--;
 			}
 
-			if (Lmax < 1 || W < Rmin || Umax < 1 || H < Dmin) {
+			if (S.charAt(i) == 'L') {
+				leftLimit++;
+			}
+			if (S.charAt(i) == 'R') {
+				rightLimit--;
+			}
+			if (S.charAt(i) == 'U') {
+				upLimit++;
+			}
+			if (S.charAt(i) == 'D') {
+				downLimit--;
+			}
+			if (leftLimit > rightLimit || upLimit > downLimit) {
 				System.out.println("NO");
 				return;
 			}
-
-			if (T.charAt(i) == 'L') {
-				if (Lmin > 1) {
-					Lmin--;
-				}
-				if (Rmin > 1) {
-					Rmin--;
-				}
-			}
-			if (T.charAt(i) == 'R') {
-				if (Lmax < W) {
-					Lmax++;
-				}
-				if (Rmax < W) {
-					Rmax++;
-				}
-			}
-			if (T.charAt(i) == 'U') {
-				if (Umin > 1) {
-					Umin--;
-				}
-				if (Dmin > 1) {
-					Dmin--;
-				}
-			}
-			if (T.charAt(i) == 'D') {
-				if (Umax < H) {
-					Umax++;
-				}
-				if (Dmax < H) {
-					Dmax++;
-				}
-			}
 		}
-		System.out.println("YES");
+		System.out.println(leftLimit <= s_c && s_c <= rightLimit && upLimit <= s_r && s_r <= downLimit ? "YES" : "NO");
 	}
 
 	class Scanner {
