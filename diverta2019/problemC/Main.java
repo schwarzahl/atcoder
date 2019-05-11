@@ -51,9 +51,21 @@ public class Main {
 				firstB--;
 				ans++;
 			}
-			if (firstB > 0 && lastA > 0) {
-				ans += Math.min(firstB, lastA);
+		}
+		// BA == 0 or lastA == 0
+		if (BA > 0) {
+			BA--;
+			if (BA > 0) {
+				ans += BA;
+				BA = 0;
 			}
+			if (firstB > 0) {
+				firstB--;
+				ans++;
+			}
+		}
+		if (firstB > 0 && lastA > 0) {
+			ans += Math.min(firstB, lastA);
 		}
 		System.out.println(ans);
 	}
