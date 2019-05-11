@@ -19,9 +19,18 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long N = sc.nextLong();
+		long ans = 0L;
+		// N = (m + 1) * A;
+		for (long A = 1; A <= Math.sqrt(N); A++) {
+			if (N % A == 0) {
+				long m = (N / A) - 1;
+				if (m > 0 && N / m == N % m) {
+					ans += (N / A) - 1;
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
