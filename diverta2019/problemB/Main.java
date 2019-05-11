@@ -19,9 +19,19 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		int R = sc.nextInt();
+		int G = sc.nextInt();
+		int B = sc.nextInt();
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long ans = 0L;
+		for (int r = 0; r * R <= N; r++) {
+			for (int g = 0; r * R + g * G <= N; g++) {
+				if ((N - r * R - g * G) % B == 0) {
+					ans++;
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
