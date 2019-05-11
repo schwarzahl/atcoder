@@ -20,8 +20,42 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long ans = 0L;
+		long firstB = 0L;
+		long lastA = 0L;
+		long BA = 0L;
+		for (int i = 0; i < N; i++) {
+			String S = sc.next();
+			char prev = 'B';
+			for (char c : S.toCharArray()) {
+				if (prev == 'A' && c == 'B') {
+					ans++;
+				}
+				prev = c;
+			}
+			if (S.charAt(0) == 'B' && S.charAt(S.length() - 1) == 'A') {
+				BA++;
+			} else if (S.charAt(0) == 'B') {
+				firstB++;
+			} else if (S.charAt(S.length() - 1) == 'A') {
+				lastA++;
+			}
+		}
+		if (lastA > 0) {
+			lastA--;
+			if (BA > 0) {
+				ans += BA;
+				BA = 0;
+			}
+			if (firstB > 0) {
+				firstB--;
+				ans++;
+			}
+			if (firstB > 0 && lastA > 0) {
+				ans += Math.min(firstB, lastA);
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
