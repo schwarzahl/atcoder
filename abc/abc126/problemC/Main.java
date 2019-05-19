@@ -20,8 +20,18 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		double ans = 0.0;
+		for (int start = 1; start <= N; start++) {
+			double p = 1.0;
+			int tmp = start;
+			while (tmp < K) {
+				tmp *= 2;
+				p *= 0.5;
+			}
+			ans += p;
+		}
+		System.out.println(1.0 * ans / N);
 	}
 
 	class Scanner {
