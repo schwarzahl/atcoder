@@ -19,9 +19,25 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int K = sc.nextInt();
+		if (K == 0) {
+			System.out.print("0 0");
+			for (int i = 1; i < pow(M); i++) {
+				System.out.print(" " + i + " " + i);
+			}
+			System.out.println();
+		} else {
+			System.out.println(-1);
+		}
+	}
+
+	private int pow(int i) {
+		int ret = 1;
+		for (int j = 0; j < i; j++) {
+			ret *= 2;
+		}
+		return ret;
 	}
 
 	class Scanner {
