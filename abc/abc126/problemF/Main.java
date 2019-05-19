@@ -21,12 +21,33 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		int M = sc.nextInt();
 		int K = sc.nextInt();
+		int limit = pow(M);
+		int xor = 0;
+		for (int i = 0; i < limit; i++) {
+			if (i == K) {
+				continue;
+			}
+			xor ^= i;
+		}
 		if (K == 0) {
 			System.out.print("0 0");
-			for (int i = 1; i < pow(M); i++) {
+			for (int i = 1; i < limit; i++) {
 				System.out.print(" " + i + " " + i);
 			}
 			System.out.println();
+		} else if (K == xor) {
+			for (int i = 0; i < limit; i++) {
+				if (i != xor) {
+					System.out.print(i + " ");
+				}
+			}
+			System.out.print(xor + " ");
+			for (int i = limit - 1; i >= 0; i--) {
+				if (i != xor) {
+					System.out.print(i + " ");
+				}
+			}
+			System.out.println(xor);
 		} else {
 			System.out.println(-1);
 		}
