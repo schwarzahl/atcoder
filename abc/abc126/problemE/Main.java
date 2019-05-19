@@ -22,20 +22,17 @@ public class Main {
 		int N = sc.nextInt();
 		int M = sc.nextInt();
 		SetUnionFind uf = new SetUnionFind(N + 1);
+		int ans = N;
 		for (int i = 1; i <= M; i++) {
 			int X = sc.nextInt();
 			int Y = sc.nextInt();
 			int Z = sc.nextInt();
 			if (!uf.judge(X, Y)) {
 				uf.union(X, Y);
+				ans--;
 			}
 		}
-		int[] parent = uf.getParent();
-		Set<Integer> set = new HashSet<>();
-		for (int i = 1; i <= N; i++) {
-			set.add(parent[i]);
-		}
-		System.out.println(set.size());
+		System.out.println(ans);
 	}
 
 	class Scanner {
