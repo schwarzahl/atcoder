@@ -20,8 +20,55 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Map<Integer, List<Integer>> oddMap = new HashMap<>();
+		Map<Integer, List<Integer>> evenMap = new HashMap<>();
+		for (int i = 1; i <= N - 1; i++) {
+			int u = sc.nextInt();
+			int v = sc.nextInt();
+			int w = sc.nextInt();
+			if (!oddMap.containsKey(u)) {
+				oddMap.put(u, new ArrayList<>());
+			}
+			if (!oddMap.containsKey(v)) {
+				oddMap.put(v, new ArrayList<>());
+			}
+			if (!evenMap.containsKey(u)) {
+				evenMap.put(u, new ArrayList<>());
+			}
+			if (!evenMap.containsKey(v)) {
+				evenMap.put(v, new ArrayList<>());
+			}
+			if (w % 2 == 1) {
+				oddMap.get(u).add(v);
+				oddMap.get(v).add(u);
+			} else {
+				evenMap.get(u).add(v);
+				evenMap.get(v).add(u);
+			}
+		}
+		Boolean[] colors = new Boolean[N + 1];
+		foo(colors, 1, true, oddMap, evenMap);
+		for (int i = 1; i <= N; i++) {
+			System.out.println(colors[i] ? "0" : "1");
+		}
+	}
+
+	void foo(Boolean[] colors, int id, boolean color, Map<Integer, List<Integer>> oddMap, Map<Integer, List<Integer>> evenMap) {
+		colors[id] = color;
+		if (oddMap.containsKey(id)) {
+			for (int nextId : oddMap.get(id)) {
+				if (colors[nextId] == null) {
+					foo(colors, nextId, !color, oddMap, evenMap);
+				}
+			}
+		}
+		if (evenMap.containsKey(id)) {
+			for (int nextId : evenMap.get(id)) {
+				if (colors[nextId] == null) {
+					foo(colors, nextId, color, oddMap, evenMap);
+				}
+			}
+		}
 	}
 
 	class Scanner {
