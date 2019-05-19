@@ -20,8 +20,16 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		String S = sc.next();
+		for (int i = 0; i < N; i++) {
+			if (i == K - 1) {
+				System.out.print((char)(S.charAt(i) + 'a' - 'A'));
+			} else {
+				System.out.print(S.charAt(i));
+			}
+		}
+		System.out.println();
 	}
 
 	class Scanner {

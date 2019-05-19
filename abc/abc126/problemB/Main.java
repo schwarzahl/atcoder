@@ -19,9 +19,34 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		String left = S.substring(0, 2);
+		String right = S.substring(2, 4);
+		Integer leftInt = Integer.parseInt(left);
+		Integer rightInt = Integer.parseInt(right);
+		if (isMM(leftInt)) {
+			if (isMM(rightInt)) {
+				System.out.println("AMBIGUOUS");
+			} else {
+				System.out.println("MMYY");
+			}
+		} else {
+			if (isMM(rightInt)) {
+				System.out.println("YYMM");
+			} else {
+				System.out.println("NA");
+			}
+		}
+	}
+
+	private boolean isMM(Integer i) {
+		if (i == 0) {
+			return false;
+		}
+		if (i > 12) {
+			return false;
+		}
+		return true;
 	}
 
 	class Scanner {
