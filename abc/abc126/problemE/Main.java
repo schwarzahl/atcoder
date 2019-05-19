@@ -20,8 +20,22 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		SetUnionFind uf = new SetUnionFind(N + 1);
+		for (int i = 1; i <= M; i++) {
+			int X = sc.nextInt();
+			int Y = sc.nextInt();
+			int Z = sc.nextInt();
+			if (!uf.judge(X, Y)) {
+				uf.union(X, Y);
+			}
+		}
+		int[] parent = uf.getParent();
+		Set<Integer> set = new HashSet<>();
+		for (int i = 1; i <= N; i++) {
+			set.add(parent[i]);
+		}
+		System.out.println(set.size());
 	}
 
 	class Scanner {
@@ -521,6 +535,10 @@ public class Main {
 			}
 			rank = new int[size];
 			this.size = size;
+		}
+
+		public int[] getParent() {
+			return parent;
 		}
 
 		@Override
