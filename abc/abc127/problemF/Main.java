@@ -53,8 +53,8 @@ public class Main {
 						center = right;
 						min += a - center;
 					} else {
-						rightQueue.add(a);
-						leftQueue.add(a);
+						rightQueue.add(right);
+						leftQueue.add(left);
 						center = a;
 					}
 				} else {
