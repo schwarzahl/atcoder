@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -19,9 +20,64 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int Q = sc.nextInt();
+		PriorityQueue<Long> leftQueue = new PriorityQueue<>();
+		Long center = null;
+		PriorityQueue<Long> rightQueue = new PriorityQueue<>();
+		long sum = 0L;
+		long min = 0L;
+		{
+			sc.nextInt(); // 1 a b
+			long a = sc.nextLong();
+			long b = sc.nextLong();
+			sum += b;
+			center = a;
+		}
+		for (int i = 1; i < Q; i++) {
+			int type = sc.nextInt();
+			if (type == 1) {
+				long a = sc.nextLong();
+				long b = sc.nextLong();
+				sum += b;
+				if (center == null) {
+					long left = leftQueue.poll();
+					long right = rightQueue.poll();
+					if (a < left) {
+						leftQueue.add(a);
+						rightQueue.add(right);
+						center = left;
+						min += center - a;
+					} else if (right < a) {
+						rightQueue.add(a);
+						leftQueue.add(left);
+						center = right;
+						min += a - center;
+					} else {
+						rightQueue.add(a);
+						leftQueue.add(a);
+						center = a;
+					}
+				} else {
+					if (center <= a) {
+						rightQueue.add(a);
+						leftQueue.add(center);
+						min += a - center;
+					} else {
+						leftQueue.add(a);
+						rightQueue.add(center);
+						min += center - a;
+					}
+					center = null;
+				}
+			} else {
+				if (center == null) {
+					System.out.print(leftQueue.peek() + " ");
+				} else {
+					System.out.print(center + " ");
+				}
+				System.out.println(min + sum);
+			}
+		}
 	}
 
 	class Scanner {
