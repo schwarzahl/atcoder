@@ -20,8 +20,24 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int maxL = 0;
+		int minR = N + 1;
+		for (int i = 1; i <= M; i++) {
+			int L = sc.nextInt();
+			int R = sc.nextInt();
+			if (maxL < L) {
+				maxL = L;
+			}
+			if (minR > R) {
+				minR = R;
+			}
+		}
+		if (maxL <= minR) {
+			System.out.println(minR - maxL + 1);
+		} else {
+			System.out.println(0);
+		}
 	}
 
 	class Scanner {

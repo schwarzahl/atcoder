@@ -19,9 +19,13 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int r = sc.nextInt();
+		int D = sc.nextInt();
+		long x = sc.nextLong();
+		for (int i = 2000; i < 2010; i++) {
+			x = x * r - D;
+			System.out.println(x);
+		}
 	}
 
 	class Scanner {
