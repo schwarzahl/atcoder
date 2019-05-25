@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -20,8 +21,45 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		PriorityQueue<Card> queue = new PriorityQueue<Card>((o1, o2) -> {
+			if (o2.value > o1.value) {
+				return 1;
+			}
+			if (o1.value > o2.value) {
+				return -1;
+			}
+			return 0;
+		});
+		for (int i = 0; i < N; i++) {
+			long A = sc.nextLong();
+			queue.add(new Card(1, A));
+		}
+		for (int i = 0; i < M; i++) {
+			int B = sc.nextInt();
+			long C = sc.nextLong();
+			queue.add(new Card(B, C));
+		}
+		long ans = 0L;
+		while (N > 0) {
+			Card c = queue.poll();
+			int del = c.num;
+			if (del > N) {
+				del = N;
+			}
+			N -= del;
+			ans += c.value * del;
+		}
+		System.out.println(ans);
+	}
+
+	class Card {
+		int num;
+		long value;
+		public Card(int num, long value) {
+			this.num = num;
+			this.value = value;
+		}
 	}
 
 	class Scanner {
