@@ -3,6 +3,7 @@ package problemF;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +22,7 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int Q = sc.nextInt();
-		PriorityQueue<Long> leftQueue = new PriorityQueue<>();
+		PriorityQueue<Long> leftQueue = new PriorityQueue<>(Collections.reverseOrder());
 		Long center = null;
 		PriorityQueue<Long> rightQueue = new PriorityQueue<>();
 		long sum = 0L;
