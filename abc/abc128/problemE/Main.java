@@ -3,6 +3,8 @@ package problemE;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -22,95 +25,75 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
 		int Q = sc.nextInt();
-		long[] S = new long[N];
-		long[] T = new long[N];
-		long[] X = new long[N];
+		Event[] insertEvents = new Event[N];
+		Event[] deleteEvents = new Event[N];
 		for (int i = 0; i < N; i++) {
-			S[i] = sc.nextLong();
-			T[i] = sc.nextLong();
-			X[i] = sc.nextLong();
+			long S = sc.nextLong();
+			long T = sc.nextLong();
+			long X = sc.nextLong();
+			insertEvents[i] = new Event(S - X, i, X);
+			deleteEvents[i] = new Event(T - X, i, X);
 		}
-		long[] D = new long[Q];
-		long[] ans = new long[Q];
+		Arrays.sort(insertEvents, (o1, o2) -> {
+			if (o1.time < o2.time) {
+				return -1;
+			}
+			if (o1.time > o2.time) {
+				return 1;
+			}
+			return 0;
+		});
+		Arrays.sort(deleteEvents, (o1, o2) -> {
+			if (o1.time < o2.time) {
+				return -1;
+			}
+			if (o1.time > o2.time) {
+				return 1;
+			}
+			return 0;
+		});
+		int insertId = 0;
+		int deleteId = 0;
+		TreeSet<IdLong> set = new TreeSet<IdLong>((o1, o2) -> {
+			if (o1.value < o2.value) {
+				return -1;
+			}
+			if (o1.value > o2.value) {
+				return 1;
+			}
+			return o1.id - o2.id;
+		});
 		for (int i = 0; i < Q; i++) {
-			D[i] = sc.nextLong();
-			ans[i] = Long.MAX_VALUE / 3;
+			long D = sc.nextLong();
+			while (insertId < N && insertEvents[insertId].time <= D) {
+				set.add(new IdLong(insertEvents[insertId].key, insertEvents[insertId].id));
+				insertId++;
+			}
+			while (deleteId < N && deleteEvents[deleteId].time <= D) {
+				set.remove(new IdLong(deleteEvents[deleteId].key, deleteEvents[deleteId].id));
+				deleteId++;
+			}
+			System.out.println(set.isEmpty() ? -1 : set.first().value);
 		}
-		Map<Integer, List<Long>> start = new HashMap<>();
-		Map<Integer, List<Long>> finish = new HashMap<>();
-		for (int i = 0; i < N; i++) {
-			int left; //含まない
-			int right; //含む
-			{
-				int low = -1;
-				int high = Q;
-				while (low + 1 < high) {
-					int mid = (low + high) / 2;
-					if (S[i] - X[i] <= D[mid]) {
-						high = mid;
-					} else {
-						low = mid;
-					}
-				}
-				left = low;
-			}
-			{
-				int low = -1;
-				int high = Q;
-				while (low + 1 < high) {
-					int mid = (low + high) / 2;
-					if (T[i] - X[i] <= D[mid]) {
-						high = mid;
-					} else {
-						low = mid;
-					}
-				}
-				right = low;
-			}
-			if (!start.containsKey(left)) {
-				start.put(left, new ArrayList<>());
-			}
-			if (!finish.containsKey(right)) {
-				finish.put(right, new ArrayList<>());
-			}
-			start.get(left).add(X[i]);
-			finish.get(right).add(X[i]);
-			/*
-			for (int j = left + 1; j <= right; j++) {
-				if (ans[j] > X[i]) {
-					ans[j] = X[i];
-				}
-			}
-			*/
+	}
+
+	class Event {
+		long time;
+		int id;
+		long key;
+		public Event(long time, int id, long key) {
+			this.time = time;
+			this.id = id;
+			this.key = key;
 		}
-		PriorityQueue<Long> queue = new PriorityQueue<>();
-		Set<Long> used = new HashSet<>();
-		if (start.containsKey(-1)) {
-			queue.addAll(start.get(-1));
-		}
-		for (int i = 0; i < Q; i++) {
-			Long val = null;
-			while (!queue.isEmpty()) {
-				val = queue.peek();
-				if (used.contains(val)) {
-					queue.poll();
-					used.remove(val);
-					val = null;
-				} else {
-					break;
-				}
-			}
-			if (val == null) {
-				System.out.println(-1);
-			} else {
-				System.out.println(val);
-			}
-			if (start.containsKey(i)) {
-				queue.addAll(start.get(i));
-			}
-			if (finish.containsKey(i)) {
-				used.addAll(finish.get(i));
-			}
+	}
+
+	class IdLong {
+		long value;
+		int id;
+		public IdLong(long value, int id) {
+			this.value = value;
+			this.id = id;
 		}
 	}
 
