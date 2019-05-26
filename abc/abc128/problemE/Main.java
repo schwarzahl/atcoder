@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -20,8 +21,97 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int Q = sc.nextInt();
+		long[] S = new long[N];
+		long[] T = new long[N];
+		long[] X = new long[N];
+		for (int i = 0; i < N; i++) {
+			S[i] = sc.nextLong();
+			T[i] = sc.nextLong();
+			X[i] = sc.nextLong();
+		}
+		long[] D = new long[Q];
+		long[] ans = new long[Q];
+		for (int i = 0; i < Q; i++) {
+			D[i] = sc.nextLong();
+			ans[i] = Long.MAX_VALUE / 3;
+		}
+		Map<Integer, List<Long>> start = new HashMap<>();
+		Map<Integer, List<Long>> finish = new HashMap<>();
+		for (int i = 0; i < N; i++) {
+			int left; //含まない
+			int right; //含む
+			{
+				int low = -1;
+				int high = Q;
+				while (low + 1 < high) {
+					int mid = (low + high) / 2;
+					if (S[i] - X[i] <= D[mid]) {
+						high = mid;
+					} else {
+						low = mid;
+					}
+				}
+				left = low;
+			}
+			{
+				int low = -1;
+				int high = Q;
+				while (low + 1 < high) {
+					int mid = (low + high) / 2;
+					if (T[i] - X[i] <= D[mid]) {
+						high = mid;
+					} else {
+						low = mid;
+					}
+				}
+				right = low;
+			}
+			if (!start.containsKey(left)) {
+				start.put(left, new ArrayList<>());
+			}
+			if (!finish.containsKey(right)) {
+				finish.put(right, new ArrayList<>());
+			}
+			start.get(left).add(X[i]);
+			finish.get(right).add(X[i]);
+			/*
+			for (int j = left + 1; j <= right; j++) {
+				if (ans[j] > X[i]) {
+					ans[j] = X[i];
+				}
+			}
+			*/
+		}
+		PriorityQueue<Long> queue = new PriorityQueue<>();
+		Set<Long> used = new HashSet<>();
+		if (start.containsKey(-1)) {
+			queue.addAll(start.get(-1));
+		}
+		for (int i = 0; i < Q; i++) {
+			Long val = null;
+			while (!queue.isEmpty()) {
+				val = queue.peek();
+				if (used.contains(val)) {
+					queue.poll();
+					used.remove(val);
+					val = null;
+				} else {
+					break;
+				}
+			}
+			if (val == null) {
+				System.out.println(-1);
+			} else {
+				System.out.println(val);
+			}
+			if (start.containsKey(i)) {
+				queue.addAll(start.get(i));
+			}
+			if (finish.containsKey(i)) {
+				used.addAll(finish.get(i));
+			}
+		}
 	}
 
 	class Scanner {
