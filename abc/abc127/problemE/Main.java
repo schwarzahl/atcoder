@@ -20,8 +20,38 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int K = sc.nextInt();
+		CombCalculator cc = new FactorialTableCombCalculator(N * M + 1, 1000000007L);
+		ModLong ans = new ModLong(0L, 1000000007L);
+		for (int d = 1; d < N; d++) {
+			ModLong tmp = new ModLong(0L, 1000000007L);
+			tmp.add(M).mul(M).mul(N - d).mul(cc.comb(N * M - 2, K - 2)).mul(d);
+			ans.add(tmp.value);
+		}
+		for (int d = 1; d < M; d++) {
+			ModLong tmp = new ModLong(0L, 1000000007L);
+			tmp.add(N).mul(N).mul(M - d).mul(cc.comb(N * M - 2, K - 2)).mul(d);
+			ans.add(tmp.value);
+		}
+		System.out.println(ans.value);
+	}
+
+	class ModLong {
+		long MOD;
+		long value;
+		public ModLong(long value, long MOD) {
+			this.value = value;
+			this.MOD = MOD;
+		}
+		public ModLong add(long value) {
+			this.value = (this.value + value) % MOD;
+			return this;
+		}
+		public ModLong mul(long value) {
+			this.value = (this.value * value) % MOD;
+			return this;
+		}
 	}
 
 	class Scanner {
