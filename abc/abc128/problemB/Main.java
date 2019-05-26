@@ -3,6 +3,7 @@ package problemB;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +21,33 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		List<Rest> list = new ArrayList<>();
+		for (int i = 1; i <= N; i++) {
+			list.add(new Rest(i, sc.next(), sc.nextInt()));
+		}
+		Collections.sort(list, (o1, o2) -> {
+			if (o1.name.compareTo(o2.name) > 0) {
+				return 1;
+			}
+			if (o1.name.compareTo(o2.name) < 0) {
+				return -1;
+			}
+			return o2.point - o1.point;
+		});
+		for (Rest rest : list) {
+			System.out.println(rest.id);
+		}
+	}
+
+	class Rest {
+		int id;
+		String name;
+		int point;
+		public Rest(int id, String name, int point) {
+			this.id = id;
+			this.name = name;
+			this.point = point;
+		}
 	}
 
 	class Scanner {

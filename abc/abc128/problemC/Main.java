@@ -20,8 +20,31 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		long[] light = new long[M + 1];
+		for (int i = 1; i <= M; i++) {
+			int k = sc.nextInt();
+			light[i] = 0L;
+			for (int j = 0; j < k; j++) {
+				int s = sc.nextInt();
+				light[i] += 1 << (s - 1);
+			}
+		}
+		int[] p = new int[M + 1];
+		for (int i = 1; i <= M; i++) {
+			p[i] = sc.nextInt();
+		}
+		long ans = 0L;
+		for (int i = 0; i < (1 << N); i++) {
+			boolean ok = true;
+			for (int j = 1; j <= M; j++) {
+				ok &= Long.bitCount(i & light[j]) % 2 == p[j];
+			}
+			if (ok) {
+				ans++;
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {

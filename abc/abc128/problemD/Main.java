@@ -3,6 +3,7 @@ package problemD;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +21,38 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		long[] V = new long[N];
+		for (int i = 0; i < N; i++) {
+			V[i] = sc.nextLong();
+		}
+		long ans = 0L;
+		for (int left = 0; left <= N; left++) {
+			for (int right = -1; right < N; right++) {
+				long sum = 0L;
+				int cost = 0;
+				List<Long> list = new ArrayList<>();
+				for (int i = 0; i < N; i++) {
+					if (i < left || right < i) {
+						list.add(V[i]);
+						sum += V[i];
+						cost++;
+					}
+				}
+				list.sort(Comparator.naturalOrder());
+				if (ans < sum && cost <= K) {
+					ans = sum;
+				}
+				for (long val : list) {
+					cost++;
+					sum -= val;
+					if (ans < sum && cost <= K) {
+						ans = sum;
+					}
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
