@@ -20,27 +20,23 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		Map<Integer, List<Integer>> xTo = new HashMap<>();
-		Map<Integer, List<Integer>> yTo = new HashMap<>();
+		Map<Integer, Set<Integer>> xTo = new HashMap<>();
+		Map<Integer, Set<Integer>> yTo = new HashMap<>();
 		for (int i = 0; i < N; i++) {
 			int x = sc.nextInt();
 			int y = sc.nextInt();
 			if (!xTo.containsKey(x)) {
-				xTo.put(x, new ArrayList<>());
+				xTo.put(x, new HashSet<>());
 			}
 			if (!yTo.containsKey(y)) {
-				yTo.put(y, new ArrayList<>());
+				yTo.put(y, new HashSet<>());
 			}
 			xTo.get(x).add(y);
 			yTo.get(y).add(x);
 		}
 		int ans = 0;
-		Set<Integer> used = new HashSet<>();
 		for (int x : xTo.keySet()) {
-			if (used.contains(x)) {
-				continue;
-			}
-			List<Integer> ys = xTo.get(x);
+			Set<Integer> ys = xTo.get(x);
 			if (ys.size() > 1) {
 				Set<Integer> xs = new HashSet<>();
 				int sum = 0;
@@ -49,7 +45,12 @@ public class Main {
 					xs.addAll(yTo.get(y));
 				}
 				ans += xs.size() * ys.size() - sum;
-				used.addAll(xs);
+				for (int y : ys) {
+					yTo.get(y).addAll(xs);
+				}
+				for (int tx : xs) {
+					xTo.get(tx).addAll(ys);
+				}
 			}
 		}
 		System.out.println(ans);
