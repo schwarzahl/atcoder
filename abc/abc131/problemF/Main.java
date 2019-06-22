@@ -20,40 +20,65 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		Map<Integer, Set<Integer>> xTo = new HashMap<>();
-		Map<Integer, Set<Integer>> yTo = new HashMap<>();
+		Map<Integer, Set<Integer>> xToId = new HashMap<>();
+		Map<Integer, Set<Integer>> yToId = new HashMap<>();
+		UnionFind uf = new SetUnionFind(N + 1);
+		Point[] points = new Point[N];
 		for (int i = 0; i < N; i++) {
 			int x = sc.nextInt();
 			int y = sc.nextInt();
-			if (!xTo.containsKey(x)) {
-				xTo.put(x, new HashSet<>());
+			points[i] = new Point(i, x, y);
+			if (!xToId.containsKey(x)) {
+				xToId.put(x, new HashSet<>());
 			}
-			if (!yTo.containsKey(y)) {
-				yTo.put(y, new HashSet<>());
+			if (!yToId.containsKey(y)) {
+				yToId.put(y, new HashSet<>());
 			}
-			xTo.get(x).add(y);
-			yTo.get(y).add(x);
-		}
-		int ans = 0;
-		for (int x : xTo.keySet()) {
-			Set<Integer> ys = xTo.get(x);
-			if (ys.size() > 1) {
-				Set<Integer> xs = new HashSet<>();
-				int sum = 0;
-				for (int y : ys) {
-					sum += yTo.get(y).size();
-					xs.addAll(yTo.get(y));
+			xToId.get(x).add(i);
+			yToId.get(y).add(i);
+			for (int id : xToId.get(x)) {
+				if (i != id) {
+					if (!uf.judge(i, id)) {
+						uf.union(i, id);
+					}
 				}
-				ans += xs.size() * ys.size() - sum;
-				for (int y : ys) {
-					yTo.get(y).addAll(xs);
-				}
-				for (int tx : xs) {
-					xTo.get(tx).addAll(ys);
+			}
+			for (int id : yToId.get(y)) {
+				if (i != id) {
+					if (!uf.judge(i, id)) {
+						uf.union(i, id);
+					}
 				}
 			}
 		}
-		System.out.println(ans);
+		Set<Integer> used = new HashSet<>();
+		long ans = 0L;
+		for (int i = 0; i < N; i++) {
+			if (used.contains(i)) {
+				continue;
+			}
+			Set<Integer> ids = uf.getSet(i);
+			used.addAll(ids);
+			Set<Integer> xs = new HashSet<>();
+			Set<Integer> ys = new HashSet<>();
+			for (int id : ids) {
+				xs.add(points[id].x);
+				ys.add(points[id].y);
+			}
+			ans += xs.size() * ys.size();
+		}
+		System.out.println(ans - N);
+	}
+
+	class Point {
+		int id;
+		int x;
+		int y;
+		public Point(int id, int x, int y) {
+			this.id = id;
+			this.x = x;
+			this.y = y;
+		}
 	}
 
 	class Scanner {
