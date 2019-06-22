@@ -20,8 +20,39 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Map<Integer, List<Integer>> xTo = new HashMap<>();
+		Map<Integer, List<Integer>> yTo = new HashMap<>();
+		for (int i = 0; i < N; i++) {
+			int x = sc.nextInt();
+			int y = sc.nextInt();
+			if (!xTo.containsKey(x)) {
+				xTo.put(x, new ArrayList<>());
+			}
+			if (!yTo.containsKey(y)) {
+				yTo.put(y, new ArrayList<>());
+			}
+			xTo.get(x).add(y);
+			yTo.get(y).add(x);
+		}
+		int ans = 0;
+		Set<Integer> used = new HashSet<>();
+		for (int x : xTo.keySet()) {
+			if (used.contains(x)) {
+				continue;
+			}
+			List<Integer> ys = xTo.get(x);
+			if (ys.size() > 1) {
+				Set<Integer> xs = new HashSet<>();
+				int sum = 0;
+				for (int y : ys) {
+					sum += yTo.get(y).size();
+					xs.addAll(yTo.get(y));
+				}
+				ans += xs.size() * ys.size() - sum;
+				used.addAll(xs);
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
