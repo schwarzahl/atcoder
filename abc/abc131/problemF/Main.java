@@ -36,19 +36,23 @@ public class Main {
 			}
 			xToId.get(x).add(i);
 			yToId.get(y).add(i);
+		}
+		for (int x : xToId.keySet()) {
+			Integer pre = null;
 			for (int id : xToId.get(x)) {
-				if (i != id) {
-					if (!uf.judge(i, id)) {
-						uf.union(i, id);
-					}
+				if (pre != null && !uf.judge(pre, id)) {
+					uf.union(pre, id);
 				}
+				pre = id;
 			}
+		}
+		for (int y : yToId.keySet()) {
+			Integer pre = null;
 			for (int id : yToId.get(y)) {
-				if (i != id) {
-					if (!uf.judge(i, id)) {
-						uf.union(i, id);
-					}
+				if (pre != null && !uf.judge(pre, id)) {
+					uf.union(pre, id);
 				}
+				pre = id;
 			}
 		}
 		Set<Integer> used = new HashSet<>();
