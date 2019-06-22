@@ -20,8 +20,37 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		List<Edge> edges = new ArrayList<>();
+		for (int i = 2; i <= N; i++) {
+			edges.add(new Edge(1, i));
+		}
+		int ans = (N - 1) * (N - 2) / 2;
+		for (int i = 2; i < N; i++) {
+			for (int j = i + 1; j <= N; j++) {
+				if (ans > K) {
+					edges.add(new Edge(i, j));
+					ans--;
+				}
+			}
+		}
+		if (ans == K) {
+			System.out.println(edges.size());
+			for (Edge e : edges) {
+				System.out.println(e.a + " " + e.b);
+			}
+		} else {
+			System.out.println(-1);
+		}
+	}
+
+	class Edge {
+		int a;
+		int b;
+		public Edge(int a, int b) {
+			this.a = a;
+			this.b = b;
+		}
 	}
 
 	class Scanner {
