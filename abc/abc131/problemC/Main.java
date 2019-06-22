@@ -19,9 +19,25 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long A = sc.nextLong();
+		long B = sc.nextLong();
+		long C = sc.nextLong();
+		long D = sc.nextLong();
+		long CD = lcm(C, D);
+		long Anum = A - 1 - ((A - 1) / C) - ((A - 1) / D) + ((A - 1) / CD);
+		long Bnum = B - (B / C) - (B / D) + (B / CD);
+		System.out.println(Bnum - Anum);
+	}
+
+	private long lcm(long a, long b) {
+		long c = a;
+		c *= b;
+		while (a % b != 0) {
+			long tmp = a % b;
+			a = b;
+			b = tmp;
+		}
+		return c / b;
 	}
 
 	class Scanner {

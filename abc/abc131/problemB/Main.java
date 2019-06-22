@@ -20,8 +20,18 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int L = sc.nextInt();
+		long sum = 0L;
+		long min = Long.MAX_VALUE / 3;
+		int min_index = 0;
+		for (int i = 1; i <= N; i++) {
+			sum += L + i - 1;
+			if (min > Math.abs(L + i - 1)) {
+				min = Math.abs(L + i - 1);
+				min_index = i;
+			}
+		}
+		System.out.println(sum - (L + min_index - 1));
 	}
 
 	class Scanner {

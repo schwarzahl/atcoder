@@ -19,9 +19,16 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		char pre = '-';
+		for (char c : S.toCharArray()) {
+			if (pre == c) {
+				System.out.println("Bad");
+				return;
+			}
+			pre = c;
+		}
+		System.out.println("Good");
 	}
 
 	class Scanner {

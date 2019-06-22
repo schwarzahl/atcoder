@@ -3,6 +3,8 @@ package problemD;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +22,33 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Task[] tasks = new Task[N];
+		for (int i = 0; i < N; i++) {
+			tasks[i] = new Task(sc.nextLong(), sc.nextLong());
+		}
+		Arrays.sort(tasks, new Comparator<Task>() {
+			@Override
+			public int compare(Task o1, Task o2) {
+				return (int)(o2.limit - o1.limit);
+			}
+		});
+		long time = Long.MAX_VALUE / 3;
+		for (int i = 0; i < N; i++) {
+			if (time > tasks[i].limit) {
+				time = tasks[i].limit;
+			}
+			time -= tasks[i].cost;
+		}
+		System.out.println(time >= 0 ? "Yes" : "No");
+	}
+
+	class Task {
+		long cost;
+		long limit;
+		public Task(long c, long l) {
+			cost = c;
+			limit = l;
+		}
 	}
 
 	class Scanner {
