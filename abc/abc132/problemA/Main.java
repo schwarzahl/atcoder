@@ -19,9 +19,18 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		int[] ans = new int[26];
+		for (char asc : S.toCharArray()) {
+			ans[asc - 'A']++;
+		}
+		for (int num : ans) {
+			if (num != 0 && num != 2) {
+				System.out.println("No");
+				return;
+			}
+		}
+		System.out.println("Yes");
 	}
 
 	class Scanner {

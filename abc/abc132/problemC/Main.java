@@ -3,6 +3,7 @@ package problemC;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +21,12 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[] d = new int[N];
+		for (int i = 0; i < N; i++) {
+			d[i] = sc.nextInt();
+		}
+		Arrays.sort(d);
+		System.out.println(d[N/2]-d[N/2-1]);
 	}
 
 	class Scanner {
