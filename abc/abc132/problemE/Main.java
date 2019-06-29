@@ -2,12 +2,14 @@ package problemE;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -20,8 +22,57 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		for (int i = 1; i <= M; i++) {
+			int u = sc.nextInt();
+			int v = sc.nextInt();
+			if (!map.containsKey(u)) {
+				map.put(u, new HashSet<>());
+			}
+			map.get(u).add(v);
+		}
+		int S = sc.nextInt();
+		int T = sc.nextInt();
+		Memo[] memos = new Memo[N + 1];
+		for (int i = 0; i <= N; i++) {
+			memos[i] = new Memo();
+		}
+		memos[S].set(0L);
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.add(S);
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			for (int i = 0; i < 3; i++) {
+				Long step = memos[current].get(i);
+				if (step != null && map.containsKey(current)) {
+					for (int next : map.get(current)) {
+						if (memos[next].set(step + 1L)) {
+							queue.add(next);
+						}
+					}
+				}
+			}
+		}
+		System.out.println(memos[T].num[0] != null ? memos[T].num[0] / 3 : -1);
+	}
+
+	class Memo {
+		Long[] num = new Long[3];
+		public boolean set(long step) {
+			int mod = (int)(step % 3L);
+			if (num[mod] == null) {
+				num[mod] = step;
+				return true;
+			} else if (num[mod] > step) {
+				num[mod] = step;
+				return true;
+			}
+			return false;
+		}
+		public Long get(int index) {
+			return num[index];
+		}
 	}
 
 	class Scanner {
