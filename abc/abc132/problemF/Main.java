@@ -20,8 +20,34 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		long MOD = 1000000007L;
+		int border = (int)Math.round(Math.floor(Math.sqrt(N)));
+		long[] count = new long[border + 1];
+		for (int i = 1; i <= border; i++) {
+			count[i] = 1L;
+		}
+		long[] freq = new long[border + 1];
+		freq[1] = N - border;
+		for (int i = 2; i <= K; i++) {
+			long[] nextCount = new long[border + 1];
+			/*
+			for (int j = 1; j <= border; j++) {
+
+			}
+			for (int j = 1; j <= N; j++) {
+				for (int k = 1; k <= N / j; k++) {
+					next[k] = (next[k] + count[j]) % MOD;
+				}
+			}
+			count = next;
+			*/
+		}
+		long ans = 0L;
+		for (long current : count) {
+			ans = (ans + current) % MOD;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
