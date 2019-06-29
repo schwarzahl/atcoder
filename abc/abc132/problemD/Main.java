@@ -20,8 +20,12 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		long MOD = 1000000007L;
+		CombCalculator cc = new FactorialTableCombCalculator(N, MOD);
+		for (int i = 1; i <= K; i++) {
+			System.out.println(cc.comb(N - K + 1, i) * cc.comb(K - 1, i - 1) % MOD);
+		}
 	}
 
 	class Scanner {
