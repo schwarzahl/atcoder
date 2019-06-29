@@ -23,29 +23,42 @@ public class Main {
 		int K = sc.nextInt();
 		long MOD = 1000000007L;
 		int border = (int)Math.round(Math.floor(Math.sqrt(N)));
-		long[] count = new long[border + 1];
+		long[] weight = new long[border + 1];
+		long used = 0;
+		for (int i = 1; i <= border; i++) {
+			long current = N - N / (i + 1) - used;
+			used += current;
+			if (used > N - border) {
+				current -= used - (N - border);
+				used = N - border;
+			}
+			weight[i] = current;
+		}
+		long[] count = new long[border + 2];
 		for (int i = 1; i <= border; i++) {
 			count[i] = 1L;
 		}
-		long[] freq = new long[border + 1];
-		freq[1] = N - border;
+		long[] freq = new long[border + 2];
+		for (int i = 1; i <= border; i++) {
+			freq[i] = 1;
+		}
 		for (int i = 2; i <= K; i++) {
-			long[] nextCount = new long[border + 1];
-			/*
+			long[] nextCount = new long[border + 2];
+			long[] nextFreq = new long[border + 2];
 			for (int j = 1; j <= border; j++) {
-
+				nextFreq[j] = (nextFreq[j - 1] + count[j]) % MOD;
 			}
-			for (int j = 1; j <= N; j++) {
-				for (int k = 1; k <= N / j; k++) {
-					next[k] = (next[k] + count[j]) % MOD;
-				}
+			nextCount[border + 1] = nextFreq[border];
+			for (int j = border; j >= 1; j--) {
+				nextCount[j] = (nextCount[j + 1] + weight[j] * freq[j]) % MOD;
 			}
-			count = next;
-			*/
+			count = nextCount;
+			freq = nextFreq;
 		}
 		long ans = 0L;
-		for (long current : count) {
-			ans = (ans + current) % MOD;
+		for (int i = 1; i <= border; i++) {
+			ans = (ans + count[i]) % MOD;
+			ans = (ans + (freq[i] * weight[i]) % MOD) % MOD;
 		}
 		System.out.println(ans);
 	}
