@@ -20,8 +20,28 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int D = sc.nextInt();
+		int[][] X = new int[N][];
+		for (int i = 0; i < N; i++) {
+			X[i] = new int[D];
+			for (int j = 0; j < D; j++) {
+				X[i][j] = sc.nextInt();
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = i + 1; j < N; j++) {
+				int tmp = 0;
+				for (int d = 0; d < D; d++) {
+					tmp += (X[i][d] - X[j][d]) * (X[i][d] - X[j][d]);
+				}
+				long sq = Math.round(Math.floor(Math.sqrt(tmp)));
+				if (sq * sq == tmp) {
+					ans++;
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {

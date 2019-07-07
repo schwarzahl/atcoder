@@ -19,9 +19,26 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long LL = sc.nextLong();
+		long LR = sc.nextLong();
+		if (LL + 2018 <= LR) {
+			System.out.println(0);
+			return;
+		}
+		int L = (int)(LL % 2019);
+		int R = (int)(LR % 2019);
+		if (L >= R) {
+			R += 2019;
+		}
+		long min = 2019;
+		for (int i = L; i < R; i++) {
+			for (int j = i + 1; j <= R; j++) {
+				if (min > (i * j) % 2019) {
+					min = (i * j) % 2019;
+				}
+			}
+		}
+		System.out.println(min);
 	}
 
 	class Scanner {
