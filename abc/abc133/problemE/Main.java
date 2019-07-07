@@ -2,12 +2,14 @@ package problemE;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -20,8 +22,55 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		long MOD = 1000000007L;
+		long[] fact = new long[K];
+		fact[0] = 1;
+		if (K > 1) {
+			fact[1] = K - 2;
+		}
+		for (int i = 2; i < K; i++) {
+			fact[i] = (fact[i - 1] * (K - i - 1)) % MOD;
+		}
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		for (int i = 1; i < N; i++) {
+			int a = sc.nextInt();
+			int b = sc.nextInt();
+			if (!map.containsKey(a)) {
+				map.put(a, new HashSet<>());
+			}
+			if (!map.containsKey(b)) {
+				map.put(b, new HashSet<>());
+			}
+			map.get(a).add(b);
+			map.get(b).add(a);
+		}
+		if (map.get(1).size() - 1 >= K) {
+			System.out.println(0);
+			return;
+		}
+		long ans = (((K * (K - 1)) % MOD) * fact[map.get(1).size() - 1]) % MOD;
+		Queue<Integer> queue = new ArrayDeque<>();
+		queue.addAll(map.get(1));
+		Set<Integer> used = new HashSet<>();
+		used.add(1);
+		used.addAll(map.get(1));
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			for (int next : map.get(current)) {
+				if (!used.contains(next)) {
+					queue.add(next);
+					used.add(next);
+				}
+			}
+			if (map.get(current).size() - 1 >= 0) {
+				ans = (ans * fact[map.get(current).size() - 1]) % MOD;
+			} else {
+				System.out.println(0);
+				return;
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
