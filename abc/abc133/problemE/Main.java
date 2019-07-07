@@ -23,12 +23,30 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
 		int K = sc.nextInt();
+		if (N == 1) {
+			System.out.println(K);
+			return;
+		}
+		if (K == 1) {
+			if (N >= 2) {
+				System.out.println(0);
+			} else {
+				System.out.println(1);
+			}
+			return;
+		}
+		if (K == 2) {
+			if (N >= 3) {
+				System.out.println(0);
+			} else {
+				System.out.println(2);
+			}
+			return;
+		}
 		long MOD = 1000000007L;
 		long[] fact = new long[K];
 		fact[0] = 1;
-		if (K > 1) {
-			fact[1] = K - 2;
-		}
+		fact[1] = K - 2;
 		for (int i = 2; i < K; i++) {
 			fact[i] = (fact[i - 1] * (K - i - 1)) % MOD;
 		}
@@ -45,7 +63,7 @@ public class Main {
 			map.get(a).add(b);
 			map.get(b).add(a);
 		}
-		if (map.get(1).size() - 1 >= K) {
+		if (map.get(1).size() >= K) {
 			System.out.println(0);
 			return;
 		}
