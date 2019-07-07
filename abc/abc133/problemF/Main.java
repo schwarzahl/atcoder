@@ -2,12 +2,14 @@ package problemF;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -20,8 +22,78 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int Q = sc.nextInt();
+		int[] a = new int[N];
+		int[] b = new int[N];
+		int[] c = new int[N];
+		int[] d = new int[N];
+		Map<Integer, List<Edge>> map = new HashMap<>();
+		for (int i = 1; i < N; i++) {
+			a[i] = sc.nextInt();
+			b[i] = sc.nextInt();
+			c[i] = sc.nextInt();
+			d[i] = sc.nextInt();
+			if (!map.containsKey(a[i])) {
+				map.put(a[i], new ArrayList<>());
+			}
+			if (!map.containsKey(b[i])) {
+				map.put(b[i], new ArrayList<>());
+			}
+			map.get(a[i]).add(new Edge(b[i], c[i], d[i]));
+			map.get(b[i]).add(new Edge(a[i], c[i], d[i]));
+		}
+		int[] parent = new int[N + 1];
+		long[] totalDist = new long[N + 1];
+		long[][] cidColorToDist = new long[N + 1][];
+		long[][] cidColorToCount = new long[N + 1][];
+		for (int i = 1; i <= N; i++) {
+			cidColorToDist[i] = new long[N];
+			cidColorToCount[i] = new long[N];
+		}
+		Queue<Integer> queue = new ArrayDeque<>();
+		Set<Integer> used = new HashSet<>();
+		queue.add(1);
+		used.add(1);
+		while (!queue.isEmpty()) {
+			int current = queue.poll();
+			for (Edge e : map.get(current)) {
+				if (used.contains(e.to)) {
+					continue;
+				}
+				used.add(e.to);
+				queue.add(e.to);
+				parent[e.to] = current;
+				for (int i = 1; i < N; i++) {
+					cidColorToDist[e.to][i] = cidColorToDist[current][i];
+					cidColorToCount[e.to][i] = cidColorToCount[current][i];
+				}
+				cidColorToDist[e.to][e.color] += e.dist;
+				cidColorToCount[e.to][e.color] += 1;
+				totalDist[e.to] = totalDist[current];
+				totalDist[e.to] += e.dist;
+			}
+		}
+		for (int i = 1; i <= Q; i++) {
+			int x = sc.nextInt();
+			int y = sc.nextInt();
+			int u = sc.nextInt();
+			int v = sc.nextInt();
+			long ans = totalDist[u] + totalDist[v];
+			ans -= cidColorToDist[u][x] + cidColorToDist[v][x];
+			ans += (cidColorToCount[u][x] + cidColorToCount[v][x]) * y;
+			System.out.println(ans);
+		}
+	}
+
+	class Edge {
+		int to;
+		int color;
+		int dist;
+		public Edge(int to, int c, int d) {
+			this.to = to;
+			this.color = c;
+			this.dist = d;
+		}
 	}
 
 	class Scanner {
