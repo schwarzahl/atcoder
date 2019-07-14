@@ -62,7 +62,7 @@ public class Main {
 			for (long tmp : count.keySet()) {
 				keys[idx++] = tmp;
 			}
-			if ((keys[0] ^ keys[1]) == keys[2] && (count.get(keys[0]) == count.get(keys[1])) && (count.get(keys[2]) == count.get(keys[1]))) {
+			if (((keys[0] ^ keys[1]) == keys[2]) && ((count.get(keys[0]) == count.get(keys[1]))) && ((count.get(keys[2]) == count.get(keys[1])))) {
 				System.out.println("Yes");
 			} else {
 				System.out.println("No");
