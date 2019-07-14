@@ -20,26 +20,18 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		int[] A = new int[N];
-		Map<Integer, Integer> count = new HashMap<>();
+		long[] A = new long[N];
+		Map<Long, Integer> count = new HashMap<>();
 		for (int i = 0; i < N; i++) {
-			A[i] = sc.nextInt();
+			A[i] = sc.nextLong();
 			if (!count.containsKey(A[i])) {
 				count.put(A[i], 0);
 			}
 			count.put(A[i], count.get(A[i]) + 1);
 		}
-		if (N == 3) {
-			if ((A[0] ^ A[2]) == A[1]) {
-				System.out.println("Yes");
-			} else {
-				System.out.println("No");
-			}
-			return;
-		}
 		if (count.size() == 1) {
-			int key = 0;
-			for (int tmp : count.keySet()) {
+			long key = 0;
+			for (long tmp : count.keySet()) {
 				key = tmp;
 			}
 			if (key == 0) {
@@ -50,9 +42,9 @@ public class Main {
 			return;
 		}
 		if (count.size() == 2) {
-			int[] keys = new int[2];
+			long[] keys = new long[2];
 			int idx = 0;
-			for (int tmp : count.keySet()) {
+			for (long tmp : count.keySet()) {
 				keys[idx++] = tmp;
 			}
 			if (keys[0] == 0 && (count.get(keys[0]) * 2 == count.get(keys[1]))) {
@@ -65,9 +57,9 @@ public class Main {
 			return;
 		}
 		if (count.size() == 3) {
-			int[] keys = new int[3];
+			long[] keys = new long[3];
 			int idx = 0;
-			for (int tmp : count.keySet()) {
+			for (long tmp : count.keySet()) {
 				keys[idx++] = tmp;
 			}
 			if ((keys[0] ^ keys[1]) == keys[2] && (count.get(keys[0]) == count.get(keys[1])) && (count.get(keys[2]) == count.get(keys[1]))) {
