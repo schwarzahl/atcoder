@@ -20,8 +20,30 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
+		int M = sc.nextInt();
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		for (int i = 0; i < M; i++) {
+			int A = sc.nextInt();
+			int B = sc.nextInt();
+			join(map, A, B);
+		}
+		if (M % 2 == 1) {
+			System.out.println(-1);
+			return;
+		}
 		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+	}
+
+	private void join(Map<Integer, Set<Integer>> map, int a, int b) {
+		join_0(map, a, b);
+		join_0(map, b, a);
+	}
+
+	private void join_0(Map<Integer, Set<Integer>> map, int from, int to) {
+		if (!map.containsKey(from)) {
+			map.put(from, new HashSet<>());
+		}
+		map.get(from).add(to);
 	}
 
 	class Scanner {
