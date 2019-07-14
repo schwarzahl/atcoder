@@ -20,8 +20,32 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		if (isPow2(N)) {
+			System.out.println("No");
+			return;
+		}
+		System.out.println("Yes");
+		System.out.println("3 " + (N + 1));
+		for (int i = 3; i <= N; i += 2) {
+			System.out.println("1 " + (i - 1));
+			System.out.println(i + " " + (i - 1));
+			System.out.println("1 " + (N + i));
+			System.out.println((N + i - 1) + " " + (N + i));
+		}
+		if (N % 2 == 0) {
+			System.out.println((N + N - 1) + " " + (N * 2));
+			System.out.println((N ^ (N - 1) ^ 1) + " " + N);
+		}
+	}
+
+	private boolean isPow2(int a) {
+		while (a > 1) {
+			if (a % 2 == 1) {
+				return false;
+			}
+			a /= 2;
+		}
+		return true;
 	}
 
 	class Scanner {
