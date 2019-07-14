@@ -20,8 +20,64 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[] A = new int[N];
+		Map<Integer, Integer> count = new HashMap<>();
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextInt();
+			if (!count.containsKey(A[i])) {
+				count.put(A[i], 0);
+			}
+			count.put(A[i], count.get(A[i]) + 1);
+		}
+		if (N == 3) {
+			if ((A[0] ^ A[2]) == A[1]) {
+				System.out.println("Yes");
+			} else {
+				System.out.println("No");
+			}
+			return;
+		}
+		if (count.size() == 1) {
+			int key = 0;
+			for (int tmp : count.keySet()) {
+				key = tmp;
+			}
+			if (key == 0) {
+				System.out.println("Yes");
+			} else {
+				System.out.println("No");
+			}
+			return;
+		}
+		if (count.size() == 2) {
+			int[] keys = new int[2];
+			int idx = 0;
+			for (int tmp : count.keySet()) {
+				keys[idx++] = tmp;
+			}
+			if (keys[0] == 0 && (count.get(keys[0]) * 2 == count.get(keys[1]))) {
+				System.out.println("Yes");
+			} else if (keys[1] == 0 && (count.get(keys[1]) * 2 == count.get(keys[0]))) {
+				System.out.println("Yes");
+			} else {
+				System.out.println("No");
+			}
+			return;
+		}
+		if (count.size() == 3) {
+			int[] keys = new int[3];
+			int idx = 0;
+			for (int tmp : count.keySet()) {
+				keys[idx++] = tmp;
+			}
+			if ((keys[0] ^ keys[1]) == keys[2] && (count.get(keys[0]) == count.get(keys[1])) && (count.get(keys[2]) == count.get(keys[1]))) {
+				System.out.println("Yes");
+			} else {
+				System.out.println("No");
+			}
+			return;
+		}
+		System.out.println("No");
 	}
 
 	class Scanner {

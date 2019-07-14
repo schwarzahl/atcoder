@@ -1,4 +1,4 @@
-Main.javapackage problemB;
+package problemB;
 
 import java.io.IOException;
 import java.io.InputStream;
