@@ -19,9 +19,44 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int n = sc.nextInt();
+		int k = sc.nextInt();
+		int[] ret = foo(new int[0], n);
+		for (int i = 0; i < n * n; i++) {
+			System.out.println(i + ":" + ret[i]);
+		}
+	}
+
+	private int[] foo(int[] array, int n) {
+		int[] ret = new int[n * n];
+		if (array.length == n) {
+			int sum = 0;
+			for (int i = 0; i < array.length; i++) {
+				sum += Math.abs(array[i] - (i + 1));
+			}
+			ret[sum] = 1;
+			return ret;
+		}
+		int[] new_array = new int[array.length + 1];
+		for (int i = 0; i < array.length; i++) {
+			new_array[i] = array[i];
+		}
+		new_array[array.length] = array.length + 1;
+		{
+			int[] cur = foo(new_array, n);
+			for (int j = 0; j < n * n; j++) {
+				ret[j] += cur[j];
+			}
+		}
+		for (int i = array.length - 1; i >= 0; i--) {
+			new_array[i + 1] = new_array[i];
+			new_array[i] = array.length + 1;
+			int[] cur = foo(new_array, n);
+			for (int j = 0; j < n * n; j++) {
+				ret[j] += cur[j];
+			}
+		}
+		return ret;
 	}
 
 	class Scanner {
