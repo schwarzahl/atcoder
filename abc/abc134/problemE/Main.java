@@ -20,8 +20,30 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[] color = new int[N];
+		int ans = 0;
+		for (int i = 0; i < N; i++) {
+			int A = sc.nextInt();
+			int right = ans;
+			{
+				int left = -1;
+				while (left + 1 < right) {
+					int mid = (left + right) / 2;
+					if (color[mid] >= A) {
+						left = mid;
+					} else {
+						right = mid;
+					}
+				}
+			}
+			if (right == ans) {
+				color[ans] = A;
+				ans++;
+			} else {
+				color[right] = A;
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
