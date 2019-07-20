@@ -20,8 +20,29 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int max = 0;
+		int maxId = -1;
+		int second = 0;
+		int secondId = -1;
+		for (int i = 1; i <= N; i++) {
+			int tmp = sc.nextInt();
+			if (max < tmp) {
+				second = max;
+				secondId = maxId;
+				max = tmp;
+				maxId = i;
+			} else if (second < tmp) {
+				second = tmp;
+				secondId = i;
+			}
+		}
+		for (int i = 1; i <= N; i++) {
+			if (i == maxId) {
+				System.out.println(second);
+			} else {
+				System.out.println(max);
+			}
+		}
 	}
 
 	class Scanner {
