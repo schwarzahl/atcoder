@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +21,29 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long start = System.currentTimeMillis();
+		int[] a = new int[N + 1];
+		for (int i = 1; i <= N; i++) {
+			a[i] = sc.nextInt();
+		}
+		int[] ans = new int[N + 1];
+		List<String> list = new ArrayList<>();
+		for (int i = N; i >= 1; i--) {
+			int sum = 0;
+			for (int j = i; j <= N; j += i) {
+				sum += ans[j];
+			}
+			if (sum % 2 != a[i]) {
+				ans[i] = 1;
+				list.add("" + i);
+			}
+		}
+		System.out.println(list.size());
+		StringJoiner sj = new StringJoiner(" ");
+		for (String s : list) {
+			sj.add(s);
+		}
+		System.out.println(sj.toString());
 	}
 
 	class Scanner {
