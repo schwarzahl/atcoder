@@ -19,9 +19,126 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		int X = sc.nextInt();
+		int Y = sc.nextInt();
+		if (K % 2 == 0 && (X + Y) % 2 == 1) {
+			System.out.println(-1);
+			return;
+		}
+		List<Answer> ans = new ArrayList<>();
+		int x = 0;
+		int y = 0;
+		if (X == 0) {
+			if (Y != 0) {
+				while (Y >= y + 2 * K) {
+					y += K;
+					ans.add(new Answer(x, y));
+				}
+				while (Y <= y - 2 * K) {
+					y -= K;
+					ans.add(new Answer(x, y));
+				}
+				if (x != X || y != Y) {
+					if (K % 2 == 1 && ((Math.abs(X - x) + Math.abs(Y - y)) % 2 == 1)) {
+						if (y < Y) {
+							y += K;
+						} else {
+							y -= K;
+						}
+						ans.add(new Answer(x, y));
+					}
+				}
+				if (x != X || y != Y) {
+					int rest = (2 * K - Math.abs(Y - y)) / 2;
+					int tmp = K - rest;
+					if (y < Y) {
+						y += tmp;
+					} else {
+						y -= tmp;
+					}
+					x += rest;
+					ans.add(new Answer(x, y));
+					ans.add(new Answer(X, Y));
+				}
+			}
+		} else {
+			while (y < Y) {
+				if (y + K <= Y) {
+					y += K;
+					ans.add(new Answer(x, y));
+				} else {
+					if (x < X) {
+						x += Y - y;
+						y = Y;
+					} else {
+						x -= Y - y;
+						y = Y;
+					}
+					ans.add(new Answer(x, y));
+				}
+			}
+			while (Y < y) {
+				if (y - K >= Y) {
+					y -= K;
+					ans.add(new Answer(x, y));
+				} else {
+					if (x < X) {
+						x += y - Y;
+						y = Y;
+					} else {
+						x -= y - Y;
+						y = Y;
+					}
+					ans.add(new Answer(x, y));
+				}
+			}
+			if (X != 0) {
+				while (X >= x + 2 * K) {
+					x += K;
+					ans.add(new Answer(x, y));
+				}
+				while (X <= x - 2 * K) {
+					x -= K;
+					ans.add(new Answer(x, y));
+				}
+				if (x != X || y != Y) {
+					if (K % 2 == 1 && ((Math.abs(X - x) + Math.abs(Y - y)) % 2 == 1)) {
+						if (x < X) {
+							x += K;
+						} else {
+							x -= K;
+						}
+						ans.add(new Answer(x, y));
+					}
+				}
+				if (x != X || y != Y) {
+					int rest = (2 * K - Math.abs(X - x)) / 2;
+					int tmp = K - rest;
+					if (x < X) {
+						x += tmp;
+					} else {
+						x -= tmp;
+					}
+					y += rest;
+					ans.add(new Answer(x, y));
+					ans.add(new Answer(X, Y));
+				}
+			}
+		}
+		System.out.println(ans.size());
+		for (Answer current : ans) {
+			System.out.println(current.x + " " + current.y);
+		}
+	}
+
+	class Answer {
+		int x;
+		int y;
+		public Answer(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
 	}
 
 	class Scanner {
