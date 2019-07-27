@@ -20,8 +20,51 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long K = sc.nextLong();
+		int[] A = new int[N];
+		int[] count = new int[200001];
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextInt();
+			count[A[i]]++;
+		}
+		boolean[] used = new boolean[200001];
+		int realLength = 0;
+		for (int i = 0; i < N; i++) {
+			if (count[A[i]] % 2 == 0) {
+				int skip = i + 1;
+				while (A[skip] != A[i]) {
+					skip++;
+				}
+				i = skip;
+			} else {
+				if (!used[i]) {
+					realLength++;
+					used[i] = true;
+				}
+			}
+		}
+		K = realLength + 1;
+		System.out.println("K=" + K);
+		int[] order = new int[N + 1];
+		int L = 0;
+		for (int i = 0; i < K; i++) {
+			for (int idx = 0; idx < N; idx++) {
+				boolean dup = false;
+				for (int s_i = 0; s_i < L; s_i++) {
+					if (order[s_i] == A[idx]) {
+						L = s_i;
+						dup = true;
+					}
+				}
+				if (!dup) {
+					order[L] = A[idx];
+					L++;
+				}
+			}
+		}
+		for (int i = 0; i < L; i++) {
+			System.out.print(order[i] + " ");
+		}
 	}
 
 	class Scanner {

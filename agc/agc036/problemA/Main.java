@@ -19,9 +19,21 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long S = sc.nextLong();
+		long sqrt = Math.round(Math.floor(Math.sqrt(S)));
+		for (long x = sqrt; x <= sqrt + 100L; x++) {
+			for (long y = sqrt; y <= sqrt + 100L; y++) {
+				for (long x_0 = 0; x_0 <= 100L; x_0++) {
+					for (long y_0 = 0; y_0 <= 100L; y_0++) {
+						if (S == x * y - x_0 * y - x * y_0) {
+							System.out.println(x_0 + " " + y_0 + " " + x + " 0 0 " + y);
+							return;
+						}
+					}
+				}
+			}
+		}
+		System.out.println();
 	}
 
 	class Scanner {
