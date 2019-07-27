@@ -45,7 +45,7 @@ public class Main {
 				tmp = B[i];
 			}
 			ans += tmp;
-			A[i] -= tmp;
+			A[i + 1] -= tmp;
 			B[i] -= tmp;
 		}
 		System.out.println(ans);
