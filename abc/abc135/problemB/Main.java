@@ -20,8 +20,18 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int ans = 0;
+		for (int i = 1; i <= N; i++) {
+			int p = sc.nextInt();
+			if (p != i) {
+				ans++;
+			}
+		}
+		if (ans > 2) {
+			System.out.println("NO");
+		} else {
+			System.out.println("YES");
+		}
 	}
 
 	class Scanner {

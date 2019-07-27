@@ -19,9 +19,27 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		int N = S.length();
+		long MOD = 1000000007L;
+		long[][] dp = new long[N + 1][];
+		dp[0] = new long[13];
+		dp[0][0] = 1L;
+		int weight = 1;
+		for (int i = 1; i <= N; i++) {
+			dp[i] = new long[13];
+			char asc = S.charAt(N - i);
+			for (int num = 0; num <= 9; num++) {
+				if (asc == '?' || num == (asc - '0')) {
+					int plus = (weight * num) % 13;
+					for (int j = 0; j < 13; j++) {
+						dp[i][j] = (dp[i][j] + dp[i - 1][(j + 13 - plus) % 13]) % MOD;
+					}
+				}
+			}
+			weight = (weight * 10) % 13;
+		}
+		System.out.println(dp[N][5]);
 	}
 
 	class Scanner {
