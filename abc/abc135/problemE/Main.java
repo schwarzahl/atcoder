@@ -63,67 +63,86 @@ public class Main {
 				}
 			}
 		} else {
-			while (y < Y) {
-				if (y + K <= Y) {
-					y += K;
-					ans.add(new Answer(x, y));
+			// X != 0
+			while (Math.abs(X - x) + Math.abs(Y - y) >= 2 * K) {
+				int tmp = K;
+				if (y + tmp < Y) {
+					y += tmp;
+					tmp = 0;
+				} else if (y < Y) {
+					tmp -= Y - y;
+					y = Y;
+				}
+				if (y - tmp > Y) {
+					y -= tmp;
+					tmp = 0;
+				} else if (y > Y) {
+					tmp -= y - Y;
+					y = Y;
+				}
+				if (x < X) {
+					x += tmp;
 				} else {
-					if (x < X) {
-						x += Y - y;
-						y = Y;
-					} else {
-						x -= Y - y;
-						y = Y;
-					}
-					ans.add(new Answer(x, y));
+					x -= tmp;
 				}
+				ans.add(new Answer(x, y));
 			}
-			while (Y < y) {
-				if (y - K >= Y) {
-					y -= K;
-					ans.add(new Answer(x, y));
-				} else {
-					if (x < X) {
-						x += y - Y;
-						y = Y;
-					} else {
-						x -= y - Y;
+			// 距離は2K未満
+			if (x != X || y != Y) {
+				if (K % 2 == 1 && ((Math.abs(X - x) + Math.abs(Y - y)) % 2 == 1)) {
+					int tmp = K;
+					if (y + tmp < Y) {
+						y += tmp;
+						tmp = 0;
+					} else if (y < Y) {
+						tmp -= Y - y;
 						y = Y;
 					}
-					ans.add(new Answer(x, y));
-				}
-			}
-			if (X != 0) {
-				while (X >= x + 2 * K) {
-					x += K;
-					ans.add(new Answer(x, y));
-				}
-				while (X <= x - 2 * K) {
-					x -= K;
-					ans.add(new Answer(x, y));
-				}
-				if (x != X || y != Y) {
-					if (K % 2 == 1 && ((Math.abs(X - x) + Math.abs(Y - y)) % 2 == 1)) {
-						if (x < X) {
-							x += K;
-						} else {
-							x -= K;
-						}
-						ans.add(new Answer(x, y));
+					if (y - tmp > Y) {
+						y -= tmp;
+						tmp = 0;
+					} else if (y > Y) {
+						tmp -= y - Y;
+						y = Y;
 					}
-				}
-				if (x != X || y != Y) {
-					int rest = (2 * K - Math.abs(X - x)) / 2;
-					int tmp = K - rest;
 					if (x < X) {
 						x += tmp;
 					} else {
 						x -= tmp;
 					}
-					y += rest;
 					ans.add(new Answer(x, y));
-					ans.add(new Answer(X, Y));
 				}
+			}
+			// 偶奇は一致 距離は2K未満
+			if (x != X || y != Y) {
+				int rest = (2 * K - Math.abs(Y - y) - Math.abs(X - x)) / 2;
+				int tmp = K - rest;
+				if (y + tmp < Y) {
+					y += tmp;
+					tmp = 0;
+				} else if (y < Y) {
+					tmp -= Y - y;
+					y = Y;
+				}
+				if (y - tmp > Y) {
+					y -= tmp;
+					tmp = 0;
+				} else if (y > Y) {
+					tmp -= y - Y;
+					y = Y;
+				}
+				if (x < X) {
+					x += tmp;
+				} else {
+					x -= tmp;
+				}
+				if (y < Y) {
+					y -= rest;
+				} else {
+					y += rest;
+				}
+				ans.add(new Answer(x, y));
+				ans.add(new Answer(X, Y));
 			}
 		}
 		System.out.println(ans.size());
