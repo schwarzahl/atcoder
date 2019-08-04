@@ -20,8 +20,24 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int ans = 0;
+		if (N > 9) {
+			ans += 9;
+		}
+		if (N > 999) {
+			ans += 999 - 100 + 1;
+		}
+		if (N > 99999) {
+			ans += 99999 - 10000 + 1;
+		}
+		if (N < 10) {
+			ans += N;
+		} else if (N < 1000 && N > 99) {
+			ans += N - 99;
+		} else if (N < 100000 & N > 9999) {
+			ans += N - 9999;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {

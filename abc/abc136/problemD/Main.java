@@ -3,12 +3,14 @@ package problemD;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -19,9 +21,55 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		int L = S.length();
+		int[] ans = new int[L];
+		Arrays.fill(ans, 1);
+		{
+			for (int i = 0; i < L; i += 2) {
+				if (S.charAt(i) == 'R') {
+					if (S.charAt(i + 1) == 'R') {
+						ans[i + 2] += ans[i];
+						ans[i] = 0;
+					}
+				}
+			}
+		}
+		{
+			for (int i = L - 1 - (L % 2); i >= 0; i -= 2) {
+				if (S.charAt(i) == 'L') {
+					if (S.charAt(i - 1) == 'L') {
+						ans[i - 2] += ans[i];
+						ans[i] = 0;
+					}
+				}
+			}
+		}
+		{
+			for (int i = 1; i < S.length(); i += 2) {
+				if (S.charAt(i) == 'R') {
+					if (S.charAt(i + 1) == 'R') {
+						ans[i + 2] += ans[i];
+						ans[i] = 0;
+					}
+				}
+			}
+		}
+		{
+			for (int i = L - 2 + (L % 2); i >= 0; i -= 2) {
+				if (S.charAt(i) == 'L') {
+					if (S.charAt(i - 1) == 'L') {
+						ans[i - 2] += ans[i];
+						ans[i] = 0;
+					}
+				}
+			}
+		}
+		StringJoiner sj = new StringJoiner(" ");
+		for (int current : ans) {
+			sj.add("" + current);
+		}
+		System.out.println(sj.toString());
 	}
 
 	class Scanner {
