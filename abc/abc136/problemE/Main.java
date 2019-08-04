@@ -3,6 +3,7 @@ package problemE;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +21,41 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long K = sc.nextLong();
+		long[] A = new long[N];
+		long sum = 0L;
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextLong();
+			sum += A[i];
+		}
+		Arrays.sort(A);
+
+		if (sum < K) {
+			System.out.println(sum);
+			return;
+		}
+		for (long ans = sum; ans > 0; ans--) {
+			long[] B = new long[N];
+			for (int i = 0; i < N; i++) {
+				B[i] = A[i] % ans;
+			}
+			Arrays.sort(B);
+			long[] minusSum = new long[N + 1];
+			long[] plusSum = new long[N + 1];
+			for (int i = 1; i <= N; i++) {
+				minusSum[i] = minusSum[i - 1] + B[i - 1];
+			}
+			for (int i = N - 1; i >= 0; i--) {
+				plusSum[i] = plusSum[i + 1] + (ans - B[i]);
+			}
+			for (int i = 1; i < N; i++) {
+				if (minusSum[i] == plusSum[i] && minusSum[i] <= K) {
+					System.out.println(ans);
+					return;
+				}
+			}
+		}
+		System.out.println(1);
 	}
 
 	class Scanner {

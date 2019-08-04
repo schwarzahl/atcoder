@@ -3,6 +3,7 @@ package problemF;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +21,58 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
+		IdValue[] xs = new IdValue[N];
+		IdValue[] ys = new IdValue[N];
+		for (int i = 1; i <= N; i++) {
+			long x = sc.nextLong();
+			long y = sc.nextLong();
+			xs[i - 1] = new IdValue(i, x);
+			ys[i - 1] = new IdValue(i, y);
+		}
+		Arrays.sort(xs, (o1, o2) -> {
+			if (o1.value - o2.value > 0) {
+				return 1;
+			}
+			if (o1.value - o2.value < 0) {
+				return -1;
+			}
+			return 0;
+		});
+		Arrays.sort(ys, (o1, o2) -> {
+			if (o1.value - o2.value > 0) {
+				return 1;
+			}
+			if (o1.value - o2.value < 0) {
+				return -1;
+			}
+			return 0;
+		});
+		int[] id2xrank = new int[N + 1];
+		int[] id2yrank = new int[N + 1];
+		for (int i = 0; i < N; i++) {
+			id2xrank[xs[i].id] = i;
+			id2yrank[ys[i].id] = i;
+		}
+
+		long ans = 0L;
+		long MOD = 998244353L;
+		for (int id = 1; id <= N; id++) {
+			long less_x = id2xrank[id];
+			long more_x = N - id2xrank[id] - 1;
+			long less_y = id2xrank[id];
+			long more_y = N - id2xrank[id] - 1;
+		}
 		System.out.println(N);
 		System.err.println(Main.class.getPackage().getName());
+	}
+
+	class IdValue {
+		int id;
+		long value;
+		public IdValue(int id, long value) {
+			this.id = id;
+			this.value = value;
+		}
 	}
 
 	class Scanner {
