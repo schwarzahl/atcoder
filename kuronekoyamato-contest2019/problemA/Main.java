@@ -132,7 +132,7 @@ public class Main {
 				if (!graph.containsKey(prev)) {
 					graph.put(prev, new HashMap<>());
 				}
-				graph.get(prev).put(road_id + "SEout", current);
+				graph.get(prev).put(road_id + "ESout", current);
 			}
 		}
 
