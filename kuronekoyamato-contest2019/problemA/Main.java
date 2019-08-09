@@ -3,11 +3,13 @@ package problemA;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -19,9 +21,218 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int road_num = sc.nextInt();
+		int cross_num = sc.nextInt();
+		int park_num = sc.nextInt();
+		int deliver_num = sc.nextInt();
+		int query_num = sc.nextInt();
+
+		Map<String, Map<String, Long>> graph = new HashMap<>();
+
+		// road_input
+		Map<String, Road> id2road = new HashMap<>();
+		for (int i = 0; i < road_num; i++) {
+			String road_id = sc.next();
+			long road_length = sc.nextLong();
+			int road_flug = sc.nextInt();
+			Road road = new Road();
+			road.length = road_length;
+			id2road.put(road_id, road);
+
+			graph.put(road_id + "SEin", new HashMap<>());
+			graph.put(road_id + "SEout", new HashMap<>());
+			graph.put(road_id + "ESin", new HashMap<>());
+			graph.put(road_id + "ESout", new HashMap<>());
+
+			graph.get(road_id + "SEin").put(road_id + "SEout", road_length);
+			if (road_flug == 0) {
+				graph.get(road_id + "ESin").put(road_id + "ESout", road_length);
+			}
+		}
+
+		// cross_input
+		for (int i = 0; i < cross_num; i++) {
+			String cross_id = sc.next();
+			String road_in = sc.next();
+			String road_out = sc.next();
+
+			graph.get(road_in + "out").put(road_out + "in", 0L);
+			if (road_in.endsWith("SE")) {
+				id2road.get(road_in.substring(0, road_in.length() - 2)).cross_E = cross_id;
+			} else {
+				// ES
+				id2road.get(road_in.substring(0, road_in.length() - 2)).cross_S = cross_id;
+			}
+			if (road_out.endsWith("SE")) {
+				id2road.get(road_out.substring(0, road_out.length() - 2)).cross_S = cross_id;
+			} else {
+				// ES
+				id2road.get(road_out.substring(0, road_out.length() - 2)).cross_E = cross_id;
+			}
+		}
+
+		// park_input
+		Map<String, List<String>> road2lengthPoint = new HashMap<>();
+		for (int i = 0; i < park_num; i++) {
+			String park_id = sc.next();
+			String road_id = sc.next();
+			long stop_length = sc.nextLong();
+			if (!road2lengthPoint.containsKey(road_id)) {
+				road2lengthPoint.put(road_id, new ArrayList<>());
+			}
+			road2lengthPoint.get(road_id).add(String.format("%05d", stop_length) + park_id);
+		}
+
+		for (String road_id : road2lengthPoint.keySet()) {
+			List<String> list = road2lengthPoint.get(road_id);
+			list.sort(Comparator.naturalOrder());
+			{
+				long current = 0L;
+				String prev = road_id + "SEin";
+				long goal = graph.get(prev).get(road_id + "SEout");
+				graph.get(prev).remove(road_id + "SEout");
+				for (String lengthPoint : list) {
+					long length = Long.valueOf(lengthPoint.substring(0, 5));
+					String point = lengthPoint.substring(5);
+					if (point.startsWith("P") && point.endsWith("ES")) {
+						// 駐車場で向きを変えることはできない
+						continue;
+					}
+					if (!graph.containsKey(prev)) {
+						graph.put(prev, new HashMap<>());
+					}
+					graph.get(prev).put(point, length - current);
+					current = length;
+					prev = point;
+				}
+				if (!graph.containsKey(prev)) {
+					graph.put(prev, new HashMap<>());
+				}
+				graph.get(prev).put(road_id + "SEout", goal - current);
+			}
+			if (!graph.get(road_id + "ESin").isEmpty()) {
+				list.sort(Comparator.reverseOrder());
+				String prev = road_id + "ESin";
+				long current = graph.get(prev).get(road_id + "ESout");
+				graph.get(prev).remove(road_id + "ESout");
+				for (String lengthPoint : list) {
+					long length = Long.valueOf(lengthPoint.substring(0, 5));
+					String point = lengthPoint.substring(5);
+					if (point.startsWith("P") && point.endsWith("SE")) {
+						// 駐車場で向きを変えることはできない
+						continue;
+					}
+					if (!graph.containsKey(prev)) {
+						graph.put(prev, new HashMap<>());
+					}
+					graph.get(prev).put(point, current - length);
+					current = length;
+					prev = point;
+				}
+				if (!graph.containsKey(prev)) {
+					graph.put(prev, new HashMap<>());
+				}
+				graph.get(prev).put(road_id + "SEout", current);
+			}
+		}
+
+		// deliver_input
+		for (int i = 0; i < deliver_num; i++) {
+			String deliver_id = sc.next();
+			String road_id = sc.next();
+			long u_length = sc.nextLong();
+			if (!road2lengthPoint.containsKey(road_id)) {
+				road2lengthPoint.put(road_id, new ArrayList<>());
+			}
+			road2lengthPoint.get(road_id).add(String.format("%05d", u_length) + deliver_id);
+		}
+
+		Map<String, Map<String, Long>> graphD = new HashMap<>();
+		{
+			for (String road_id : id2road.keySet()) {
+				Road road = id2road.get(road_id);
+				String prev = road.cross_S;
+				long current = 0L;
+				List<String> list = road2lengthPoint.get(road_id);
+				list.sort(Comparator.naturalOrder());
+				for (String lengthPoint : list) {
+					long length = Long.valueOf(lengthPoint.substring(0, 5));
+					String point = lengthPoint.substring(5);
+					if (!graphD.containsKey(prev)) {
+						graphD.put(prev, new HashMap<>());
+					}
+					graphD.get(prev).put(point, length - current);
+					if (!graphD.containsKey(point)) {
+						graphD.put(point, new HashMap<>());
+					}
+					graphD.get(point).put(prev, length - current);
+					current = length;
+					prev = point;
+				}
+				if (!graphD.containsKey(prev)) {
+					graphD.put(prev, new HashMap<>());
+				}
+				graphD.get(prev).put(road.cross_E, road.length - current);
+				if (!graphD.containsKey(road.cross_E)) {
+					graphD.put(road.cross_E, new HashMap<>());
+				}
+				graphD.get(road.cross_E).put(prev, road.length - current);
+			}
+		}
+
+		// query_input
+		for (int i = 0; i < query_num; i++) {
+			int query_type = sc.nextInt();
+			String x_id = sc.next();
+			String y_id = sc.next();
+
+			System.out.println(search(x_id, y_id, query_type == 0 ? graph : graphD));
+		}
+	}
+
+	class Road {
+		String cross_S;
+		String cross_E;
+		long length;
+	}
+
+	class DistPoint {
+		long dist;
+		String point;
+		public DistPoint(long dist, String point) {
+			this.dist = dist;
+			this.point = point;
+		}
+	}
+
+	long search(String from, String to, Map<String, Map<String, Long>> map) {
+		Map<String, Long> point2minMap = new HashMap<>();
+		PriorityQueue<DistPoint> queue = new PriorityQueue<>(
+				(p1, p2) -> {
+					if (p1.dist - p2.dist > 0) {
+						return 1;
+					}
+					if (p1.dist - p2.dist < 0) {
+						return -1;
+					}
+					return 0;
+				}
+		);
+		queue.add(new DistPoint(0L, from));
+		while (!queue.isEmpty()) {
+			DistPoint dp = queue.poll();
+			if (point2minMap.containsKey(dp.point) && point2minMap.get(dp.point) <= dp.dist) {
+				continue;
+			}
+			point2minMap.put(dp.point, dp.dist);
+			for (String next : map.get(dp.point).keySet()) {
+				long sum = dp.dist + map.get(dp.point).get(next);
+				if (!point2minMap.containsKey(next) || point2minMap.get(next) > sum) {
+					queue.add(new DistPoint(sum, next));
+				}
+			}
+		}
+		return point2minMap.containsKey(to) ? point2minMap.get(to) : -1L;
 	}
 
 	class Scanner {
