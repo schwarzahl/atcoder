@@ -3,6 +3,7 @@ package problemC;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +21,23 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Map<String, Integer> map = new HashMap<>();
+		for (int i = 0; i < N; i++) {
+			char[] arr = sc.next().toCharArray();
+			Arrays.sort(arr);
+			String s = String.valueOf(arr);
+			if (!map.containsKey(s)) {
+				map.put(s, 0);
+			}
+			map.put(s, map.get(s) + 1);
+		}
+		long ans = 0L;
+		for (int num : map.values()) {
+			if (num > 1) {
+				ans += 1L * num * (num - 1) / 2L;
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {

@@ -19,9 +19,9 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int A = sc.nextInt();
+		int B = sc.nextInt();
+		System.out.println(Math.max(Math.max(A + B, A - B), A * B));
 	}
 
 	class Scanner {

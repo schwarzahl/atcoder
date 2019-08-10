@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -20,8 +21,55 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		PriorityQueue<Baito> queue = new PriorityQueue<>(
+				(b1, b2) -> {
+					if (b1.A == b2.A) {
+						if (b1.B == b2.B) {
+							return 0;
+						}
+						if (b1.B < b2.B) {
+							return 1;
+						} else {
+							return -1;
+						}
+					}
+					if (b1.A < b2.A) {
+						return -1;
+					} else {
+						return 1;
+					}
+				}
+		);
+		for (int i = 1; i <= N; i++) {
+			int A = sc.nextInt();
+			int B = sc.nextInt();
+			queue.add(new Baito(A, B));
+		}
+		PriorityQueue<Baito> hand = new PriorityQueue<>(
+				(b1, b2) -> {
+					return b2.B - b1.B;
+				}
+		);
+		long ans = 0L;
+		for (int now = 1; now <= M; now++) {
+			while (!queue.isEmpty() && queue.peek().A <= now) {
+				hand.add(queue.poll());
+			}
+			if (!hand.isEmpty()) {
+				ans += hand.poll().B;
+			}
+		}
+		System.out.println(ans);
+	}
+
+	class Baito {
+		int A;
+		int B;
+		public Baito(int A, int B) {
+			this.A = A;
+			this.B = B;
+		}
 	}
 
 	class Scanner {
