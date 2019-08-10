@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -19,9 +20,11 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		System.out.println("2500 5000 10");
+		Random rand = new Random();
+		for (int i = 0; i < 5000; i++) {
+			System.out.println(((i % 2500) + 1) + " " + (rand.nextInt(2500) + 1) + " " + rand.nextInt(12));
+		}
 	}
 
 	class Scanner {

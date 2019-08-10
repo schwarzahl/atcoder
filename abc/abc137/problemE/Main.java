@@ -3,6 +3,7 @@ package problemE;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +21,43 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int P = sc.nextInt();
+		Map<Integer, Map<Integer, Integer>> map = new HashMap<>();
+		for (int i = 0; i < M; i++) {
+			int A = sc.nextInt();
+			int B = sc.nextInt();
+			int C = sc.nextInt();
+			if (!map.containsKey(A)) {
+				map.put(A, new HashMap<>());
+			}
+			if (!map.get(A).containsKey(B) || map.get(A).get(B) < C - P) {
+				map.get(A).put(B, C - P);
+			}
+		}
+		long[] max = new long[N + 1];
+		Arrays.fill(max, Long.MIN_VALUE);
+		int[] path = new int[N + 1];
+		path[1] = 1;
+		search(map, 1, 0L, path, N, max);
+		System.out.println(max[N] > Long.MAX_VALUE / 3 ? -1 : (max[N] < 0 ? 0 : max[N]));
+	}
+
+	private void search(Map<Integer, Map<Integer, Integer>> map, int current, long coin, int[] path, int N, long[] max) {
+		if (max[current] >= coin) {
+			path[current]--;
+			return;
+		}
+		max[current] = path[current] > 0 ? Long.MAX_VALUE / 2 : coin;
+		if (!map.containsKey(current)) {
+			path[current]--;
+			return;
+		}
+		for (int next : map.get(current).keySet()) {
+			path[current]++;
+			search(map, next, coin + map.get(current).get(next), path, N, max);
+		}
+		path[current]--;
 	}
 
 	class Scanner {
