@@ -20,8 +20,30 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long K = sc.nextLong();
+		int[] A = new int[N];
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextInt();
+		}
+		long[] left = new long[N];
+		long[] right = new long[N];
+		for (int base = 0; base < N; base++) {
+			for (int compare = 0; compare < N; compare++) {
+				if (base < compare && A[base] < A[compare]) {
+					right[base]++;
+				}
+				if (base > compare && A[base] < A[compare]) {
+					left[base]++;
+				}
+			}
+		}
+		long ans = 0L;
+		long MOD = 1000000007L;
+		for (int i = N - 1; i >= 0; i--) {
+			ans = (ans + left[i] * (1L + K) * K / 2L) % MOD;
+			ans = (ans + right[i] * (-1L + K) * K / 2L) % MOD;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
