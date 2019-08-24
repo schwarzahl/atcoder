@@ -19,9 +19,17 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int D = sc.nextInt();
+		int ans = 0;
+		for (int m = 1; m <= M; m++) {
+			for (int d = 20; d <= D; d++) {
+				if ((d % 10 >= 2) && m == (d / 10) * (d % 10)) {
+					ans++;
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
