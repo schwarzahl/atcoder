@@ -18,7 +18,51 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
+		int B_1 = sc.nextInt();
+		int B_2 = sc.nextInt();
+		int B_3 = sc.nextInt();
+		int[][] l = new int[N][];
+		for (int i = 0; i < N; i++) {
+			l[i] = new int[N];
+			for (int j = 0; j < N; j++) {
+				l[i][j] = sc.nextInt();
+			}
+		}
+		int[][] r = new int[N][];
+		for (int i = 0; i < N; i++) {
+			r[i] = new int[N];
+			for (int j = 0; j < N; j++) {
+				r[i][j] = sc.nextInt();
+			}
+		}
+		int[] c_sum = new int[N];
+		int[] c_up_index = new int[N];
+		int[][] a = new int[N][];
+		for (int i = 0; i < N; i++) {
+			a[i] = new int[N];
+			int r_sum = 0;
+			int target = B_3 - c_sum[0];
+			if (l[i][0] <= target && target <= r[i][0]) {
+				a[i][0] = target;
+			} else {
+				target = B_2 - c_sum[0];
+				if (l[i][0] <= target && target <= r[i][0]) {
+					a[i][0] = target;
+				} else {
+					target = B_1 - c_sum[0];
+					if (l[i][0] <= target && target <= r[i][0]) {
+						a[i][0] = target;
+					} else {
+						a[i][0] = r[i][0];
+					}
+				}
+			}
+			System.out.print(r[i][0]);
+			for (int j = 1; j < N; j++) {
+				System.out.print(" " + r[i][j]);
+			}
+			System.out.println();
+		}
 	}
 
 	class Scanner {
