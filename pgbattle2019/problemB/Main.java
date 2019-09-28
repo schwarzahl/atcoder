@@ -20,8 +20,43 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		int nextL = 1;
+		int nextR = N;
+		boolean[] isExist = new boolean[N + 1];
+		{
+			int i = 0;
+			for (; i < N; i++) {
+				char input = S.charAt(i);
+				if (input == 'L') {
+					System.out.println(nextL);
+					isExist[nextL] = true;
+					nextL += 2;
+				} else {
+					System.out.println(nextR);
+					isExist[nextR] = true;
+					nextR -= 2;
+				}
+				if (nextL > nextR) {
+					break;
+				}
+			}
+			i++;
+			nextL = 1;
+			nextR = N;
+			for (; i < N; i++) {
+				char input = S.charAt(i);
+				if (input == 'L') {
+					for (; isExist[nextL]; nextL++);
+					System.out.println(nextL);
+					isExist[nextL] = true;
+				} else {
+					for (; isExist[nextR]; nextR--);
+					System.out.println(nextR);
+					isExist[nextR] = true;
+				}
+			}
+		}
 	}
 
 	class Scanner {

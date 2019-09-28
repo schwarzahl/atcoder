@@ -20,8 +20,27 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[] X = new int[N];
+		int[] Y = new int[N];
+		int[] D = new int[N];
+		for (int i = 0; i < N; i++) {
+			X[i] = sc.nextInt();
+			Y[i] = sc.nextInt();
+			D[i] = sc.nextInt();
+		}
+		BinaryIndexedTree2D bit = new BinaryIndexedTree2D(6003, 6003);
+		for (int i = 0; i < N; i++) {
+			bit.add(X[i] + Y[i] + 1, 3001 - X[i] + Y[i], 1);
+		}
+		for (int i = 0; i < N; i++) {
+			int newX = X[i] + Y[i] + 1;
+			int newY = 3001 - X[i] + Y[i];
+			long ans = bit.getSum(Math.min(newX + D[i], 6002), Math.min(newY + D[i], 6002));
+			ans += bit.getSum(Math.max(newX - D[i] - 1, 0), Math.max(newY - D[i] - 1, 0));
+			ans -= bit.getSum(Math.max(newX - D[i] - 1, 0), Math.min(newY + D[i], 6002));
+			ans -= bit.getSum(Math.min(newX + D[i], 6002), Math.max(newY - D[i] - 1, 0));
+			System.out.println(ans);
+		}
 	}
 
 	class Scanner {
