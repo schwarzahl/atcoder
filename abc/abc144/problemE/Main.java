@@ -37,7 +37,7 @@ public class Main {
 		if (sumA <= K) {
 			System.out.println(0);
 		} else {
-			long ok = 200000000000L;
+			long ok = 2000000000000L;
 			long ng = 0L;
 			while (ng + 1 < ok) {
 				long mid = (ok + ng) / 2L;
