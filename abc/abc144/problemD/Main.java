@@ -19,9 +19,21 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int a = sc.nextInt();
+		int b = sc.nextInt();
+		int x = sc.nextInt();
+		boolean inv = false;
+		if (a * a * b < x * 2) {
+			x = a * a * b - x;
+			inv = true;
+		}
+		double ans;
+		if (inv) {
+			ans = Math.atan2(1.0 * x * 2 / a / a, 1.0 * a) * 180.0 / Math.PI;
+		} else {
+			ans = Math.atan2(1.0 * b, 1.0 * x * 2 / a / b) * 180.0 / Math.PI;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {

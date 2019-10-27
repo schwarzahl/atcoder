@@ -20,8 +20,13 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		for (int A = 1; A <= 9; A++) {
+			if (N % A == 0 && N / A <= 9) {
+				System.out.println("Yes");
+				return;
+			}
+		}
+		System.out.println("No");
 	}
 
 	class Scanner {
