@@ -21,7 +21,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		long N = sc.nextLong();
 		long min = N + 1;
-		for (long i = 1; i <= 100000; i++) {
+		for (long i = 1; i <= 1000000; i++) {
 			if (N % i == 0) {
 				long tmp = (i - 1) + (N / i - 1);
 				if (min > tmp) {
