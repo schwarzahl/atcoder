@@ -55,6 +55,60 @@ public class Main {
 			order[by][bx] = 'B';
 		}
 
+		int[][][] movableScore = new int[N][N][4];
+		for (int y = 0; y < N; y++) {
+			{
+				int fx = -1;
+				for (int ix = 0; ix <= 2 * N; ix++) {
+					int x = ix % N;
+					if (order[y][x] == 'B') {
+						fx = x;
+					}
+					if (fx != -1) {
+						movableScore[y][x][c2dir['L']] = fx;
+					}
+				}
+			}
+			{
+				int fx = -1;
+				for (int ix = 2 * N; ix >= 0; ix--) {
+					int x = ix % N;
+					if (order[y][x] == 'B') {
+						fx = x;
+					}
+					if (fx != -1) {
+						movableScore[y][x][c2dir['R']] = fx;
+					}
+				}
+			}
+		}
+		for (int x = 0; x < N; x++) {
+			{
+				int fy = -1;
+				for (int iy = 0; iy <= 2 * N; iy++) {
+					int y = iy % N;
+					if (order[y][x] == 'B') {
+						fy = y;
+					}
+					if (fy != -1) {
+						movableScore[y][x][c2dir['U']] = fy;
+					}
+				}
+			}
+			{
+				int fy = -1;
+				for (int iy = 2 * N; iy >= 0; iy--) {
+					int y = iy % N;
+					if (order[y][x] == 'B') {
+						fy = y;
+					}
+					if (fy != -1) {
+						movableScore[y][x][c2dir['D']] = fy;
+					}
+				}
+			}
+		}
+
 		int prev_score = 0;
 		int try_num = 0;
 		int rollback_num = 0;
