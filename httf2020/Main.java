@@ -10,6 +10,11 @@ import java.util.Set;
 import java.util.stream.IntStream;
 
 public class Main {
+	int[] dir_y = {-1, 0, 1, 0};
+	int[] dir_x = {0, 1, 0, -1};
+	char[] dir_c = {'U', 'R', 'D', 'L'};
+	int[] c2dir = new int[256];
+
 	public static void main(String[] args) {
 		Main main = new Main();
 		main.solve();
@@ -17,7 +22,12 @@ public class Main {
 
 	private void solve() {
 		long st = System.currentTimeMillis();
-		long LIMIT_TIME = 2890L;
+		long LIMIT_TIME = 2800L;
+
+		c2dir['U'] = 0;
+		c2dir['R'] = 1;
+		c2dir['D'] = 2;
+		c2dir['L'] = 3;
 
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
@@ -39,41 +49,18 @@ public class Main {
 				order[y][x] = 'N';
 			}
 		}
-		boolean[][] isBlock = new boolean[N][N];
 		for (int i = 0; i < B; i++) {
 			int by = sc.nextInt();
 			int bx = sc.nextInt();
-			isBlock[by][bx] = true;
 			order[by][bx] = 'B';
 		}
-		order[gy][gx] = 'G';
 
-		int[] dir_y = {-1, 0, 1, 0};
-		int[] dir_x = {0, 1, 0, -1};
-		char[] dir_c = {'U', 'R', 'D', 'L'};
-		int[] c2dir = new int[256];
-		c2dir['U'] = 0;
-		c2dir['R'] = 1;
-		c2dir['D'] = 2;
-		c2dir['L'] = 3;
 		int prev_score = 0;
 		int try_num = 0;
 		int rollback_num = 0;
 		Random random = new Random();
 
-		{
-			for (int dir = 0; dir < 4; dir++) {
-				int ty = (gy + dir_y[dir] + N) % N;
-				int tx = (gx + dir_x[dir] + N) % N;
-				while (order[ty][tx] == 'N') {
-					char tc = dir_c[(dir + 2) % 4];
-					order[ty][tx] = tc;
-
-					ty = (ty + dir_y[dir] + N) % N;
-					tx = (tx + dir_x[dir] + N) % N;
-				}
-			}
-		}
+		search(gy, gx, order, N, 'G');
 		while (System.currentTimeMillis() - st < LIMIT_TIME) {
 			try_num++;
 		}
@@ -90,9 +77,25 @@ public class Main {
 			for (Order ord : list) {
 				System.out.println(ord.y + " " + ord.x + " " + ord.c);
 			}
+			/*
 			System.err.println("TRY_NUM = " + try_num);
 			System.err.println("ROLLBACK_NUM = " + rollback_num);
 			System.err.println("SCORE = " + prev_score);
+			*/
+		}
+	}
+
+	void search(int y, int x, char[][] order, int N, char nd) {
+		if (order[y][x] != 'N') {
+			return;
+		}
+		order[y][x] = nd;
+		for (int dir = 0; dir < 4; dir++) {
+			int ty = (y + dir_y[dir] + N) % N;
+			int tx = (x + dir_x[dir] + N) % N;
+			if (order[ty][tx] == 'N') {
+				search(ty, tx, order, N, dir_c[(dir + 2) % 4]);
+			}
 		}
 	}
 
