@@ -58,6 +58,13 @@ public class Main {
 
 		int[][][] movableScore = new int[N][N][4];
 		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				for (int dir = 0; dir < 4; dir++) {
+					movableScore[y][x][dir] = -1;
+				}
+			}
+		}
+		for (int y = 0; y < N; y++) {
 			{
 				int fx = -1;
 				for (int ix = 0; ix <= 2 * N; ix++) {
@@ -109,6 +116,30 @@ public class Main {
 				}
 			}
 		}
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				for (int dir = 0; dir < 4; dir++) {
+					int score = movableScore[y][x][dir];
+					if (score == -1) {
+						movableScore[y][x][dir] = N;
+					} else {
+						if (dir == 0) {
+							score = gy < score ? gy + N - score : gy - score;
+						}
+						if (dir == 1) {
+							score = gx > score ? score + N - gx : score - gx;
+						}
+						if (dir == 2) {
+							score = gy > score ? score + N - gy : score - gy;
+						}
+						if (dir == 3) {
+							score = gx < score ? gx + N - score : gx - score;
+						}
+						movableScore[y][x][dir] = score;
+					}
+				}
+			}
+		}
 
 		int prev_score = 0;
 		int try_num = 0;
@@ -119,18 +150,6 @@ public class Main {
 		PriorityQueue<Order> queue = new PriorityQueue<>((o1, o2) -> o2.score - o1.score);
 		for (int dir = 0; dir < 4; dir++) {
 			int score = movableScore[gy][gx][dir];
-			if (dir == 0) {
-				score = gy < score ? gy + N - score : gy - score;
-			}
-			if (dir == 1) {
-				score = gx > score ? score + N - gx : score - gx;
-			}
-			if (dir == 2) {
-				score = gy > score ? score + N - gy : score - gy;
-			}
-			if (dir == 3) {
-				score = gx < score ? gx + N - score : gx - score;
-			}
 			if (score > 1) {
 				queue.add(new Order(gy, gx, dir_c[dir], score));
 			}
@@ -143,20 +162,8 @@ public class Main {
 			while (order[y][x] == 'N') {
 				order[y][x] = dir_c[(dir + 2) % 4];
 				for (int chgDir = 1; chgDir < 4; chgDir += 2) {
-					int score = 0;
+					int score = movableScore[y][x][dir];
 					int nextDir = (dir + chgDir) % 4;
-					if (nextDir == 0) {
-						score = y < score ? y + N - score : y - score;
-					}
-					if (nextDir == 1) {
-						score = x > score ? score + N - x : score - x;
-					}
-					if (nextDir == 2) {
-						score = y > score ? score + N - y : score - y;
-					}
-					if (nextDir == 3) {
-						score = x < score ? x + N - score : x - score;
-					}
 					if (score > 1) {
 						queue.add(new Order(y, x, dir_c[nextDir], score));
 					}
