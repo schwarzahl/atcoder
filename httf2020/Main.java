@@ -36,13 +36,9 @@ public class Main {
 		int B = sc.nextInt();
 		int gy = sc.nextInt();
 		int gx = sc.nextInt();
-		int[] ry = new int[M];
-		int[] rx = new int[M];
-		char[] c = new char[M];
+		Robot[] robots = new Robot[M];
 		for (int i = 0; i < M; i++) {
-			ry[i] = sc.nextInt();
-			rx[i] = sc.nextInt();
-			c[i] = sc.next().charAt(0);
+			robots[i] = new Robot(i, sc.nextInt(), sc.nextInt(), sc.next().charAt(0));
 		}
 		int[][] distance = new int[N][N];
 		int[][] bestMove = new int[N][N];
@@ -138,9 +134,9 @@ public class Main {
 
 		order[gy][gx] = 'G';
 		for (int i = 0; i < M; i++) {
-			int dir = c2dir[c[i]];
-			int y = ry[i];
-			int x = rx[i];
+			int dir = c2dir[robots[i].c];
+			int y = robots[i].y;
+			int x = robots[i].x;
 			while (true) {
 				int min_y = -1;
 				int min_x = -1;
@@ -209,8 +205,18 @@ public class Main {
 		}
 	}
 
-	boolean isNotDirOrder(char c) {
-		return c == 'B' || c == 'G' || c == 'N';
+	class Robot {
+		int id;
+		int y;
+		int x;
+		char c;
+		int cost;
+		public Robot(int id, int y, int x, char c) {
+			this.id = id;
+			this.y = y;
+			this.x = x;
+			this.c = c;
+		}
 	}
 
 	class Order {
