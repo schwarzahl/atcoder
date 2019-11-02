@@ -60,7 +60,34 @@ public class Main {
 		int rollback_num = 0;
 		Random random = new Random();
 
-		search(gy, gx, order, N, 'G');
+		order[gy][gx] = 'G';
+		Set<Integer> set = new HashSet<>();
+		for (int dir = 0; dir < 4; dir++) {
+			int ty = (gy + dir_y[dir] + N) % N;
+			int tx = (gx + dir_x[dir] + N) % N;
+			char tc = dir_c[(dir + 2) % 4];
+			if (order[ty][tx] != 'B') {
+				order[ty][tx] = tc;
+				set.add(ty * N + tx);
+			}
+		}
+		while (!set.isEmpty()) {
+			Set<Integer> nextSet = new HashSet<>();
+			for (int yx : set) {
+				int y = yx / N;
+				int x = yx % N;
+				for (int dir = 0; dir < 4; dir++) {
+					int ty = (y + dir_y[dir] + N) % N;
+					int tx = (x + dir_x[dir] + N) % N;
+					char tc = dir_c[(dir + 2) % 4];
+					if (order[ty][tx] == 'N') {
+						order[ty][tx] = tc;
+						nextSet.add(ty * N + tx);
+					}
+				}
+			}
+			set = nextSet;
+		}
 		int[][] changeCount = new int[N][N];
 		for (int i = 0; i < M; i++) {
 			int my = ry[i];
