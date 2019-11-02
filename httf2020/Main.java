@@ -116,12 +116,13 @@ public class Main {
 				}
 			}
 		}
+		int GETA = N * N * M;
 		for (int y = 0; y < N; y++) {
 			for (int x = 0; x < N; x++) {
 				for (int dir = 0; dir < 4; dir++) {
 					int score = movableScore[y][x][dir];
 					if (score == -1) {
-						movableScore[y][x][dir] = N;
+						movableScore[y][x][dir] = -1;
 					} else {
 						if (dir == 0) {
 							score = gy < score ? gy + N - score : gy - score;
@@ -135,20 +136,33 @@ public class Main {
 						if (dir == 3) {
 							score = gx < score ? gx + N - score : gx - score;
 						}
-						movableScore[y][x][dir] = score;
+						movableScore[y][x][dir] = score + GETA;
 					}
 				}
 			}
 		}
 		for (int i = 0; i < M; i++) {
-			int dir = c2dir[c[i]];
-			for (int step = 1; step <= N; step++) {
-				int my = (ry[i] + dir_y[dir] * step + N) % N;
-				int mx = (rx[i] + dir_x[dir] * step + N) % N;
-				if (order[my][mx] == 'B') {
-					break;
+			{
+				int dir = c2dir[c[i]];
+				for (int step = 1; step <= N; step++) {
+					int my = (ry[i] + dir_y[dir] * step + N) % N;
+					int mx = (rx[i] + dir_x[dir] * step + N) % N;
+					if (order[my][mx] == 'B') {
+						break;
+					}
+					movableScore[my][mx][(dir + 2) % 4] += N * N;
 				}
-				movableScore[my][mx][(dir + 2) % 4] += N;
+			}
+			for (int wdir = 1; wdir < 4; wdir++) {
+				int dir = (c2dir[c[i]] + wdir) % 4;
+				for (int step = 1; step <= N; step++) {
+					int my = (ry[i] + dir_y[dir] * step + N) % N;
+					int mx = (rx[i] + dir_x[dir] * step + N) % N;
+					if (order[my][mx] == 'B') {
+						break;
+					}
+					movableScore[my][mx][(dir + 2) % 4] -= N;
+				}
 			}
 		}
 
@@ -175,7 +189,7 @@ public class Main {
 				for (int chgDir = 1; chgDir < 4; chgDir += 2) {
 					int score = movableScore[y][x][dir];
 					int nextDir = (dir + chgDir) % 4;
-					if (score > 1) {
+					if (score > 0) {
 						queue.add(new Order(y, x, dir_c[nextDir], score));
 					}
 				}
