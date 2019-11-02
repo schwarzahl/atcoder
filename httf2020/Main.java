@@ -44,10 +44,13 @@ public class Main {
 			rx[i] = sc.nextInt();
 			c[i] = sc.next().charAt(0);
 		}
+		int[][] distance = new int[N][N];
+		int[][] bestMove = new int[N][N];
 		char[][] order = new char[N][N];
 		for (int y = 0; y < N; y++) {
 			for (int x = 0; x < N; x++) {
 				order[y][x] = 'N';
+				distance[y][x] = 2 * N * N;
 			}
 		}
 		for (int i = 0; i < B; i++) {
@@ -56,112 +59,74 @@ public class Main {
 			order[by][bx] = 'B';
 		}
 
-		int[][][] movableScore = new int[N][N][4];
-		for (int y = 0; y < N; y++) {
+		distance[gy][gx] = 0;
+		for (int level = 1; level < N * N; level++) {
+			for (int y = 0; y < N; y++) {
+				{
+					boolean isReach = false;
+					for (int ix = 0; ix <= 2 * N; ix++) {
+						int x = ix % N;
+						if (order[y][x] == 'B') {
+							isReach = false;
+						}
+						if (distance[y][x] == level - 1) {
+							isReach = true;
+						}
+						if (isReach && distance[y][x] > level) {
+							distance[y][x] = level;
+							bestMove[y][x] = c2dir['L'];
+						}
+					}
+				}
+				{
+					boolean isReach = false;
+					for (int ix = 2 * N; ix >= 0; ix--) {
+						int x = ix % N;
+						if (order[y][x] == 'B') {
+							isReach = false;
+						}
+						if (distance[y][x] == level - 1) {
+							isReach = true;
+						}
+						if (isReach && distance[y][x] > level) {
+							distance[y][x] = level;
+							bestMove[y][x] = c2dir['R'];
+						}
+					}
+				}
+			}
 			for (int x = 0; x < N; x++) {
-				for (int dir = 0; dir < 4; dir++) {
-					movableScore[y][x][dir] = -1;
-				}
-			}
-		}
-		for (int y = 0; y < N; y++) {
-			{
-				int fx = -1;
-				for (int ix = 0; ix <= 2 * N; ix++) {
-					int x = ix % N;
-					if (order[y][x] == 'B') {
-						fx = x;
-					}
-					if (fx != -1) {
-						movableScore[y][x][c2dir['L']] = fx;
-					}
-				}
-			}
-			{
-				int fx = -1;
-				for (int ix = 2 * N; ix >= 0; ix--) {
-					int x = ix % N;
-					if (order[y][x] == 'B') {
-						fx = x;
-					}
-					if (fx != -1) {
-						movableScore[y][x][c2dir['R']] = fx;
-					}
-				}
-			}
-		}
-		for (int x = 0; x < N; x++) {
-			{
-				int fy = -1;
-				for (int iy = 0; iy <= 2 * N; iy++) {
-					int y = iy % N;
-					if (order[y][x] == 'B') {
-						fy = y;
-					}
-					if (fy != -1) {
-						movableScore[y][x][c2dir['U']] = fy;
-					}
-				}
-			}
-			{
-				int fy = -1;
-				for (int iy = 2 * N; iy >= 0; iy--) {
-					int y = iy % N;
-					if (order[y][x] == 'B') {
-						fy = y;
-					}
-					if (fy != -1) {
-						movableScore[y][x][c2dir['D']] = fy;
-					}
-				}
-			}
-		}
-		int GETA = N * N * M;
-		for (int y = 0; y < N; y++) {
-			for (int x = 0; x < N; x++) {
-				for (int dir = 0; dir < 4; dir++) {
-					int score = movableScore[y][x][dir];
-					if (score == -1) {
-						movableScore[y][x][dir] = -1;
-					} else {
-						if (dir == 0) {
-							score = gy < score ? gy + N - score : gy - score;
+				{
+					boolean isReach = false;
+					for (int iy = 0; iy <= 2 * N; iy++) {
+						int y = iy % N;
+						if (order[y][x] == 'B') {
+							isReach = false;
 						}
-						if (dir == 1) {
-							score = gx > score ? score + N - gx : score - gx;
+						if (distance[y][x] == level - 1) {
+							isReach = true;
 						}
-						if (dir == 2) {
-							score = gy > score ? score + N - gy : score - gy;
+						if (isReach && distance[y][x] > level) {
+							distance[y][x] = level;
+							bestMove[y][x] = c2dir['U'];
 						}
-						if (dir == 3) {
-							score = gx < score ? gx + N - score : gx - score;
-						}
-						movableScore[y][x][dir] = score + GETA;
 					}
 				}
-			}
-		}
-		for (int i = 0; i < M; i++) {
-			{
-				int dir = c2dir[c[i]];
-				for (int step = 1; step <= N; step++) {
-					int my = (ry[i] + dir_y[dir] * step + N) % N;
-					int mx = (rx[i] + dir_x[dir] * step + N) % N;
-					if (order[my][mx] == 'B') {
-						break;
+				{
+					boolean isReach = false;
+					for (int iy = 2 * N; iy >= 0; iy--) {
+						int y = iy % N;
+						if (order[y][x] == 'B') {
+							isReach = false;
+						}
+						if (distance[y][x] == level - 1) {
+							isReach = true;
+						}
+						if (isReach && distance[y][x] > level) {
+							distance[y][x] = level;
+							bestMove[y][x] = c2dir['D'];
+						}
 					}
-					movableScore[my][mx][(dir + 2) % 4] += N * N;
-				}
-			}
-			for (int wdir = 1; wdir < 4; wdir++) {
-				int dir = (c2dir[c[i]] + wdir) % 4;
-				for (int step = 1; step <= N; step++) {
-					int my = (ry[i] + dir_y[dir] * step + N) % N;
-					int mx = (rx[i] + dir_x[dir] * step + N) % N;
-					if (order[my][mx] == 'B') {
-						break;
-					}
-					movableScore[my][mx][(dir + 2) % 4] -= N;
 				}
 			}
 		}
@@ -172,29 +137,35 @@ public class Main {
 		Random random = new Random();
 
 		order[gy][gx] = 'G';
-		PriorityQueue<Order> queue = new PriorityQueue<>((o1, o2) -> o2.score - o1.score);
-		for (int dir = 0; dir < 4; dir++) {
-			int score = movableScore[gy][gx][dir];
-			if (score > 1) {
-				queue.add(new Order(gy, gx, dir_c[dir], score));
-			}
-		}
-		while (!queue.isEmpty()) {
-			Order current = queue.poll();
-			int dir = c2dir[current.c];
-			int y = (current.y + dir_y[dir] + N) % N;
-			int x = (current.x + dir_x[dir] + N) % N;
-			while (order[y][x] == 'N') {
-				order[y][x] = dir_c[(dir + 2) % 4];
-				for (int chgDir = 1; chgDir < 4; chgDir += 2) {
-					int score = movableScore[y][x][dir];
-					int nextDir = (dir + chgDir) % 4;
-					if (score > 0) {
-						queue.add(new Order(y, x, dir_c[nextDir], score));
+		for (int i = 0; i < M; i++) {
+			int dir = c2dir[c[i]];
+			int y = ry[i];
+			int x = rx[i];
+			while (true) {
+				int min_y = -1;
+				int min_x = -1;
+				int min_level = N * N;
+				int best_dir = -1;
+				for (int step = 0; step <= N; step++) {
+					int ty = (y + dir_y[dir] * step + N) % N;
+					int tx = (x + dir_x[dir] * step + N) % N;
+					if (order[ty][tx] == 'B') {
+						break;
+					}
+					if (min_level > distance[ty][tx]) {
+						min_y = ty;
+						min_x = tx;
+						min_level = distance[ty][tx];
+						best_dir = bestMove[ty][tx];
 					}
 				}
-				y = (y + dir_y[dir] + N) % N;
-				x = (x + dir_x[dir] + N) % N;
+				if (min_level == 0) {
+					break;
+				}
+				order[min_y][min_x] = dir_c[best_dir];
+				y = min_y;
+				x = min_x;
+				dir = best_dir;
 			}
 		}
 		int[][] changeCount = new int[N][N];
