@@ -61,7 +61,6 @@ public class Main {
 		int rollback_num = 0;
 		Random random = new Random();
 
-		List<Order> list = new ArrayList<>();
 		{
 			for (int dir = 0; dir < 4; dir++) {
 				int ty = (gy + dir_y[dir] + N) % N;
@@ -69,7 +68,6 @@ public class Main {
 				while (order[ty][tx] == 'N') {
 					char tc = dir_c[(dir + 2) % 4];
 					order[ty][tx] = tc;
-					list.add(new Order(ty, tx, tc));
 
 					ty = (ty + dir_y[dir] + N) % N;
 					tx = (tx + dir_x[dir] + N) % N;
@@ -79,13 +77,23 @@ public class Main {
 		while (System.currentTimeMillis() - st < LIMIT_TIME) {
 			try_num++;
 		}
-		System.out.println(list.size());
-		for (Order ord : list) {
-			System.out.println(ord.y + " " + ord.x + " " + ord.c);
+		{
+			List<Order> list = new ArrayList<>();
+			for (int y = 0; y < N; y++) {
+				for (int x = 0; x < N; x++) {
+					if (order[y][x] != 'N' && order[y][x] != 'B' && order[y][x] != 'G') {
+						list.add(new Order(y, x, order[y][x]));
+					}
+				}
+			}
+			System.out.println(list.size());
+			for (Order ord : list) {
+				System.out.println(ord.y + " " + ord.x + " " + ord.c);
+			}
+			System.err.println("TRY_NUM = " + try_num);
+			System.err.println("ROLLBACK_NUM = " + rollback_num);
+			System.err.println("SCORE = " + prev_score);
 		}
-		System.err.println("TRY_NUM = " + try_num);
-		System.err.println("ROLLBACK_NUM = " + rollback_num);
-		System.err.println("SCORE = " + prev_score);
 	}
 
 	boolean isNotDirOrder(char c) {
