@@ -85,7 +85,6 @@ public class Main {
 					maxId = i;
 				}
 			}
-			System.err.println(maxId);
 			if (maxId != -1) {
 				routedRobotIdSet.add(maxId);
 				int dir = c2dir[robots[maxId].c];
