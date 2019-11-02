@@ -70,8 +70,8 @@ public class Main {
 					}
 				}
 			}
-			int maxId = -1;
-			int maxCost = 0;
+			int minId = -1;
+			int minCost = N * N;
 			for (int i = 0; i < M; i++) {
 				int ry = robots[i].y;
 				int rx = robots[i].x;
@@ -80,16 +80,16 @@ public class Main {
 				if (bestMove[ry][rx] == rd) {
 					cost--;
 				}
-				if (maxCost < cost && !routedRobotIdSet.contains(i)) {
-					maxCost = cost;
-					maxId = i;
+				if (cost > 0 && minCost > cost && !routedRobotIdSet.contains(i)) {
+					minCost = cost;
+					minId = i;
 				}
 			}
-			if (maxId != -1) {
-				routedRobotIdSet.add(maxId);
-				int dir = c2dir[robots[maxId].c];
-				int y = robots[maxId].y;
-				int x = robots[maxId].x;
+			if (minId != -1) {
+				routedRobotIdSet.add(minId);
+				int dir = c2dir[robots[minId].c];
+				int y = robots[minId].y;
+				int x = robots[minId].x;
 				while (true) {
 					int min_y = -1;
 					int min_x = -1;
