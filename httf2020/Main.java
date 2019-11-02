@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
@@ -115,32 +116,54 @@ public class Main {
 		Random random = new Random();
 
 		order[gy][gx] = 'G';
-		Set<Integer> set = new HashSet<>();
+		PriorityQueue<Order> queue = new PriorityQueue<>((o1, o2) -> o2.score - o1.score);
 		for (int dir = 0; dir < 4; dir++) {
-			int ty = (gy + dir_y[dir] + N) % N;
-			int tx = (gx + dir_x[dir] + N) % N;
-			char tc = dir_c[(dir + 2) % 4];
-			if (order[ty][tx] != 'B') {
-				order[ty][tx] = tc;
-				set.add(ty * N + tx);
+			int score = movableScore[gy][gx][dir];
+			if (dir == 0) {
+				score = gy < score ? gy + N - score : gy - score;
+			}
+			if (dir == 1) {
+				score = gx > score ? score + N - gx : score - gx;
+			}
+			if (dir == 2) {
+				score = gy > score ? score + N - gy : score - gy;
+			}
+			if (dir == 3) {
+				score = gx < score ? gx + N - score : gx - score;
+			}
+			if (score > 1) {
+				queue.add(new Order(gy, gx, dir_c[dir], score));
 			}
 		}
-		while (!set.isEmpty()) {
-			Set<Integer> nextSet = new HashSet<>();
-			for (int yx : set) {
-				int y = yx / N;
-				int x = yx % N;
-				for (int dir = 0; dir < 4; dir++) {
-					int ty = (y + dir_y[dir] + N) % N;
-					int tx = (x + dir_x[dir] + N) % N;
-					char tc = dir_c[(dir + 2) % 4];
-					if (order[ty][tx] == 'N') {
-						order[ty][tx] = tc;
-						nextSet.add(ty * N + tx);
+		while (!queue.isEmpty()) {
+			Order current = queue.poll();
+			int dir = c2dir[current.c];
+			int y = (current.y + dir_y[dir] + N) % N;
+			int x = (current.x + dir_x[dir] + N) % N;
+			while (order[y][x] == 'N') {
+				order[y][x] = dir_c[(dir + 2) % 4];
+				for (int chgDir = 1; chgDir < 4; chgDir += 2) {
+					int score = 0;
+					int nextDir = (dir + chgDir) % 4;
+					if (nextDir == 0) {
+						score = y < score ? y + N - score : y - score;
+					}
+					if (nextDir == 1) {
+						score = x > score ? score + N - x : score - x;
+					}
+					if (nextDir == 2) {
+						score = y > score ? score + N - y : score - y;
+					}
+					if (nextDir == 3) {
+						score = x < score ? x + N - score : x - score;
+					}
+					if (score > 1) {
+						queue.add(new Order(y, x, dir_c[nextDir], score));
 					}
 				}
+				y = (y + dir_y[dir] + N) % N;
+				x = (x + dir_x[dir] + N) % N;
 			}
-			set = nextSet;
 		}
 		int[][] changeCount = new int[N][N];
 		for (int i = 0; i < M; i++) {
@@ -209,10 +232,17 @@ public class Main {
 		int y;
 		int x;
 		char c;
+		int score;
 		public Order(int y, int x, char c) {
 			this.y = y;
 			this.x = x;
 			this.c = c;
+		}
+		public Order(int y, int x, char c, int score) {
+			this.y = y;
+			this.x = x;
+			this.c = c;
+			this.score = score;
 		}
 	}
 
