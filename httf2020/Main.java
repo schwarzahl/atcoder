@@ -159,34 +159,13 @@ public class Main {
 						best_dir = bestMove[ty][tx];
 					}
 				}
-				if (min_level == 0) {
+				if (min_level == 0 || min_level == N * N) {
 					break;
 				}
 				order[min_y][min_x] = dir_c[best_dir];
 				y = min_y;
 				x = min_x;
 				dir = best_dir;
-			}
-		}
-		int[][] changeCount = new int[N][N];
-		for (int i = 0; i < M; i++) {
-			int my = ry[i];
-			int mx = rx[i];
-			char mc = c[i];
-			while (my != gy || mx != gx) {
-				if (order[my][mx] != 'N' && order[my][mx] != mc) {
-					changeCount[my][mx]++;
-					mc = order[my][mx];
-				}
-				my = (my + dir_y[c2dir[mc]] + N) % N;
-				mx = (mx + dir_x[c2dir[mc]] + N) % N;
-			}
-		}
-		for (int y = 0; y < N; y++) {
-			for (int x = 0; x < N; x++) {
-				if (changeCount[y][x] == 0) {
-					order[y][x] = 'N';
-				}
 			}
 		}
 		while (System.currentTimeMillis() - st < LIMIT_TIME) {
