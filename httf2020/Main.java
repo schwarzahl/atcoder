@@ -22,7 +22,7 @@ public class Main {
 
 	private void solve() {
 		long st = System.currentTimeMillis();
-		long LIMIT_TIME = 2800L;
+		long LIMIT_TIME = 2500L;
 
 		c2dir['U'] = 0;
 		c2dir['R'] = 1;
