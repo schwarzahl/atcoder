@@ -140,6 +140,17 @@ public class Main {
 				}
 			}
 		}
+		for (int i = 0; i < M; i++) {
+			int dir = c2dir[c[i]];
+			for (int step = 1; step <= N; step++) {
+				int my = (ry[i] + dir_y[dir] * step + N) % N;
+				int mx = (rx[i] + dir_x[dir] * step + N) % N;
+				if (order[my][mx] == 'B') {
+					break;
+				}
+				movableScore[my][mx][(dir + 2) % 4] += N;
+			}
+		}
 
 		int prev_score = 0;
 		int try_num = 0;
