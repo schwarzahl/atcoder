@@ -56,80 +56,77 @@ public class Main {
 			order[by][bx] = 'B';
 		}
 
-		distance[gy][gx] = 0;
-		for (int level = 1; level < N * N; level++) {
-			for (int by = 0; by < N; by++) {
-				for (int bx = 0; bx < N; bx++) {
-					if (distance[by][bx] == level - 1) {
-						for (int dir = 0; dir < 4; dir++) {
-							update(by, bx, dir, level, distance, bestMove, order, N);
+		Set<Integer> routedRobotIdSet = new HashSet<>();
+		for (int try_num = 0; try_num < M; try_num++) {
+			distance[gy][gx] = 0;
+			for (int level = 1; level < N * N; level++) {
+				for (int by = 0; by < N; by++) {
+					for (int bx = 0; bx < N; bx++) {
+						if (distance[by][bx] == level - 1) {
+							for (int dir = 0; dir < 4; dir++) {
+								update(by, bx, dir, level, distance, bestMove, order, N);
+							}
 						}
 					}
 				}
 			}
-		}
-
-		int prev_score = 0;
-		int try_num = 0;
-		int rollback_num = 0;
-		Random random = new Random();
-
-		order[gy][gx] = 'G';
-		for (int i = 0; i < M; i++) {
-			robots[i].cost = distance[robots[i].y][robots[i].x];
-		}
-		Arrays.sort(robots, (o1, o2) -> o2.cost - o1.cost);
-		for (int i = 0; i < M; i++) {
-			int dir = c2dir[robots[i].c];
-			int y = robots[i].y;
-			int x = robots[i].x;
-			while (true) {
-				int min_y = -1;
-				int min_x = -1;
-				int min_level = N * N;
-				int best_dir = -1;
-				int best_step = -1;
-				for (int step = 0; step <= N; step++) {
-					int ty = (y + dir_y[dir] * step + N) % N;
-					int tx = (x + dir_x[dir] * step + N) % N;
-					if (order[ty][tx] == 'B') {
-						break;
-					} else if (order[ty][tx] != 'N' && step > 0) {
-						min_level = N * N;
-						break;
-					}
-					if (min_level > distance[ty][tx]) {
-						min_y = ty;
-						min_x = tx;
-						min_level = distance[ty][tx];
-						best_dir = bestMove[ty][tx];
-						best_step = step;
-					}
+			int maxId = -1;
+			int maxCost = 0;
+			for (int i = 0; i < M; i++) {
+				int ry = robots[i].y;
+				int rx = robots[i].x;
+				int rd = c2dir[robots[i].c];
+				int cost = distance[ry][rx];
+				if (bestMove[ry][rx] == rd) {
+					cost--;
 				}
-				if (min_level == 0 || min_level == N * N) {
-					break;
+				if (maxCost < cost && !routedRobotIdSet.contains(i)) {
+					maxCost = cost;
+					maxId = i;
 				}
-
-				for (int step = 0; step < best_step; step++) {
-					int ty = (y + dir_y[dir] * step + N) % N;
-					int tx = (x + dir_x[dir] * step + N) % N;
-					distance[ty][tx] = 1;
-					bestMove[ty][tx] = dir;
-				}
-				order[min_y][min_x] = dir_c[best_dir];
-				y = min_y;
-				x = min_x;
-				dir = best_dir;
 			}
-		}
-		while (System.currentTimeMillis() - st < LIMIT_TIME) {
-			try_num++;
+			System.err.println(maxId);
+			if (maxId != -1) {
+				routedRobotIdSet.add(maxId);
+				int dir = c2dir[robots[maxId].c];
+				int y = robots[maxId].y;
+				int x = robots[maxId].x;
+				while (true) {
+					int min_y = -1;
+					int min_x = -1;
+					int min_level = N * N;
+					int best_dir = -1;
+					for (int step = 0; step <= N; step++) {
+						int ty = (y + dir_y[dir] * step + N) % N;
+						int tx = (x + dir_x[dir] * step + N) % N;
+						if (order[ty][tx] == 'B') {
+							break;
+						} else if (order[ty][tx] != 'N' && step > 0) {
+							min_level = N * N;
+							break;
+						}
+						if (min_level > distance[ty][tx]) {
+							min_y = ty;
+							min_x = tx;
+							min_level = distance[ty][tx];
+							best_dir = bestMove[ty][tx];
+						}
+					}
+					if (min_level == 0 || min_level == N * N) {
+						break;
+					}
+					order[min_y][min_x] = dir_c[best_dir];
+					y = min_y;
+					x = min_x;
+					dir = best_dir;
+				}
+			}
 		}
 		{
 			List<Order> list = new ArrayList<>();
 			for (int y = 0; y < N; y++) {
 				for (int x = 0; x < N; x++) {
-					if (order[y][x] != 'N' && order[y][x] != 'B' && order[y][x] != 'G') {
+					if (order[y][x] != 'N' && order[y][x] != 'B') {
 						list.add(new Order(y, x, order[y][x]));
 					}
 				}
@@ -138,11 +135,6 @@ public class Main {
 			for (Order ord : list) {
 				System.out.println(ord.y + " " + ord.x + " " + ord.c);
 			}
-			/*
-			System.err.println("TRY_NUM = " + try_num);
-			System.err.println("ROLLBACK_NUM = " + rollback_num);
-			System.err.println("SCORE = " + prev_score);
-			*/
 		}
 	}
 
@@ -152,7 +144,12 @@ public class Main {
 			int tx = (x + dir_x[dir] * step + N) % N;
 			if (order[ty][tx] == 'B') {
 				break;
-			} else if (order[ty][tx] != 'N') {
+			}
+			if (order[ty][tx] == dir_c[(dir + 2) % 4]) {
+				if (distance[ty][tx] > level - 1) {
+					distance[ty][tx] = level - 1;
+					bestMove[ty][tx] = (dir + 2) % 4;
+				}
 				for (int chdir = 1; chdir < 4; chdir += 2) {
 					update(ty, tx, (dir + chdir) % 4, level, distance, bestMove, order, N);
 				}
