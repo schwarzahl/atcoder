@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -133,6 +134,10 @@ public class Main {
 		Random random = new Random();
 
 		order[gy][gx] = 'G';
+		for (int i = 0; i < M; i++) {
+			robots[i].cost = distance[robots[i].y][robots[i].x];
+		}
+		Arrays.sort(robots, (o1, o2) -> o2.cost - o1.cost);
 		for (int i = 0; i < M; i++) {
 			int dir = c2dir[robots[i].c];
 			int y = robots[i].y;
