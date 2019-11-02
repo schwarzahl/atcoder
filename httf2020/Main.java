@@ -151,6 +151,9 @@ public class Main {
 					int tx = (x + dir_x[dir] * step + N) % N;
 					if (order[ty][tx] == 'B') {
 						break;
+					} else if (order[ty][tx] != 'N' && step > 0) {
+						min_level = N * N;
+						break;
 					}
 					if (min_level > distance[ty][tx]) {
 						min_y = ty;
