@@ -25,30 +25,66 @@ public class Main {
 		int B = sc.nextInt();
 		int gy = sc.nextInt();
 		int gx = sc.nextInt();
+		int[] ry = new int[M];
+		int[] rx = new int[M];
+		char[] c = new char[M];
 		for (int i = 0; i < M; i++) {
-			int ry = sc.nextInt();
-			int rx = sc.nextInt();
-			String c = sc.next();
+			ry[i] = sc.nextInt();
+			rx[i] = sc.nextInt();
+			c[i] = sc.next().charAt(0);
 		}
+		boolean[][] isBlock = new boolean[N][N];
+		boolean[][] isOrdered = new boolean[N][N];
 		for (int i = 0; i < B; i++) {
 			int by = sc.nextInt();
 			int bx = sc.nextInt();
+			isBlock[by][bx] = true;
+			isOrdered[by][bx] = true;
 		}
+		isOrdered[gy][gx] = true;
 
-		int[] dir_r = {-1, 0, 1, 0};
-		int[] dir_c = {0, 1, 0, -1};
+		int[] dir_y = {-1, 0, 1, 0};
+		int[] dir_x = {0, 1, 0, -1};
+		char[] dir_c = {'U', 'R', 'D', 'L'};
 		int prev_score = 0;
 		int try_num = 0;
 		int rollback_num = 0;
 		Random random = new Random();
 
+		List<Order> list = new ArrayList<>();
+		{
+			for (int dir = 0; dir < 4; dir++) {
+				int ty = (gy + dir_y[dir] + N) % N;
+				int tx = (gx + dir_x[dir] + N) % N;
+				while (!isOrdered[ty][tx]) {
+					isOrdered[ty][tx] = true;
+					list.add(new Order(ty, tx, dir_c[(dir + 2) % 4]));
+					ty = (ty + dir_y[dir] + N) % N;
+					tx = (tx + dir_x[dir] + N) % N;
+				}
+			}
+		}
 		while (System.currentTimeMillis() - st < LIMIT_TIME) {
 			try_num++;
 		}
-		System.out.println(0);
+		System.out.println(list.size());
+		for (Order order : list) {
+			System.out.println(order.y + " " + order.x + " " + order.c);
+		}
 		System.err.println("TRY_NUM = " + try_num);
 		System.err.println("ROLLBACK_NUM = " + rollback_num);
 		System.err.println("SCORE = " + prev_score);
+	}
+
+	class Order {
+		int y;
+		int x;
+		char c;
+		public Order(int y, int x, char c) {
+			this.y = y;
+			this.x = x;
+			this.c = c;
+		}
 	}
 
 	interface CombCalculator {
