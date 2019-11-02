@@ -58,70 +58,11 @@ public class Main {
 
 		distance[gy][gx] = 0;
 		for (int level = 1; level < N * N; level++) {
-			for (int y = 0; y < N; y++) {
-				{
-					boolean isReach = false;
-					for (int ix = 0; ix <= 2 * N; ix++) {
-						int x = ix % N;
-						if (order[y][x] == 'B') {
-							isReach = false;
-						}
-						if (distance[y][x] == level - 1) {
-							isReach = true;
-						}
-						if (isReach && distance[y][x] > level) {
-							distance[y][x] = level;
-							bestMove[y][x] = c2dir['L'];
-						}
-					}
-				}
-				{
-					boolean isReach = false;
-					for (int ix = 2 * N; ix >= 0; ix--) {
-						int x = ix % N;
-						if (order[y][x] == 'B') {
-							isReach = false;
-						}
-						if (distance[y][x] == level - 1) {
-							isReach = true;
-						}
-						if (isReach && distance[y][x] > level) {
-							distance[y][x] = level;
-							bestMove[y][x] = c2dir['R'];
-						}
-					}
-				}
-			}
-			for (int x = 0; x < N; x++) {
-				{
-					boolean isReach = false;
-					for (int iy = 0; iy <= 2 * N; iy++) {
-						int y = iy % N;
-						if (order[y][x] == 'B') {
-							isReach = false;
-						}
-						if (distance[y][x] == level - 1) {
-							isReach = true;
-						}
-						if (isReach && distance[y][x] > level) {
-							distance[y][x] = level;
-							bestMove[y][x] = c2dir['U'];
-						}
-					}
-				}
-				{
-					boolean isReach = false;
-					for (int iy = 2 * N; iy >= 0; iy--) {
-						int y = iy % N;
-						if (order[y][x] == 'B') {
-							isReach = false;
-						}
-						if (distance[y][x] == level - 1) {
-							isReach = true;
-						}
-						if (isReach && distance[y][x] > level) {
-							distance[y][x] = level;
-							bestMove[y][x] = c2dir['D'];
+			for (int by = 0; by < N; by++) {
+				for (int bx = 0; bx < N; bx++) {
+					if (distance[by][bx] == level - 1) {
+						for (int dir = 0; dir < 4; dir++) {
+							update(by, bx, dir, level, distance, bestMove, order, N);
 						}
 					}
 				}
@@ -205,16 +146,20 @@ public class Main {
 		}
 	}
 
-	void search(int y, int x, char[][] order, int N, char nd) {
-		if (order[y][x] != 'N') {
-			return;
-		}
-		order[y][x] = nd;
-		for (int dir = 0; dir < 4; dir++) {
-			int ty = (y + dir_y[dir] + N) % N;
-			int tx = (x + dir_x[dir] + N) % N;
-			if (order[ty][tx] == 'N') {
-				search(ty, tx, order, N, dir_c[(dir + 2) % 4]);
+	void update(int y, int x, int dir, int level, int[][] distance, int[][] bestMove, char[][] order, int N) {
+		for (int step = 1; step < N; step++) {
+			int ty = (y + dir_y[dir] * step + N) % N;
+			int tx = (x + dir_x[dir] * step + N) % N;
+			if (order[ty][tx] == 'B') {
+				break;
+			} else if (order[ty][tx] != 'N') {
+				for (int chdir = 1; chdir < 4; chdir += 2) {
+					update(ty, tx, (dir + chdir) % 4, level, distance, bestMove, order, N);
+				}
+			}
+			if (distance[ty][tx] > level) {
+				distance[ty][tx] = level;
+				bestMove[ty][tx] = (dir + 2) % 4;
 			}
 		}
 	}
