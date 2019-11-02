@@ -147,6 +147,7 @@ public class Main {
 				int min_x = -1;
 				int min_level = N * N;
 				int best_dir = -1;
+				int best_step = -1;
 				for (int step = 0; step <= N; step++) {
 					int ty = (y + dir_y[dir] * step + N) % N;
 					int tx = (x + dir_x[dir] * step + N) % N;
@@ -161,10 +162,18 @@ public class Main {
 						min_x = tx;
 						min_level = distance[ty][tx];
 						best_dir = bestMove[ty][tx];
+						best_step = step;
 					}
 				}
 				if (min_level == 0 || min_level == N * N) {
 					break;
+				}
+
+				for (int step = 0; step < best_step; step++) {
+					int ty = (y + dir_y[dir] * step + N) % N;
+					int tx = (x + dir_x[dir] * step + N) % N;
+					distance[ty][tx] = 1;
+					bestMove[ty][tx] = dir;
 				}
 				order[min_y][min_x] = dir_c[best_dir];
 				y = min_y;
