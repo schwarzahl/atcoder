@@ -33,19 +33,29 @@ public class Main {
 			rx[i] = sc.nextInt();
 			c[i] = sc.next().charAt(0);
 		}
+		char[][] order = new char[N][N];
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				order[y][x] = 'N';
+			}
+		}
 		boolean[][] isBlock = new boolean[N][N];
-		boolean[][] isOrdered = new boolean[N][N];
 		for (int i = 0; i < B; i++) {
 			int by = sc.nextInt();
 			int bx = sc.nextInt();
 			isBlock[by][bx] = true;
-			isOrdered[by][bx] = true;
+			order[by][bx] = 'B';
 		}
-		isOrdered[gy][gx] = true;
+		order[gy][gx] = 'G';
 
 		int[] dir_y = {-1, 0, 1, 0};
 		int[] dir_x = {0, 1, 0, -1};
 		char[] dir_c = {'U', 'R', 'D', 'L'};
+		int[] c2dir = new int[256];
+		c2dir['U'] = 0;
+		c2dir['R'] = 1;
+		c2dir['D'] = 2;
+		c2dir['L'] = 3;
 		int prev_score = 0;
 		int try_num = 0;
 		int rollback_num = 0;
@@ -56,9 +66,11 @@ public class Main {
 			for (int dir = 0; dir < 4; dir++) {
 				int ty = (gy + dir_y[dir] + N) % N;
 				int tx = (gx + dir_x[dir] + N) % N;
-				while (!isOrdered[ty][tx]) {
-					isOrdered[ty][tx] = true;
-					list.add(new Order(ty, tx, dir_c[(dir + 2) % 4]));
+				while (order[ty][tx] == 'N') {
+					char tc = dir_c[(dir + 2) % 4];
+					order[ty][tx] = tc;
+					list.add(new Order(ty, tx, tc));
+
 					ty = (ty + dir_y[dir] + N) % N;
 					tx = (tx + dir_x[dir] + N) % N;
 				}
@@ -68,12 +80,16 @@ public class Main {
 			try_num++;
 		}
 		System.out.println(list.size());
-		for (Order order : list) {
-			System.out.println(order.y + " " + order.x + " " + order.c);
+		for (Order ord : list) {
+			System.out.println(ord.y + " " + ord.x + " " + ord.c);
 		}
 		System.err.println("TRY_NUM = " + try_num);
 		System.err.println("ROLLBACK_NUM = " + rollback_num);
 		System.err.println("SCORE = " + prev_score);
+	}
+
+	boolean isNotDirOrder(char c) {
+		return c == 'B' || c == 'G' || c == 'N';
 	}
 
 	class Order {
