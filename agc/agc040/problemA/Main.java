@@ -22,7 +22,7 @@ public class Main {
 		String S = sc.next();
 		int N = S.length() + 1;
 		int size = 0;
-		int[] rla = new int[N + 1]; // |<|, |>|, |<|, |>|, ...
+		long[] rla = new long[N + 1]; // |<|, |>|, |<|, |>|, ...
 		char prev = '<';
 		int count = 0;
 		for (int i = 0; i < N - 1; i++) {
@@ -37,12 +37,12 @@ public class Main {
 		rla[size++] = count;
 		long ans = 0L;
 		for (int i = 0; i < size; i += 2) {
-			int asc = rla[i];
-			int desc = rla[i + 1];
-			int max = Math.max(asc, desc);
-			int min = Math.min(asc, desc);
-			ans += max * (max + 1) / 2;
-			ans += min * (min - 1) / 2;
+			long asc = rla[i];
+			long desc = rla[i + 1];
+			long max = Math.max(asc, desc);
+			long min = Math.min(asc, desc);
+			ans += max * (max + 1) / 2L;
+			ans += min * (min - 1) / 2L;
 		}
 		System.out.println(ans);
 	}
