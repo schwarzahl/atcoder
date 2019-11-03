@@ -19,9 +19,32 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		int N = S.length() + 1;
+		int size = 0;
+		int[] rla = new int[N + 1]; // |<|, |>|, |<|, |>|, ...
+		char prev = '<';
+		int count = 0;
+		for (int i = 0; i < N - 1; i++) {
+			char c = S.charAt(i);
+			if (c != prev) {
+				prev = c;
+				rla[size++] = count;
+				count = 0;
+			}
+			count++;
+		}
+		rla[size++] = count;
+		long ans = 0L;
+		for (int i = 0; i < size; i += 2) {
+			int asc = rla[i];
+			int desc = rla[i + 1];
+			int max = Math.max(asc, desc);
+			int min = Math.min(asc, desc);
+			ans += max * (max + 1) / 2;
+			ans += min * (min - 1) / 2;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
