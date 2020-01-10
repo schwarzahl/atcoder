@@ -20,8 +20,62 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[] P = new int[N];
+		int[] Q = new int[N];
+		for (int i = 0; i < N; i++) {
+			P[i] = sc.nextInt();
+		}
+		for (int i = 0; i < N; i++) {
+			Q[i] = sc.nextInt();
+		}
+		List<Integer> list = new ArrayList<>();
+		for (int i = 1; i <= N; i++) {
+			list.add(i);
+		}
+		List<List<Integer>> ll = new ArrayList<>();
+		permutation(list, new ArrayList<>(), ll);
+		int index = 0;
+		int p_index = 0;
+		int q_index = 0;
+		for (List<Integer> e : ll) {
+			boolean p_same = true;
+			boolean q_same = true;
+			for (int i = 0; i < N; i++) {
+				if (P[i] != e.get(i)) {
+					p_same = false;
+				}
+				if (Q[i] != e.get(i)) {
+					q_same = false;
+				}
+			}
+			if (p_same) {
+				p_index = index;
+			}
+			if (q_same) {
+				q_index = index;
+			}
+			index++;
+		}
+		System.out.println(Math.abs(p_index - q_index));
+	}
+
+	private void permutation(List<Integer> list, List<Integer> fix, List<List<Integer>> result) {
+		int size = list.size();
+		if (size <= 0) {
+			result.add(fix);
+		} else {
+			for (int i = 0; i < size; i++) {
+				List<Integer> pre = list.subList(0, i);
+				List<Integer> suf = list.subList(i + 1, size);
+				List<Integer> nextList = new ArrayList<>();
+				nextList.addAll(pre);
+				nextList.addAll(suf);
+				List<Integer> nextFix = new ArrayList<>();
+				nextFix.addAll(fix);
+				nextFix.add(list.get(i));
+				permutation(nextList, nextFix, result);
+			}
+		}
 	}
 
 	class Scanner {
