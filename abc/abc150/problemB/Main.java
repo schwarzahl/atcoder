@@ -20,8 +20,14 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		int ans = 0;
+		for (int i = 2; i < N; i++) {
+			if (S.charAt(i - 2) == 'A' && S.charAt(i - 1) == 'B' && S.charAt(i) == 'C') {
+				ans++;
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {

@@ -19,9 +19,9 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		int X = sc.nextInt();
+		System.out.println(K * 500 >= X ? "Yes" : "No");
 	}
 
 	class Scanner {
