@@ -35,13 +35,13 @@ public class Main {
 				}
 			}
 		}
-		long me = 1;
+		long me = 1L;
 		for (int i = 0; i < 100000; i++) {
 			for (int j = 0; j < ans[i]; j++) {
-				me *= i;
+				me *= 1L * i;
 			}
 		}
-		System.out.println((M + me) / me / 2);
+		System.out.println((M + me) / me / 2L);
 	}
 
 	class Scanner {
