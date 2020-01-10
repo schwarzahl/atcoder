@@ -20,8 +20,28 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long M = sc.nextLong();
+		int[] ans = new int[100000];
+		for (int i = 0; i < N; i++) {
+			long a = sc.nextLong() / 2L;
+			for (int e = 2; e <= a; e++) {
+				int count = 0;
+				while (a % e == 0) {
+					count++;
+					a /= e;
+				}
+				if (ans[e] < count) {
+					ans[e] = count;
+				}
+			}
+		}
+		long me = 1;
+		for (int i = 0; i < 100000; i++) {
+			for (int j = 0; j < ans[i]; j++) {
+				me *= i;
+			}
+		}
+		System.out.println((M + me) / me / 2);
 	}
 
 	class Scanner {
