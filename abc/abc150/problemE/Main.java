@@ -2,13 +2,7 @@ package problemE;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -19,9 +13,26 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		long MOD = 1000000007L;
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long[] C = new long[N];
+		for (int i = 0; i < N; i++) {
+			C[i] = sc.nextLong();
+		}
+		Arrays.sort(C);
+		CombCalculator cc = new FactorialTableCombCalculator(N + 2, MOD);
+		long ans = 0L;
+		long base = 1L;
+		for (int i = 1; i <= N; i++) {
+			base = (base * 2L) % MOD;
+		}
+		for (int i = 1; i <= N; i++) {
+			for (int j = 0; j <= N - i; j++) {
+				ans = (ans + (((((base * C[i - 1]) % MOD) * (j + 1)) % MOD) * cc.comb((N - i), j)) % MOD) % MOD;
+			}
+			base = (base * 2L) % MOD;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
