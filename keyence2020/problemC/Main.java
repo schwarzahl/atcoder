@@ -20,8 +20,23 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		long S = sc.nextLong();
+		long dummy = (S == 1000000000L) ? 1L : 1000000000L;
+		if (K == 0) {
+			System.out.print(dummy);
+		} else {
+			System.out.print(S);
+		}
+		for (int i = 1; i < K; i++) {
+			System.out.print(" " + S);
+		}
+		if (K > 0) {
+			for (int i = K; i < N; i++) {
+				System.out.print(" " + dummy);
+			}
+		}
+		System.out.println();
 	}
 
 	class Scanner {
