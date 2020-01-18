@@ -31,10 +31,8 @@ public class Main {
 		for (int i = 1; i < K; i++) {
 			System.out.print(" " + S);
 		}
-		if (K > 0) {
-			for (int i = K; i < N; i++) {
-				System.out.print(" " + dummy);
-			}
+		for (int i = Math.max(1, K); i < N; i++) {
+			System.out.print(" " + dummy);
 		}
 		System.out.println();
 	}
