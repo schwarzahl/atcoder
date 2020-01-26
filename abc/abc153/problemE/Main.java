@@ -2,13 +2,7 @@ package problemE;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -19,9 +13,23 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		int H = sc.nextInt();
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[] A = new int[N];
+		int[] B = new int[N];
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextInt();
+			B[i] = sc.nextInt();
+		}
+		int[] dp = new int[H + 1];
+		Arrays.fill(dp, Integer.MAX_VALUE / 3);
+		dp[0] = 0;
+		for (int i = 1; i <= H; i++) {
+			for (int j = 0; j < N; j++) {
+				dp[i] = Math.min(dp[i], (i - A[j] >= 0 ? dp[i - A[j]] : 0) + B[j]);
+			}
+		}
+		System.out.println(dp[H]);
 	}
 
 	class Scanner {
