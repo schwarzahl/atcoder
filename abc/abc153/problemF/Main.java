@@ -8,20 +8,99 @@ import java.util.stream.IntStream;
 public class Main {
 	public static void main(String[] args) {
 		Main main = new Main();
-		main.solve();
+		//System.out.println(main.solve(main.readInput()));
+		Input test;
+		int caseNum = 0;
+		do {
+			System.err.println(++caseNum);
+			test = main.generate();
+		} while (main.solve(test) == test.answer);
+		System.out.println(test);
 	}
 
-	private void solve() {
+	class Input {
+		int N;
+		long D;
+		long A;
+		long[] X;
+		long[] H;
+		long answer;
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append(N + "\n" + D + "\n" + A + "\n");
+			for (int i = 0; i < N; i++) {
+				sb.append(X[i] + " " + H[i] + "\n");
+			}
+			sb.append(answer);
+			return sb.toString();
+		}
+	}
+
+	private Input generate() {
+		Input test = new Input();
+		Random rand = new Random();
+		test.N = rand.nextInt(200000) + 1;
+		test.D = rand.nextInt(1000000001);
+		test.A = rand.nextInt(1000000000) + 1;
+		test.X = new long[test.N];
+		test.H = new long[test.N];
+		long min = Long.MAX_VALUE;
+		long max = Long.MIN_VALUE;
+		for (int i = 0; i < test.N; i++) {
+			test.X[i] = rand.nextInt(1000000000) + 1;
+			min = Math.min(min, test.X[i]);
+			max = Math.max(max, test.X[i]);
+		}
+		test.answer = 0L;
+		min += test.D;
+		max -= test.D;
+		if (min > max) {
+			min = max;
+		}
+		boolean isExistZero = true;
+		do {
+			long rx = min + rand.nextInt(max - min > 0 ? (int)(max - min) : 1);
+			isExistZero = false;
+			for (int i = 0; i < test.N; i++) {
+				if (rx - test.D <= test.X[i] && test.X[i] <= rx + test.D) {
+					test.H[i] += test.A;
+				}
+				if (test.H[i] == 0) {
+					isExistZero = true;
+				}
+			}
+			test.answer++;
+		} while (isExistZero);
+		return test;
+	}
+
+	private Input readInput() {
+		Input input = new Input();
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		long D = sc.nextLong();
-		long A = sc.nextLong();
+		input.N = sc.nextInt();
+		input.D = sc.nextLong();
+		input.A = sc.nextLong();
+		input.X = new long[input.N];
+		input.H = new long[input.N];
+		for (int i = 0; i < input.N; i++) {
+			input.X[i] = sc.nextLong();
+			input.H[i] = sc.nextLong();
+		}
+		return input;
+	}
+
+	private long solve(Input input) {
+		int N = input.N;
+		long D = input.D;
+		long A = input.A;
 		long[] X = new long[N];
 		long[] H = new long[N];
 		long[] C = new long[N];
 		for (int i = 0; i < N; i++) {
-			X[i] = sc.nextLong();
-			H[i] = sc.nextLong();
+			X[i] = input.X[i];
+			H[i] = input.H[i];
 			C[i] = (H[i]+A-1)/A;
 		}
 		Monster[] monsters = new Monster[N];
@@ -61,7 +140,7 @@ public class Main {
 				decr[out] += count;
 			}
 		}
-		System.out.println(ans);
+		return ans;
 	}
 
 	class Monster {
