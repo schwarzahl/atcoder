@@ -19,9 +19,15 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long H = sc.nextLong();
+		long ans = 0L;
+		long base = 1L;
+		while (H > 0) {
+			ans += base;
+			H /= 2;
+			base *= 2L;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {

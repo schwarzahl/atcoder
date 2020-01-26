@@ -19,9 +19,12 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		int H = sc.nextInt();
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		for (int i = 0; i < N; i++) {
+			H -= sc.nextInt();
+		}
+		System.out.println(H > 0 ? "No" : "Yes");
 	}
 
 	class Scanner {
