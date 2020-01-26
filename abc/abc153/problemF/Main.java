@@ -2,13 +2,7 @@ package problemF;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,63 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long D = sc.nextLong();
+		long A = sc.nextLong();
+		long[] X = new long[N];
+		long[] H = new long[N];
+		long[] C = new long[N];
+		for (int i = 0; i < N; i++) {
+			X[i] = sc.nextLong();
+			H[i] = sc.nextLong();
+			C[i] = (H[i]+A-1)/A;
+		}
+		Monster[] monsters = new Monster[N];
+		for (int i = 0; i < N; i++) {
+			monsters[i] = new Monster(X[i], C[i]);
+		}
+		Arrays.sort(monsters, (m1, m2) -> {
+			if (m1.X < m2.X) {
+				return -1;
+			}
+			if (m1.X > m2.X) {
+				return 1;
+			}
+			return 0;
+		});
+		long ans = 0L;
+		long attack = 0L;
+		long[] decr = new long[N];
+		for (int i = 0; i < N; i++) {
+			attack -= decr[i];
+			long count = monsters[i].C - attack;
+			if (count > 0) {
+				attack += count;
+				ans += count;
+			}
+			int in = i;
+			int out = N + 1;
+			while (in + 1 < out) {
+				int mid = (in + out) / 2;
+				if (N <= mid || monsters[i].X + D * 2 < monsters[mid].X) {
+					out = mid;
+				} else {
+					in = mid;
+				}
+			}
+			if (out < N) {
+				decr[out] += count;
+			}
+		}
+		System.out.println(ans);
+	}
+
+	class Monster {
+		long X;
+		long C;
+		public Monster(long X, long C) {
+			this.X = X;
+			this.C = C;
+		}
 	}
 
 	class Scanner {
