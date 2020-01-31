@@ -8,7 +8,8 @@ import java.util.stream.IntStream;
 public class Main {
 	public static void main(String[] args) {
 		Main main = new Main();
-		//System.out.println(main.solve(main.readInput()));
+		System.out.println(main.solve(main.readInput()));
+		/*
 		Input test;
 		int caseNum = 0;
 		do {
@@ -16,6 +17,7 @@ public class Main {
 			test = main.generate();
 		} while (main.solve(test) == test.answer);
 		System.out.println(test);
+		*/
 	}
 
 	class Input {
@@ -122,10 +124,10 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			attack -= decr[i];
 			long count = monsters[i].C - attack;
-			if (count > 0) {
-				attack += count;
-				ans += count;
-			}
+			if (count <= 0) continue;
+			// count > 0
+			attack += count;
+			ans += count;
 			int in = i;
 			int out = N + 1;
 			while (in + 1 < out) {
