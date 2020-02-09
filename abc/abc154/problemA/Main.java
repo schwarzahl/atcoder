@@ -19,9 +19,14 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		String T = sc.next();
+		int A = sc.nextInt();
+		int B = sc.nextInt();
+		String U = sc.next();
+		if (S.equals(U)) A--;
+		if (T.equals(U)) B--;
+		System.out.println(A + " " + B);
 	}
 
 	class Scanner {

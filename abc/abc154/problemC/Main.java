@@ -20,8 +20,11 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Set<Integer> set = new HashSet<>();
+		for (int i = 0; i < N; i++) {
+			set.add(sc.nextInt());
+		}
+		System.out.println(N == set.size() ? "YES" : "NO");
 	}
 
 	class Scanner {
