@@ -20,8 +20,18 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		long[] p = new long[N];
+		long[] sum = new long[N + 1];
+		for (int i = 0; i < N; i++) {
+			p[i] = sc.nextLong();
+			sum[i + 1] = sum[i] + p[i];
+		}
+		long max = 0L;
+		for (int i = 0; i <= N - K; i++) {
+			max = Math.max(max, sum[i + K] - sum[i]);
+		}
+		System.out.println(0.5 * (max + K));
 	}
 
 	class Scanner {
