@@ -19,9 +19,34 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String N = sc.next();
+		int L = N.length();
+		int K = sc.nextInt();
+		long[] nine = new long[4];
+		nine[0] = 1L;
+		nine[1] = 9L;
+		nine[2] = nine[1] * 9L;
+		nine[3] = nine[2] * 9L;
+		long[] pre = new long[4];
+		CombCalculator cc = new FactorialTableCombCalculator(L + 1, 1000000007L);
+		long ans = 0L;
+		int nonezerocount = 0;
+		for (int digit = 0; digit < L; digit++) {
+			if (nonezerocount >= K) {
+				ans++;
+				break;
+			}
+			int tmp = N.charAt(digit) - '0';
+			ans += cc.comb(L - digit - 1, K - nonezerocount) * nine[K - nonezerocount];
+			if (nonezerocount < K) {
+				ans += cc.comb(L - digit - 1, K - nonezerocount - 1) * nine[K - nonezerocount - 1] * (tmp - 1);
+			}
+			if (tmp > 0) {
+				nonezerocount++;
+			}
+			if (digit == L - 1 && nonezerocount == K) ans++;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
