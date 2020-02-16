@@ -2,13 +2,7 @@ package problemD;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,42 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long K = sc.nextLong();
+		long[] A = new long[N];
+		int minusCount = 0;
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextLong();
+			if (A[i] < 0) {
+				minusCount++;
+			}
+		}
+		Arrays.sort(A);
+		long all = 1L * N * (N + 1) / 2L;
+		long minus = minusCount * (N - minusCount);
+		int minCount = Math.min(minusCount, N - minusCount);
+		if (K <= minus) {
+			long rank = 0L;
+			for (int sum = 0; true; sum++) {
+				int tmp = Math.min(minCount, sum + 1);
+				if (K <= rank + tmp) {
+					List<Long> list = new ArrayList<>();
+					for (int minusIndex = 0; minusIndex < minusCount; minusIndex++) {
+						if (sum - minusIndex < (N - minusCount)) {
+							list.add(A[minusIndex] * A[N - 1 - (sum - minusIndex)]);
+						}
+					}
+					Collections.sort(list);
+					for (long ll : list) {
+						rank++;
+						if (rank == K) {
+							System.out.println(ll);
+							return;
+						}
+					}
+				}
+				rank += tmp;
+			}
+		}
 	}
 
 	class Scanner {
