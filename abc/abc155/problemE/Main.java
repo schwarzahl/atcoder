@@ -19,9 +19,15 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String N = sc.next();
+		long[][] dp = new long[N.length() + 1][2];
+		dp[0][0] = 0L;
+		dp[0][1] = 1L;
+		for (int i = 0; i < N.length(); i++) {
+			dp[i + 1][0] = Math.min(dp[i][0] + (N.charAt(i) - '0'), dp[i][1] + 10 - (N.charAt(i) - '0'));
+			dp[i + 1][1] = Math.min(dp[i][0] + (N.charAt(i) - '0') + 1, dp[i][1] + 9 - (N.charAt(i) - '0'));
+		}
+		System.out.println(Math.min(dp[N.length()][0], dp[N.length()][1] + 1));
 	}
 
 	class Scanner {
