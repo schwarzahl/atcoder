@@ -2,6 +2,7 @@ package problemD;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,9 +20,46 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int n = sc.nextInt();
+		int a = sc.nextInt();
+		int b = sc.nextInt();
+		long MOD = 1000000007L;
+		long ans = (pow(n, MOD) - 1 + MOD) % MOD;
+		long na = comb(n, a, MOD);
+		long nb = comb(n, b, MOD);
+		System.out.println((ans - na - nb + MOD + MOD) % MOD);
+	}
+
+	long comb(long n, long c, long MOD) {
+		long nc = 1L;
+		for (long i = 1; i <= c; i++) {
+			nc = (nc * (n + 1 - i)) % MOD;
+			nc = (nc * inverse(i, MOD)) % MOD;
+		}
+		return nc;
+	}
+
+	private long inverse(long n, long mod) {
+		return pow(n, mod - 2, mod);
+	}
+
+	private long pow(long n, long p, long mod) {
+		if (p == 0) {
+			return 1L;
+		}
+		long half = pow(n, p / 2, mod);
+		long ret = (half * half) % mod;
+		if (p % 2 == 1) {
+			ret = (ret * n) % mod;
+		}
+		return ret;
+	}
+	long pow(int n, long MOD) {
+		if (n == 0) {
+			return 1L;
+		}
+		long tmp = pow(n / 2, MOD);
+		return tmp * tmp * (n % 2 == 1 ? 2L : 1L) % MOD;
 	}
 
 	class Scanner {
