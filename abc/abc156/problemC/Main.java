@@ -20,8 +20,21 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long[] X = new long[N];
+		for (int i = 0; i < N; i++) {
+			X[i] = sc.nextLong();
+		}
+		long min = Long.MAX_VALUE / 3L;
+		for (long i = 0L; i <= 100; i++) {
+			long tmp = 0L;
+			for (int j = 0; j < N; j++) {
+				tmp += (X[j] - i) * (X[j] - i);
+			}
+			if (min > tmp) {
+				min = tmp;
+			}
+		}
+		System.out.println(min);
 	}
 
 	class Scanner {

@@ -20,8 +20,11 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int R = sc.nextInt();
+		if (N < 10) {
+			R += (100 * (10 - N));
+		}
+		System.out.println(R);
 	}
 
 	class Scanner {
