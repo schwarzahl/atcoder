@@ -17,39 +17,39 @@ public class Main {
 		long K = sc.nextLong();
 		long[] A = new long[N];
 		int minusCount = 0;
+		int zeroCount = 0;
+		int plusCount = 0;
 		for (int i = 0; i < N; i++) {
 			A[i] = sc.nextLong();
 			if (A[i] < 0) {
 				minusCount++;
+			} else if (A[i] > 0) {
+				plusCount++;
+			} else {
+				zeroCount++;
 			}
 		}
 		Arrays.sort(A);
-		long all = 1L * N * (N + 1) / 2L;
-		long minus = minusCount * (N - minusCount);
-		int minCount = Math.min(minusCount, N - minusCount);
-		if (K <= minus) {
-			long rank = 0L;
-			for (int sum = 0; true; sum++) {
-				int tmp = Math.min(minCount, sum + 1);
-				if (K <= rank + tmp) {
-					List<Long> list = new ArrayList<>();
-					for (int minusIndex = 0; minusIndex < minusCount; minusIndex++) {
-						if (sum - minusIndex < (N - minusCount)) {
-							list.add(A[minusIndex] * A[N - 1 - (sum - minusIndex)]);
-						}
-					}
-					Collections.sort(list);
-					for (long ll : list) {
-						rank++;
-						if (rank == K) {
-							System.out.println(ll);
-							return;
-						}
-					}
-				}
-				rank += tmp;
-			}
+		long minusAns = minusCount * plusCount;
+		long zeroAns = zeroCount * (N - zeroCount);
+		long plusAns = N - (minusAns + zeroAns);
+		long[] arr = new long[]{(A[0] * A[1]), (A[0] * A[N - 1]), (A[N - 2] * A[N - 1])};
+		Arrays.sort(arr);
+		long low = arr[0];
+		long high = arr[2] + 1;
+		if (K <= minusAns) {
+			System.out.println("minus");
+		} else if (K <= minusAns + zeroAns) {
+			System.out.println(0);
+		} else {
+			System.out.println("plus");
 		}
+		/*
+		while (low + 1 < high) {
+			long mid = (low + high) / 2;
+
+		}
+		*/
 	}
 
 	class Scanner {
