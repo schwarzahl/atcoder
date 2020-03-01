@@ -20,8 +20,25 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int[] ans = new int[N];
+		for (int i = 0; i < M; i++) {
+			int s = sc.nextInt() - 1;
+			int c = sc.nextInt();
+			if (ans[s] != 0 && ans[s] != c) {
+				System.out.println(-1);
+				return;
+			}
+			ans[s] = c;
+		}
+		if (ans[0] == 0) {
+			System.out.println(-1);
+			return;
+		}
+		for (int i = 0; i < N; i++) {
+			System.out.print(ans[i]);
+		}
+		System.out.println();
 	}
 
 	class Scanner {
