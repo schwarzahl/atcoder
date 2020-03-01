@@ -19,9 +19,72 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		int[][] A = new int[3][3];
+		for (int r = 0; r < 3; r++) {
+			for (int c = 0; c < 3; c++) {
+				A[r][c] = sc.nextInt();
+			}
+		}
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		for (int i = 0; i < N; i++) {
+			int b = sc.nextInt();
+			for (int r = 0; r < 3; r++) {
+				for (int c = 0; c < 3; c++) {
+					if (A[r][c] == b) {
+						A[r][c] = -1;
+					}
+				}
+			}
+		}
+		for (int r = 0; r < 3; r++) {
+			boolean isOK = true;
+			for (int c = 0; c < 3; c++) {
+				if (A[r][c] != -1) {
+					isOK = false;
+				}
+			}
+			if (isOK) {
+				System.out.println("Yes");
+				return;
+			}
+		}
+		for (int c = 0; c < 3; c++) {
+			boolean isOK = true;
+			for (int r = 0; r < 3; r++) {
+				if (A[r][c] != -1) {
+					isOK = false;
+				}
+			}
+			if (isOK) {
+				System.out.println("Yes");
+				return;
+			}
+		}
+		{
+			boolean isOK = true;
+			for (int i = 0; i < 3; i++) {
+				if (A[i][i] != -1) {
+					isOK = false;
+				}
+			}
+			if (isOK) {
+				System.out.println("Yes");
+				return;
+			}
+		}
+		{
+			boolean isOK = true;
+			for (int i = 0; i < 3; i++) {
+				if (A[i][2-i] != -1) {
+					isOK = false;
+				}
+			}
+			if (isOK) {
+				System.out.println("Yes");
+				return;
+			}
+		}
+		System.out.println("No");
 	}
 
 	class Scanner {

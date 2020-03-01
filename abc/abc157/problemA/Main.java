@@ -20,8 +20,7 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		System.out.println((N+1)/2);
 	}
 
 	class Scanner {
