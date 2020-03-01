@@ -36,6 +36,7 @@ public class Main {
 				char c = sc.next().charAt(0);
 				if (c != S[i]) {
 					char pre = S[i];
+					S[i] = c;
 					bit[pre].add(i + 1, -1);
 					bit[c].add(i + 1, 1);
 				}
