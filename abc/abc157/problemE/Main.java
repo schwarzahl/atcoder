@@ -20,8 +20,37 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		char[] S = sc.next().toCharArray();
+		BinaryIndexedTree[] bit = new BinaryIndexedTree['z' + 1];
+		for (char c = 'a'; c <= 'z'; c++) {
+			bit[c] = new BinaryIndexedTree(N + 2);
+		}
+		for (int i = 0; i < N; i++) {
+			bit[S[i]].add(i + 1, 1);
+		}
+		int Q = sc.nextInt();
+		for (int q = 0; q < Q; q++) {
+			int type = sc.nextInt();
+			if (type == 1) {
+				int i = sc.nextInt() - 1;
+				char c = sc.next().charAt(0);
+				if (c != S[i]) {
+					char pre = S[i];
+					bit[pre].add(i + 1, -1);
+					bit[c].add(i + 1, 1);
+				}
+			} else {
+				int l = sc.nextInt();
+				int r = sc.nextInt();
+				int count = 0;
+				for (char c = 'a'; c <= 'z'; c++) {
+					if (bit[c].getSum(r) - bit[c].getSum(l - 1) > 0) {
+						count++;
+					}
+				}
+				System.out.println(count);
+			}
+		}
 	}
 
 	class Scanner {
