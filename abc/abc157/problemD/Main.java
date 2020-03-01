@@ -20,8 +20,35 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int K = sc.nextInt();
+		UnionFind uf = new SetUnionFind(N + 1);
+		int[] friendCount = new int[N + 1];
+		for (int i = 0; i < M; i++) {
+			int A = sc.nextInt();
+			int B = sc.nextInt();
+			if (!uf.judge(A, B)) {
+				uf.union(A, B);
+			}
+			friendCount[A]++;
+			friendCount[B]++;
+		}
+		int[] blockCount = new int[N + 1];
+		for (int i = 0; i < K; i++) {
+			int C = sc.nextInt();
+			int D = sc.nextInt();
+			if (uf.judge(C, D)) {
+				blockCount[C]++;
+				blockCount[D]++;
+			}
+		}
+		for (int i = 1; i <= N; i++) {
+			if (i > 1) {
+				System.out.print(' ');
+			}
+			System.out.print(uf.getSet(i).size() - 1 - friendCount[i] - blockCount[i]);
+		}
+		System.out.println();
 	}
 
 	class Scanner {
