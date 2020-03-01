@@ -2,13 +2,7 @@ package problemF;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,31 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		int[] x = new int[N];
+		int[] y = new int[N];
+		int[] c = new int[N];
+		for (int i = 0; i < N; i++) {
+			x[i] = sc.nextInt();
+			y[i] = sc.nextInt();
+			c[i] = sc.nextInt();
+		}
+		double ans = Double.MAX_VALUE / 3.0;
+		for (int s_i = 0; s_i < N; s_i++) {
+			for (int t_i = s_i + 1; t_i < N; t_i++) {
+				double ax = (1.0 * x[s_i] * c[s_i] + 1.0 * x[t_i] * c[t_i]) / (c[s_i] + c[t_i]);
+				double ay = (1.0 * y[s_i] * c[s_i] + 1.0 * y[t_i] * c[t_i]) / (c[s_i] + c[t_i]);
+				double[] time = new double[N];
+				for (int i = 0; i < N; i++) {
+					time[i] = 1.0 * c[i] * Math.sqrt((ax - x[i]) * (ax - x[i]) + (ay - y[i]) * (ay - y[i]));
+				}
+				Arrays.sort(time);
+				if (ans > time[K - 1]) {
+					ans = time[K - 1];
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
