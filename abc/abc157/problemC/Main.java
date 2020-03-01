@@ -29,13 +29,18 @@ public class Main {
 				System.out.println(-1);
 				return;
 			}
+			if (s == 0 && c == 0 && N > 1) {
+				System.out.println(-1);
+				return;
+			}
 			ans[s] = c;
 		}
-		if (ans[0] == 0) {
-			System.out.println(-1);
+		if (N == 1) {
+			System.out.println(ans[0]);
 			return;
 		}
-		for (int i = 0; i < N; i++) {
+		System.out.print(ans[0] == 0 ? 1 : ans[0]);
+		for (int i = 1; i < N; i++) {
 			System.out.print(ans[i]);
 		}
 		System.out.println();
