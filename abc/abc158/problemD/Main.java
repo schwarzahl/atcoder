@@ -19,9 +19,42 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		StringBuilder ss = new StringBuilder();
+		String S = sc.next();
+		ss.append(S);
+		int Q = sc.nextInt();
+		boolean isReverse = false;
+		StringBuilder tail = new StringBuilder();
+		StringBuilder head = new StringBuilder();
+		for (int i = 0; i < Q; i++) {
+			int T = sc.nextInt();
+			if (T == 1) {
+				isReverse = !isReverse;
+			} else {
+				// T == 2
+				int F = sc.nextInt();
+				String C = sc.next();
+				if (F == 1) {
+					if (isReverse) {
+						tail.append(C);
+					} else {
+						head.append(C);
+					}
+				} else {
+					// F == 2
+					if (isReverse) {
+						head.append(C);
+					} else {
+						tail.append(C);
+					}
+				}
+			}
+		}
+		if (isReverse) {
+			System.out.println(tail.reverse().toString() + ss.reverse().toString() + head.toString());
+		} else {
+			System.out.println(head.reverse().toString() + S + tail.toString());
+		}
 	}
 
 	class Scanner {

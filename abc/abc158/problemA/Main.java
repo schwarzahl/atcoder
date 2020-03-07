@@ -19,9 +19,8 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		System.out.println(S.equals("AAA") || S.equals("BBB") ? "No" : "Yes");
 	}
 
 	class Scanner {

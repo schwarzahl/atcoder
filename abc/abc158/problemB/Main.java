@@ -19,9 +19,15 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long N = sc.nextLong();
+		long A = sc.nextLong();
+		long B = sc.nextLong();
+		long ans = (N % (A + B));
+		if (ans > A) {
+			ans = A;
+		}
+		ans += (N / (A + B)) * A;
+		System.out.println(ans);
 	}
 
 	class Scanner {

@@ -19,9 +19,15 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int A = sc.nextInt();
+		int B = sc.nextInt();
+		for (int ans = 10; ans <= 1000; ans++) {
+			if (ans * 8 / 100 == A && ans * 10 / 100 == B) {
+				System.out.println(ans);
+				return;
+			}
+		}
+		System.out.println(-1);
 	}
 
 	class Scanner {
