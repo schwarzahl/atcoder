@@ -2,13 +2,7 @@ package problemC;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -35,13 +29,67 @@ public class Main {
 		}
 		int[] ans = new int[N + 1];
 		search(1, ans, map, true);
-		int i1 = 4;
+		int[] count = new int[4];
+		for (int i : ans) {
+			count[i]++;
+		}
+		Vertex[] vertexes = new Vertex[N];
+		for (int i = 1; i <= N; i++) {
+			vertexes[i - 1] = new Vertex(i, ans[i], map.get(i));
+		}
+		Arrays.sort(vertexes, (v1, v2) -> {
+			if (v1.n_size > v2.n_size) {
+				return -1;
+			}
+			if (v1.n_size < v2.n_size) {
+				return 1;
+			}
+			return 0;
+		});
+		int v_index = 0;
+		while (count[1] >= 2 * N / 3 || count[2] >= 2 * N / 3) {
+			List<Integer> nextList = vertexes[v_index].neighbour;
+			int next_index = 0;
+			for (; next_index < N; next_index++) {
+				if (nextList.contains(vertexes[next_index].id)) {
+					break;
+				}
+			}
+			count[vertexes[next_index].value] -= vertexes[v_index].n_size - 1;
+			count[vertexes[v_index].value] -= vertexes[next_index].n_size - 1;
+			for (int zero_id : vertexes[next_index].neighbour) {
+				if (zero_id != v_index) {
+					count[ans[zero_id]]--;
+					ans[zero_id] = 3;
+					count[ans[zero_id]]++;
+				}
+			}
+			for (int any_id : vertexes[v_index].neighbour) {
+				if (any_id != next_index && (count[1] >= 2 * N / 3 || count[2] >= 2 * N / 3)) {
+					count[ans[any_id]]--;
+					ans[any_id] = 3 - ans[any_id];
+					count[ans[any_id]]++;
+				}
+			}
+			v_index++;
+		}
+		int i1 = 1;
 		int i2 = 2;
 		int i3 = 3;
-		System.out.print(1);
+		System.out.print(ans[1]);
+		if (ans[1] == 1) {
+			i1 += 3;
+		} else if (ans[1] == 2) {
+			i2 += 3;
+		} else {
+			i3 += 3;
+		}
 		for (int i = 2; i <= N; i++) {
 			System.out.print(" ");
-			if (ans[i] == 1) {
+			if (ans[i] == 3) {
+				System.out.print(i3);
+				i3 += 3;
+			} else if (ans[i] == 1) {
 				if (i1 <= N) {
 					System.out.print(i1);
 					i1 += 3;
@@ -60,6 +108,19 @@ public class Main {
 			}
 		}
 		System.out.println();
+	}
+
+	class Vertex {
+		int id;
+		int value;
+		List<Integer> neighbour;
+		int n_size;
+		public Vertex(int id, int value, List<Integer> neighbour) {
+			this.id = id;
+			this.value = value;
+			this.neighbour = neighbour;
+			this.n_size = neighbour.size();
+		}
 	}
 
 	void search(int current, int[] ans, Map<Integer, List<Integer>> map, boolean isOdd) {
