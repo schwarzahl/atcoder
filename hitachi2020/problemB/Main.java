@@ -19,9 +19,33 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int A = sc.nextInt();
+		int B = sc.nextInt();
+		int M = sc.nextInt();
+		int[] a = new int[A + 1];
+		int[] b = new int[B + 1];
+		int min_a = 100001;
+		int min_b = 100001;
+		for (int i = 1; i <= A; i++) {
+			a[i] = sc.nextInt();
+			if (min_a > a[i]) {
+				min_a = a[i];
+			}
+		}
+		for (int j = 1; j <= B; j++) {
+			b[j] = sc.nextInt();
+			if (min_b > b[j]) {
+				min_b = b[j];
+			}
+		}
+		int ans = min_a + min_b;
+		for (int i = 0; i < M; i++) {
+			int x = sc.nextInt();
+			int y = sc.nextInt();
+			int c = sc.nextInt();
+			ans = Math.min(ans, a[x] + b[y] - c);
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
