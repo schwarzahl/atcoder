@@ -20,8 +20,54 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 1; i < N; i++) {
+			int a = sc.nextInt();
+			int b = sc.nextInt();
+			if (!map.containsKey(a)) {
+				map.put(a, new ArrayList<>());
+			}
+			if (!map.containsKey(b)) {
+				map.put(b, new ArrayList<>());
+			}
+			map.get(a).add(b);
+			map.get(b).add(a);
+		}
+		int[] ans = new int[N + 1];
+		search(1, ans, map, true);
+		int i1 = 4;
+		int i2 = 2;
+		int i3 = 3;
+		System.out.print(1);
+		for (int i = 2; i <= N; i++) {
+			System.out.print(" ");
+			if (ans[i] == 1) {
+				if (i1 <= N) {
+					System.out.print(i1);
+					i1 += 3;
+				} else {
+					System.out.print(i3);
+					i3 += 3;
+				}
+			} else {
+				if (i2 <= N) {
+					System.out.print(i2);
+					i2 += 3;
+				} else {
+					System.out.print(i3);
+					i3 += 3;
+				}
+			}
+		}
+		System.out.println();
+	}
+
+	void search(int current, int[] ans, Map<Integer, List<Integer>> map, boolean isOdd) {
+		if (ans[current] != 0) return;
+		ans[current] = isOdd ? 1 : 2;
+		for (int next : map.get(current)) {
+			search(next, ans, map, !isOdd);
+		}
 	}
 
 	class Scanner {
