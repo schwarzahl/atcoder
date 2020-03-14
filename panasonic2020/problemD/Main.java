@@ -24,12 +24,14 @@ public class Main {
 		int[] count = new int[11];
 		count[0] = N;
 		char[] i2c = "abcdefghij".toCharArray();
+		StringBuilder sb = new StringBuilder();
 		do {
 			for (int i = 0; i < N; i++) {
-				System.out.print(i2c[ans[i]]);
+				sb.append(i2c[ans[i]]);
 			}
-			System.out.println();
+			sb.append('\n');
 		} while (up(count, ans, N - 1));
+		System.out.println(sb.toString());
 	}
 
 	private boolean up(int[] count, int[] ans, int index) {
