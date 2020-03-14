@@ -20,8 +20,52 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		if (N == 1) {
+			System.out.println("a");
+			return;
+		}
+		long index = 0;
+		long[] ten = new long[11];
+		ten[0] = 1L;
+		for (int i = 0; i < N; i++) {
+			ten[i + 1] = 10L * ten[i];
+		}
+		char[] i2c = "abcdefghij".toCharArray();
+		while (index < ten[N - 1]) {
+			for (int i = 10 - N; i < 10; i++) {
+				System.out.print(i2c[(int)((index / ten[9 - i]) % 10)]);
+			}
+			System.out.println();
+			boolean retry = true;
+			while (retry) {
+				index++;
+				long base = index;
+				int[] count = new int[10];
+				int[] num = new int[N + 1];
+				{
+					int i = 0;
+					int ac = N;
+					while (base > 0) {
+						num[i++] = (int) (base % 10);
+						count[(int) (base % 10)]++;
+						base /= 10;
+						ac--;
+					}
+					count[0] = ac;
+				}
+				retry = false;
+				for (int i = 1; i < 10; i++) {
+					retry |= (count[i] > 0) && (count[i - 1] == 0);
+				}
+				int max = 0;
+				for (int i = N - 1; i >= 0; i--) {
+					if (max + 1 < num[i]) {
+						retry = true;
+					}
+					max = Math.max(max, num[i]);
+				}
+			}
+		}
 	}
 
 	class Scanner {
