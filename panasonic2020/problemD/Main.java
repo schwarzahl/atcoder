@@ -20,52 +20,32 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		if (N == 1) {
-			System.out.println("a");
-			return;
-		}
-		long index = 0;
-		long[] ten = new long[11];
-		ten[0] = 1L;
-		for (int i = 0; i < N; i++) {
-			ten[i + 1] = 10L * ten[i];
-		}
+		int[] ans = new int[N];
+		int[] count = new int[11];
+		count[0] = N;
 		char[] i2c = "abcdefghij".toCharArray();
-		while (index < ten[N - 1]) {
-			for (int i = 10 - N; i < 10; i++) {
-				System.out.print(i2c[(int)((index / ten[9 - i]) % 10)]);
+		do {
+			for (int i = 0; i < N; i++) {
+				System.out.print(i2c[ans[i]]);
 			}
 			System.out.println();
-			boolean retry = true;
-			while (retry) {
-				index++;
-				long base = index;
-				int[] count = new int[10];
-				int[] num = new int[N + 1];
-				{
-					int i = 0;
-					int ac = N;
-					while (base > 0) {
-						num[i++] = (int) (base % 10);
-						count[(int) (base % 10)]++;
-						base /= 10;
-						ac--;
-					}
-					count[0] = ac;
-				}
-				retry = false;
-				for (int i = 1; i < 10; i++) {
-					retry |= (count[i] > 0) && (count[i - 1] == 0);
-				}
-				int max = 0;
-				for (int i = N - 1; i >= 0; i--) {
-					if (max + 1 < num[i]) {
-						retry = true;
-					}
-					max = Math.max(max, num[i]);
-				}
+		} while (up(count, ans, N - 1));
+	}
+
+	private boolean up(int[] count, int[] ans, int index) {
+		if (index < 0) {
+			return false;
+		}
+		count[ans[index]]--;
+		ans[index]++;
+		if (count[ans[index] - 1] == 0) {
+			ans[index] = 0;
+			if (!up(count, ans, index - 1)) {
+				return false;
 			}
 		}
+		count[ans[index]]++;
+		return true;
 	}
 
 	class Scanner {
