@@ -19,9 +19,10 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long a = sc.nextLong();
+		long b = sc.nextLong();
+		long c = sc.nextLong();
+		System.out.println((((c - a - b) * (c - a - b) > a * b * 4L) && ((c - a - b) > 0)) ? "Yes" : "No");
 	}
 
 	class Scanner {

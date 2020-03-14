@@ -19,9 +19,17 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long H = sc.nextLong();
+		long W = sc.nextLong();
+		long ans = (H / 2) * (W / 2) * 2;
+		if (H % 2 == 1 && W % 2 == 1) {
+			ans += (W / 2) + (H / 2) + 1;
+		} else if (H % 2 == 1) {
+			ans += (W / 2);
+		} else if (W % 2 == 1) {
+			ans += (H / 2);
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
