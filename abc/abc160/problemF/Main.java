@@ -20,8 +20,60 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long MOD = 1000000007L;
+		CombCalculator cc = new FactorialTableCombCalculator(N + 2, MOD);
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		for (int i = 1; i < N; i++) {
+			int a = sc.nextInt();
+			int b = sc.nextInt();
+			if (!map.containsKey(a)) {
+				map.put(a, new HashSet<>());
+			}
+			if (!map.containsKey(b)) {
+				map.put(b, new HashSet<>());
+			}
+			map.get(a).add(b);
+			map.get(b).add(a);
+		}
+		Map<Long, Result> memo = new HashMap<>();
+		for (int k = 1; k <= N; k++) {
+			System.out.println(ans(k, -1, memo, map, MOD, cc).value);
+		}
+	}
+
+	private Result ans(int current, int parent, Map<Long, Result> memo, Map<Integer, Set<Integer>> map, long MOD, CombCalculator cc) {
+		if (memo.containsKey(parent * 1000000L + current)) {
+			return memo.get(parent * 1000000L + current);
+		}
+		List<Integer> counts = new ArrayList<>();
+		int countSum = 0;
+		long valueMul = 1L;
+		for (int next : map.get(current)) {
+			if (next == parent) continue;
+			Result result = ans(next, current, memo, map, MOD, cc);
+			counts.add(result.count);
+			countSum += result.count;
+			valueMul = (valueMul * result.value) % MOD;
+		}
+		long answer = 1L;
+		int rest = countSum;
+		for (int tmp : counts) {
+			answer = (answer * cc.comb(rest, tmp)) % MOD;
+			rest -= tmp;
+		}
+		answer = (answer * valueMul) % MOD;
+		Result result = new Result(countSum + 1, answer);
+		memo.put(parent * 1000000L + current, result);
+		return result;
+	}
+
+	class Result {
+		int count;
+		long value;
+		public Result(int count, long value) {
+			this.count = count;
+			this.value = value;
+		}
 	}
 
 	class Scanner {
