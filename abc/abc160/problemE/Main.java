@@ -2,13 +2,7 @@ package problemE;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -19,9 +13,57 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int X = sc.nextInt();
+		int Y = sc.nextInt();
+		int A = sc.nextInt();
+		int B = sc.nextInt();
+		int C = sc.nextInt();
+		long ans = 0L;
+		PriorityQueue<Long> redApples = new PriorityQueue<>();
+		for (int i = 0; i < A; i++) {
+			long p = sc.nextLong();
+			redApples.add(p);
+			ans += p;
+		}
+		while (redApples.size() > X) {
+			ans -= redApples.poll();
+		}
+		PriorityQueue<Long> greenApples = new PriorityQueue<>();
+		for (int i = 0; i < B; i++) {
+			long q = sc.nextLong();
+			greenApples.add(q);
+			ans += q;
+		}
+		while (greenApples.size() > Y) {
+			ans -= greenApples.poll();
+		}
+		PriorityQueue<Long> clApples = new PriorityQueue<>(Collections.reverseOrder());
+		for (int i = 0; i < C; i++) {
+			clApples.add(sc.nextLong());
+		}
+		while (!clApples.isEmpty()) {
+			long cl = clApples.poll();
+			long red = redApples.peek();
+			long green = greenApples.peek();
+			if (red < green) {
+				if (red < cl) {
+					ans -= red;
+					ans += cl;
+					redApples.poll();
+				} else {
+					break;
+				}
+			} else {
+				if (green < cl) {
+					ans -= green;
+					ans += cl;
+					greenApples.poll();
+				} else {
+					break;
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
