@@ -23,64 +23,48 @@ public class Main {
 		int X = sc.nextInt();
 		int Y = sc.nextInt();
 		int[] ans = new int[N];
-		int K = (Y - X + 1);
-		for (int i = 1; i <= K / 2; i++) {
-			ans[i] = K;
-		}
-		if (X > 1) {
-			int[] base = new int[N];
-			base[1] = 1;
-			for (int i = 2; i <= (K + 1) / 2; i++) {
-				base[i] = 2;
-			}
-			if (K % 2 == 0) {
-				base[K / 2 + 1] = 1;
-			}
-			for (int i = 0; X - 1 - i >= 1; i++) {
-				for (int j = 1; j <= i; j++) {
-					ans[j]++;
-				}
-				for (int j = 1; j + i < N; j++) {
-					ans[j + i] += base[j];
-				}
-			}
-		}
-		if (Y < N) {
-			int[] base = new int[N];
-			boolean[] isChecked = new boolean[N + 1];
-			isChecked[0] = true;
-			isChecked[Y] = true;
-			isChecked[Y + 1] = true;
+		for (int start = 1; start < N; start++) {
 			Set<Integer> set = new HashSet<>();
-			set.add(Y);
+			Set<Integer> closeSet = new HashSet<>();
+			set.add(start);
+			closeSet.add(start);
+			closeSet.add(0);
+			closeSet.add(N + 1);
 			int dist = 1;
 			while (!set.isEmpty()) {
-				base[dist] = set.size();
 				Set<Integer> nextSet = new HashSet<>();
 				for (int current : set) {
-					if (current == Y && !isChecked[X]) {
+					if (current == X && !closeSet.contains(Y)) {
+						nextSet.add(Y);
+						closeSet.add(Y);
+						if (start < Y) {
+							ans[dist]++;
+						}
+					}
+					if (current == Y && !closeSet.contains(X)) {
 						nextSet.add(X);
-						isChecked[X] = true;
+						closeSet.add(X);
+						if (start < X) {
+							ans[dist]++;
+						}
 					}
-					if (!isChecked[current + 1]) {
-						nextSet.add(current + 1);
-						isChecked[current + 1] = true;
-					}
-					if (!isChecked[current - 1]) {
+					if (!closeSet.contains(current - 1)) {
 						nextSet.add(current - 1);
-						isChecked[current - 1] = true;
+						closeSet.add(current - 1);
+						if (start < current - 1) {
+							ans[dist]++;
+						}
+					}
+					if (!closeSet.contains(current + 1)) {
+						nextSet.add(current + 1);
+						closeSet.add(current + 1);
+						if (start < current + 1) {
+							ans[dist]++;
+						}
 					}
 				}
 				set = nextSet;
 				dist++;
-			}
-			for (int i = 0; Y + 1 + i <= N; i++) {
-				for (int j = 1; j <= i; j++) {
-					ans[j]++;
-				}
-				for (int j = 1; j + i < N; j++) {
-					ans[j + i] += base[j];
-				}
 			}
 		}
 		for (int i = 1; i < N; i++) {
