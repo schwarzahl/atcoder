@@ -43,9 +43,15 @@ public class Main {
 		}
 		while (!clApples.isEmpty()) {
 			long cl = clApples.poll();
-			long red = redApples.peek();
-			long green = greenApples.peek();
-			if (red < green) {
+			long red = 0;
+			if (!redApples.isEmpty()) {
+				red = redApples.peek();
+			}
+			long green = 0;
+			if (!greenApples.isEmpty()) {
+				green = greenApples.peek();
+			}
+			if (red < green || green == 0) {
 				if (red < cl) {
 					ans -= red;
 					ans += cl;
