@@ -19,9 +19,18 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		int K = sc.nextInt();
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int A0 = sc.nextInt();
+		int prev = A0;
+		int ans = K;
+		for (int i = 1; i < N; i++) {
+			int A = sc.nextInt();
+			ans = Math.min(ans, K - (A - prev));
+			prev = A;
+		}
+		ans = Math.min(ans, (K) - (K + A0 - prev));
+		System.out.println(ans);
 	}
 
 	class Scanner {

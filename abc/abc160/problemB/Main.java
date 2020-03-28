@@ -19,9 +19,8 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int X = sc.nextInt();
+		System.out.println((X / 500) * 1000 + ((X % 500) / 5) * 5);
 	}
 
 	class Scanner {

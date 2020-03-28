@@ -19,9 +19,8 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		System.out.println(S.charAt(2) == S.charAt(3) && S.charAt(4) == S.charAt(5) ? "Yes" : "No");
 	}
 
 	class Scanner {
