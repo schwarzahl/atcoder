@@ -25,10 +25,7 @@ public class Main {
 			return;
 		}
 		int ans = 3;
-		for (long i = 2; true; i++) {
-			if (i > N / i) {
-				break;
-			}
+		for (long i = 2; i * i < N; i++) {
 			if ((N - 1) % i == 0) {
 				ans += 2;
 				if ((N - 1) / i == i) {

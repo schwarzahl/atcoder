@@ -20,8 +20,24 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		int C = sc.nextInt();
+		String S = sc.next();
+		int[][] dp = new int[N + 1][C + 1];
+		for (int day = 1; day <= N; day++) {
+			dp[day][0] = Math.max(dp[day - 1][0], dp[day - 1][1]);
+			for (int rest = 1; rest < C; rest++) {
+				dp[day][rest] = dp[day - 1][rest + 1];
+			}
+			if (S.charAt(day - 1) == 'o') {
+				dp[day][C] = 1 + dp[day - 1][0];
+			}
+		}
+		int ans = 0;
+
+		for (int day = 2; day <= N; day++) {
+			int before = dp[day - 1][C];
+		}
 	}
 
 	class Scanner {
