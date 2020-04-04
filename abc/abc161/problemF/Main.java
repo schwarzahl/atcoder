@@ -19,9 +19,24 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long N = sc.nextLong();
+		if (N <= 4) {
+			System.out.println(N - 1);
+			return;
+		}
+		int ans = 3;
+		for (long i = 2; true; i++) {
+			if (i > N / i) {
+				break;
+			}
+			if ((N - 1) % i == 0) {
+				ans += 2;
+				if ((N - 1) / i == i) {
+					ans--;
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
