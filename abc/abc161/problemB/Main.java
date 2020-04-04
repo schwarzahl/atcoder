@@ -2,13 +2,7 @@ package problemB;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,15 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int[] A = new int[N];
+		int sum = 0;
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextInt();
+			sum += A[i];
+		}
+		Arrays.sort(A);
+		System.out.println(A[N - M] >= sum / M / 4 ? "Yes" : "No");
 	}
 
 	class Scanner {

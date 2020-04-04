@@ -19,9 +19,20 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long N = sc.nextLong();
+		long K = sc.nextLong();
+		if (N >= K) {
+			long tmp = N % K;
+			System.out.println(Math.min(K - tmp, tmp));
+		} else {
+			long prev = N;
+			long ans = Math.abs(N - K);
+			while (prev > ans) {
+				prev = ans;
+				ans = Math.abs(ans - K);
+			}
+			System.out.println(prev);
+		}
 	}
 
 	class Scanner {
