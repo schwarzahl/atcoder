@@ -22,7 +22,7 @@ public class Main {
 			sum += A[i];
 		}
 		Arrays.sort(A);
-		System.out.println(A[N - M] >= sum / M / 4 ? "Yes" : "No");
+		System.out.println(A[N - M] * 4 * M >= sum ? "Yes" : "No");
 	}
 
 	class Scanner {
