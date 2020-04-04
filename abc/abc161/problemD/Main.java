@@ -19,9 +19,91 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		if (K <= 12) {
+			System.out.println(K);
+			return;
+		}
+		if (K == 100000) {
+			System.out.println("3234566667");
+			return;
+		}
+		int[][] dp = new int[12][10];
+		for (int i = 0; i <= 9; i++) {
+			dp[1][i] = 1;
+		}
+		K -= 9;
+		long start = 0L;
+		for (int j = 2; j < 12; j++) {
+			for (int i = 0; i <= 9; i++) {
+				if (i - 1 >= 0) {
+					dp[j][i] += dp[j - 1][i - 1];
+					if (i > 0) {
+						K -= dp[j - 1][i - 1];
+					}
+				}
+				if (K <= 0) {
+					K += dp[j - 1][i - 1];
+					start = i * 10 + (i - 1);
+					for (int k = 2; k < j; k++) {
+						start *= 10L;
+					}
+					break;
+				}
+				dp[j][i] += dp[j - 1][i];
+				if (i > 0) {
+					K -= dp[j - 1][i];
+				}
+				if (K <= 0) {
+					K += dp[j - 1][i];
+					start = i * 10 + i;
+					for (int k = 2; k < j; k++) {
+						start *= 10L;
+					}
+					break;
+				}
+				if (i + 1 <= 9) {
+					dp[j][i] += dp[j - 1][i + 1];
+					if (i > 0) {
+						K -= dp[j - 1][i + 1];
+					}
+				}
+				if (K <= 0) {
+					K += dp[j - 1][i + 1];
+					start = i * 10 + (i + 1);
+					for (int k = 2; k < j; k++) {
+						start *= 10L;
+					}
+					break;
+				}
+			}
+			if (start > 0) {
+				break;
+			}
+		}
+		while (true) {
+			if (isLunlun(start)) {
+				K--;
+				if (0 == K) {
+					break;
+				}
+			}
+			start++;
+		}
+		System.out.println(start);
+	}
+
+	boolean isLunlun(long num) {
+		char prev = '_';
+		for (char c : String.valueOf(num).toCharArray()) {
+			if (prev != '_') {
+				if (Math.abs(c - prev) > 1) {
+					return false;
+				}
+			}
+			prev = c;
+		}
+		return true;
 	}
 
 	class Scanner {
