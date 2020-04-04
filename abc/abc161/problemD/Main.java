@@ -24,86 +24,48 @@ public class Main {
 			System.out.println(K);
 			return;
 		}
-		if (K == 100000) {
-			System.out.println("3234566667");
-			return;
-		}
 		int[][] dp = new int[12][10];
 		for (int i = 0; i <= 9; i++) {
 			dp[1][i] = 1;
 		}
-		K -= 9;
-		long start = 0L;
 		for (int j = 2; j < 12; j++) {
 			for (int i = 0; i <= 9; i++) {
 				if (i - 1 >= 0) {
 					dp[j][i] += dp[j - 1][i - 1];
-					if (i > 0) {
-						K -= dp[j - 1][i - 1];
-					}
-				}
-				if (K <= 0) {
-					K += dp[j - 1][i - 1];
-					start = i * 10 + (i - 1);
-					for (int k = 2; k < j; k++) {
-						start *= 10L;
-					}
-					break;
 				}
 				dp[j][i] += dp[j - 1][i];
-				if (i > 0) {
-					K -= dp[j - 1][i];
-				}
-				if (K <= 0) {
-					K += dp[j - 1][i];
-					start = i * 10 + i;
-					for (int k = 2; k < j; k++) {
-						start *= 10L;
-					}
-					break;
-				}
 				if (i + 1 <= 9) {
 					dp[j][i] += dp[j - 1][i + 1];
-					if (i > 0) {
-						K -= dp[j - 1][i + 1];
-					}
 				}
-				if (K <= 0) {
-					K += dp[j - 1][i + 1];
-					start = i * 10 + (i + 1);
-					for (int k = 2; k < j; k++) {
-						start *= 10L;
-					}
-					break;
-				}
-			}
-			if (start > 0) {
-				break;
 			}
 		}
-		while (true) {
-			if (isLunlun(start)) {
-				K--;
-				if (0 == K) {
-					break;
+		int sum = 0;
+		for (int digit = 1; digit < 12; digit++) {
+			for (int i = 1; i <= 9; i++) {
+				sum += dp[digit][i];
+				if (sum >= K) {
+					System.out.println(dp_func(digit, i, K - (sum - dp[digit][i]), dp));
+					return;
 				}
 			}
-			start++;
 		}
-		System.out.println(start);
 	}
 
-	boolean isLunlun(long num) {
-		char prev = '_';
-		for (char c : String.valueOf(num).toCharArray()) {
-			if (prev != '_') {
-				if (Math.abs(c - prev) > 1) {
-					return false;
-				}
-			}
-			prev = c;
+	String dp_func(int digit, int start, int rest, int[][] dp) {
+		if (digit == 0) {
+			return "";
 		}
-		return true;
+		if (start - 1 >= 0) {
+			rest -= dp[digit - 1][start - 1];
+			if (rest <= 0) {
+				return start + dp_func(digit - 1, start - 1, rest + dp[digit - 1][start - 1], dp);
+			}
+		}
+		rest -= dp[digit - 1][start];
+		if (rest <= 0) {
+			return start + dp_func(digit - 1, start, rest + dp[digit - 1][start], dp);
+		}
+		return start + dp_func(digit - 1, start + 1, rest, dp);
 	}
 
 	class Scanner {
