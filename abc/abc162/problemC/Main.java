@@ -19,9 +19,29 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		long[] ab = new long[201];
+		for (int a = 1; a <= K; a++) {
+			for (int b = 1; b <= K; b++) {
+				ab[(int)gcd(a, b)]++;
+			}
+		}
+		long ans = 0L;
+		for (int c = 1; c <= K; c++) {
+			for (int i = 1; i <= 200; i++) {
+				ans += ab[i] * gcd(c, i);
+			}
+		}
+		System.out.println(ans);
+	}
+
+	private long gcd(int a, int b) {
+		for (int i = Math.min(a, b); i > 1; i--) {
+			if ((a % i == 0) && (b % i == 0)) {
+				return i;
+			}
+		}
+		return 1;
 	}
 
 	class Scanner {

@@ -20,8 +20,7 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		System.out.println((N / 100 == 7) || ((N % 100) / 10 == 7) || (N % 10 == 7) ? "Yes" : "No");
 	}
 
 	class Scanner {

@@ -20,8 +20,38 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String S = sc.next();
+		int[] c2i = new int[256];
+		c2i['R'] = 1;
+		c2i['G'] = 2;
+		c2i['B'] = 3;
+		int[][] sum = new int[4][N + 1];
+		for (int i = 0; i < N; i++) {
+			int ci = c2i[S.charAt(i)];
+			for (int j = 1; j <= 3; j++) {
+				sum[j][i + 1] = sum[j][i];
+				if (j == ci) {
+					sum[j][i + 1]++;
+				}
+			}
+		}
+		long ans = 0L;
+		for (int i = 0; i < N; i++) {
+			for (int j = i + 1; j < N; j++) {
+				for (int ci = 1; ci <= 3; ci++) {
+					int ic = c2i[S.charAt(i)];
+					int jc = c2i[S.charAt(j)];
+					if (ic == ci) continue;
+					if (jc == ci) continue;
+					if (ic == jc) continue;
+					ans += sum[ci][N] - sum[ci][j];
+					if (2 * j - i < N && c2i[S.charAt(2 * j - i)] == ci) {
+						ans--;
+					}
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
