@@ -20,8 +20,46 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long[] A = new long[N];
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextLong();
+		}
+		long[] evenSum = new long[N];
+		long[] oddSum = new long[N];
+		for (int i = 0; i * 2 < N; i++) {
+			evenSum[i + 1] = evenSum[i] + A[i * 2];
+			if (i * 2 + 1 < N) {
+				oddSum[i + 1] = oddSum[i] + A[i * 2 + 1];
+			}
+		}
+		long max = Long.MIN_VALUE / 3;
+		for (int i = 0; i <= N / 2; i++) {
+			long tmp = evenSum[i] + oddSum[N / 2] - oddSum[i];
+			max = Math.max(max, tmp);
+		}
+		if (N % 2 != 0) {
+			long[] eomax = new long[N];
+			long[] oemax = new long[N];
+			for (int i = 0; i * 2 + 1 < N; i++) {
+				eomax[i + 1] = Math.max(eomax[i] + A[i * 2 + 1], evenSum[i + 1]);
+			}
+			for (int i = N / 2; i > 0; i--) {
+				oemax[i - 1] = Math.max(oemax[i] + A[i * 2 - 1], evenSum[N / 2 + 1] - evenSum[i]);
+			}
+			for (int i = 0; i <= N / 2; i++) {
+				max = Math.max(max, eomax[i] + oemax[i]);
+			}
+			for (int i = 0; i < N; i += 2) {
+				long tmp = evenSum[N / 2 + 1] - A[i];
+				max = Math.max(max, tmp);
+			}
+			for (int i = 0; i <= N / 2; i++) {
+				long tmp = oddSum[i] + evenSum[N / 2 + 1] - evenSum[i + 1];
+				max = Math.max(max, tmp);
+			}
+			// TODO: even odd even
+		}
+		System.out.println(max);
 	}
 
 	class Scanner {
