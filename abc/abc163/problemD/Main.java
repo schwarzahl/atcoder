@@ -19,9 +19,14 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		long MOD = 1000000007L;
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		long ans = 0L;
+		for (long i = K; i <= N + 1; i++) {
+			ans = (ans + i * (-i + N + 1L) + 1L) % MOD;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {

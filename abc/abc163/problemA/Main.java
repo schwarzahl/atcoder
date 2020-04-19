@@ -19,9 +19,8 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		double R = sc.nextDouble();
+		System.out.println(R * 6.2831);
 	}
 
 	class Scanner {
