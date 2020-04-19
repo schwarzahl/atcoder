@@ -2,13 +2,7 @@ package problemE;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,57 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		A[] a = new A[N];
+		for (int i = 0; i < N; i++) {
+			a[i] = new A(i, sc.nextLong());
+		}
+		Arrays.sort(a, (o1, o2) -> {
+			if (o1.k - o2.k > 0) {
+				return -1;
+			}
+			if (o1.k - o2.k < 0) {
+				return 1;
+			}
+			if (o1.id - o2.id > 0) {
+				return 1;
+			}
+			if (o1.id - o2.id < 0) {
+				return -1;
+			}
+			return 0;
+		});
+		long ans = 0L;
+		{
+			int left_id = 0;
+			int right_id = N - 1;
+			for (int i = 1; i < N; i++) {
+				A a1 = a[i - 1];
+				A a2 = a[i];
+				long ll = a1.k * Math.abs(a1.id - left_id) + a2.k * Math.abs(a2.id - (left_id + 1));
+				long lr = a1.k * Math.abs(a1.id - left_id) + a2.k * Math.abs(a2.id - right_id);
+				long rl = a1.k * Math.abs(a1.id - right_id) + a2.k * Math.abs(a2.id - left_id);
+				long rr = a1.k * Math.abs(a1.id - right_id) + a2.k * Math.abs(a2.id - (right_id - 1));
+				long lp = Math.max(ll, lr);
+				long rp = Math.max(rl, rr);
+				if (lp > rp) {
+					ans += a1.k * Math.abs(a1.id - left_id);
+					left_id++;
+				} else {
+					ans += a1.k * Math.abs(a1.id - right_id);
+					right_id--;
+				}
+			}
+		}
+		System.out.println(ans);
+	}
+
+	class A {
+		int id;
+		long k;
+		public A(int id, long k) {
+			this.id = id;
+			this.k = k;
+		}
 	}
 
 	class Scanner {
