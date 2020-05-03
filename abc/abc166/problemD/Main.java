@@ -19,9 +19,20 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long X = sc.nextLong();
+		Map<Long, Long> map = new HashMap<>();
+		for (long A = 0L; true; A++) {
+			long A5 = A * A * A * A * A;
+			map.put(A5, A);
+			if (map.containsKey(A5 - X)) {
+				System.out.println(A + " " + map.get(A5 - X));
+				return;
+			}
+			if (map.containsKey(X - A5)) {
+				System.out.println(A + " -" + map.get(X - A5));
+				return;
+			}
+		}
 	}
 
 	class Scanner {
