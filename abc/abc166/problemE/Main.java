@@ -20,8 +20,22 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long[] add = new long[N + 1];
+		long[] sub = new long[N + 1];
+		for (int i = 1; i <= N; i++) {
+			int A = sc.nextInt();
+			if (i + A <= N) {
+				add[i + A]++;
+			}
+			if (0 <= i - A && i - A <= N) {
+				sub[i - A]++;
+			}
+		}
+		long ans = 0L;
+		for (int i = 0; i <= N; i++) {
+			ans += add[i] * sub[i];
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
