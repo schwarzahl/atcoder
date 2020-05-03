@@ -20,8 +20,22 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		boolean[] snuke = new boolean[N + 1];
+		for (int i = 0; i < K; i++) {
+			int d = sc.nextInt();
+			for (int j = 0; j < d; j++) {
+				int A = sc.nextInt();
+				snuke[A] = true;
+			}
+		}
+		int ans = 0;
+		for (int i = 1; i <= N; i++) {
+			if (!snuke[i]) {
+				ans++;
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {

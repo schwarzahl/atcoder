@@ -20,8 +20,29 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int[] H = new int[N + 1];
+		for (int i = 1; i <= N; i++) {
+			H[i] = sc.nextInt();
+		}
+		boolean[] isNotGood = new boolean[N + 1];
+		for (int i = 1; i <= M; i++) {
+			int A = sc.nextInt();
+			int B = sc.nextInt();
+			if (H[A] <= H[B]) {
+				isNotGood[A] = true;
+			}
+			if (H[B] <= H[A]) {
+				isNotGood[B] = true;
+			}
+		}
+		int ans = 0;
+		for (int i = 1; i <= N; i++) {
+			if (!isNotGood[i]) {
+				ans++;
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
