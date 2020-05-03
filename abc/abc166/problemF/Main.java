@@ -20,8 +20,206 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int A = sc.nextInt();
+		int B = sc.nextInt();
+		int C = sc.nextInt();
+		String[] s = new String[N];
+		for (int i = 0; i < N; i++) {
+			s[i] = sc.next();
+		}
+		StringBuilder ans = new StringBuilder();
+		for (int i = 0; i < N; i++) {
+			String result = "";
+			if (s[i].equals("AB")) {
+				result = calc(A, B);
+			}
+			if (s[i].equals("AC")) {
+				result = calc(A, C);
+			}
+			if (s[i].equals("BC")) {
+				result = calc(B, C);
+			}
+			if (result.equals("No")) {
+				System.out.println("No");
+				return;
+			}
+			char X = s[i].charAt(0);
+			char Y = s[i].charAt(1);
+			if (result.equals("X")) {
+				ans.append(X + "\n");
+				if (X == 'A') {
+					A++;
+				}
+				if (X == 'B') {
+					B++;
+				}
+				if (X == 'C') {
+					C++;
+				}
+				if (Y == 'A') {
+					A--;
+				}
+				if (Y == 'B') {
+					B--;
+				}
+				if (Y == 'C') {
+					C--;
+				}
+			}
+			if (result.equals("Y")) {
+				ans.append(Y + "\n");
+				if (X == 'A') {
+					A--;
+				}
+				if (X == 'B') {
+					B--;
+				}
+				if (X == 'C') {
+					C--;
+				}
+				if (Y == 'A') {
+					A++;
+				}
+				if (Y == 'B') {
+					B++;
+				}
+				if (Y == 'C') {
+					C++;
+				}
+			}
+			if (result.equals("11")) {
+				if (i == N - 1) {
+					ans.append(X + "\n");
+					if (X == 'A') {
+						A++;
+					}
+					if (X == 'B') {
+						B++;
+					}
+					if (X == 'C') {
+						C++;
+					}
+					if (Y == 'A') {
+						A--;
+					}
+					if (Y == 'B') {
+						B--;
+					}
+					if (Y == 'C') {
+						C--;
+					}
+				} else {
+					if (s[i + 1].equals("AB")) {
+						if (s[i].equals("AB")) {
+							ans.append("A\n");
+							A++;
+							B--;
+						}
+						if (s[i].equals("AC")) {
+							if (B == 0) {
+								ans.append("A\n");
+								A++;
+								C--;
+							} else {
+								ans.append("C\n");
+								A--;
+								C++;
+							}
+						}
+						if (s[i].equals("BC")) {
+							if (A == 0) {
+								ans.append("B\n");
+								B++;
+								C--;
+							} else {
+								ans.append("C\n");
+								B--;
+								C++;
+							}
+						}
+					}
+					if (s[i + 1].equals("AC")) {
+						if (s[i].equals("AB")) {
+							if (C == 0) {
+								ans.append("A\n");
+								A++;
+								B--;
+							} else {
+								ans.append("B\n");
+								B++;
+								A--;
+							}
+						}
+						if (s[i].equals("AC")) {
+							ans.append("A\n");
+							A++;
+							C--;
+						}
+						if (s[i].equals("BC")) {
+							if (A == 0) {
+								ans.append("C\n");
+								C++;
+								B--;
+							} else {
+								ans.append("B\n");
+								B++;
+								C--;
+							}
+						}
+					}
+					if (s[i + 1].equals("BC")) {
+						if (s[i].equals("AB")) {
+							if (C == 0) {
+								ans.append("B\n");
+								B++;
+								A--;
+							} else {
+								ans.append("A\n");
+								A++;
+								B--;
+							}
+						}
+						if (s[i].equals("AC")) {
+							if (B == 0) {
+								ans.append("C\n");
+								C++;
+								A--;
+							} else {
+								ans.append("A\n");
+								A++;
+								C--;
+							}
+						}
+						if (s[i].equals("BC")) {
+							ans.append("B\n");
+							B++;
+							C--;
+						}
+					}
+				}
+			}
+		}
+		System.out.println("Yes");
+		System.out.print(ans.toString());
+	}
+
+	String calc(int X, int Y) {
+		if (X == 0 && Y == 0) {
+			return "No";
+		}
+		if (X > 0 && Y == 0) {
+			return "Y";
+		}
+		if (X == 0 && Y > 0) {
+			return "X";
+		}
+		if (X == 1 && Y == 1) {
+			return "11";
+		}
+		if (X > Y) {
+			return "Y";
+		}
+		return "X";
 	}
 
 	class Scanner {
