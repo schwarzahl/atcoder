@@ -19,9 +19,52 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		int MAX = 100000000;
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int X = sc.nextInt();
+		int[] C = new int[N];
+		int[][] A = new int[N][M];
+		for (int i = 0; i < N; i++) {
+			C[i] = sc.nextInt();
+			for (int j = 0; j < M; j++) {
+				A[i][j] = sc.nextInt();
+			}
+		}
+		int limit = pow(N);
+		int ans = MAX;
+		for (int c = 0; c < limit; c++) {
+			int tmp = c;
+			int cost = 0;
+			int[] skill = new int[M];
+			for (int i = 0; i < N; i++) {
+				if (tmp % 2 == 1) {
+					cost += C[i];
+					for (int j = 0; j < M; j++) {
+						skill[j] += A[i][j];
+					}
+				}
+				tmp /= 2;
+			}
+			boolean isOK = true;
+			for (int j = 0; j < M; j++) {
+				if (skill[j] < X) {
+					isOK = false;
+					break;
+				}
+			}
+			if (isOK) {
+				ans = Math.min(ans, cost);
+			}
+		}
+		System.out.println(ans == MAX ? -1 : ans);
+	}
+
+	int pow(int i) {
+		if (i == 0) {
+			return 1;
+		}
+		return pow(i - 1) * 2;
 	}
 
 	class Scanner {

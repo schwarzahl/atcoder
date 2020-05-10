@@ -19,9 +19,23 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int A = sc.nextInt();
+		int B = sc.nextInt();
+		int C = sc.nextInt();
+		int K = sc.nextInt();
+		if (K < A) {
+			System.out.println(K);
+			return;
+		}
+		if (K <= A + B) {
+			System.out.println(A);
+			return;
+		}
+		if (K >= A + B + C) {
+			System.out.println(A - C);
+			return;
+		}
+		System.out.println(A - K + (A + B));
 	}
 
 	class Scanner {
