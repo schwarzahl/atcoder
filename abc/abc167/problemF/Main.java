@@ -14,7 +14,8 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		Kakko[] kakkos = new Kakko[N];
+		List<Kakko> plusKakkoList = new ArrayList<>();
+		List<Kakko> minusKakkoList = new ArrayList<>();
 		for (int i = 0; i < N; i++) {
 			int min = 0;
 			int tmp = 0;
@@ -28,9 +29,13 @@ public class Main {
 					min = Math.min(min, tmp);
 				}
 			}
-			kakkos[i] = new Kakko(-min, tmp);
+			if (tmp >= 0) {
+				plusKakkoList.add(new Kakko(-min, tmp));
+			} else {
+				minusKakkoList.add(new Kakko(-min, tmp));
+			}
 		}
-		Arrays.sort(kakkos, (k1, k2) -> {
+		Collections.sort(plusKakkoList, (k1, k2) -> {
 			if (k1.cost < k2.cost) {
 				return -1;
 			}
@@ -45,8 +50,36 @@ public class Main {
 			}
 			return 0;
 		});
+		Collections.sort(minusKakkoList, (k1, k2) -> {
+			if (k1.cost + k1.total < k2.cost + k2.total) {
+				return 1;
+			}
+			if (k1.cost + k1.total > k2.cost + k2.total) {
+				return -1;
+			}
+			if (k1.cost < k2.cost) {
+				return 1;
+			}
+			if (k1.cost > k2.cost) {
+				return -1;
+			}
+			if (k1.total < k2.total) {
+				return 1;
+			}
+			if (k1.total > k2.total) {
+				return -1;
+			}
+			return 0;
+		});
 		int val = 0;
-		for (Kakko kakko : kakkos) {
+		for (Kakko kakko : plusKakkoList) {
+			if (val < kakko.cost) {
+				System.out.println("No");
+				return;
+			}
+			val += kakko.total;
+		}
+		for (Kakko kakko : minusKakkoList) {
 			if (val < kakko.cost) {
 				System.out.println("No");
 				return;
