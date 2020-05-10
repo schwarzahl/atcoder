@@ -2,13 +2,7 @@ package problemF;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,55 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Kakko[] kakkos = new Kakko[N];
+		for (int i = 0; i < N; i++) {
+			int min = 0;
+			int tmp = 0;
+			String S = sc.next();
+			for (char c : S.toCharArray()) {
+				if (c == '(') {
+					tmp++;
+				} else {
+					// c == ')'
+					tmp--;
+					min = Math.min(min, tmp);
+				}
+			}
+			kakkos[i] = new Kakko(-min, tmp);
+		}
+		Arrays.sort(kakkos, (k1, k2) -> {
+			if (k1.cost < k2.cost) {
+				return -1;
+			}
+			if (k1.cost > k2.cost) {
+				return 1;
+			}
+			if (k1.total < k2.total) {
+				return 1;
+			}
+			if (k1.total > k2.total) {
+				return -1;
+			}
+			return 0;
+		});
+		int val = 0;
+		for (Kakko kakko : kakkos) {
+			if (val < kakko.cost) {
+				System.out.println("No");
+				return;
+			}
+			val += kakko.total;
+		}
+		System.out.println(val == 0 ? "Yes" : "No");
+	}
+
+	class Kakko {
+		int cost;
+		int total;
+		public Kakko(int cost, int total) {
+			this.cost = cost;
+			this.total = total;
+		}
 	}
 
 	class Scanner {
