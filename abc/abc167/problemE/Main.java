@@ -20,8 +20,20 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		long MOD = 998244353L;
+		int K = sc.nextInt();
+		CombCalculator cc = new FactorialTableCombCalculator(Math.max(N , M) * 2, MOD);
+		long[] pow = new long[N + 1];
+		pow[0] = 1L;
+		for (int i = 1; i <= N; i++) {
+			pow[i] = (pow[i - 1] * (M - 1)) % MOD;
+		}
+		long ans = 0L;
+		for (int k = 0; k <= K; k++) {
+			ans = (ans + (((pow[N - 1 - k] * cc.comb(N - 1, k)) % MOD) * M)) % MOD;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
