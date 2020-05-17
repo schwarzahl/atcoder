@@ -2,13 +2,7 @@ package problemE;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -19,9 +13,192 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		long MOD = 1000000007L;
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Fish[] fishes = new Fish[N];
+		for (int i = 0; i < N; i++) {
+			fishes[i] = new Fish(sc.nextLong(), sc.nextLong());
+		}
+		Arrays.sort(fishes, (f1, f2) -> {
+		    if (f1.B == 0 && f2.B == 0) {
+		        if (f1.A < f2.A) {
+		            return -1;
+                }
+		        if (f1.A > f2.A) {
+		            return 1;
+                }
+		        return 0;
+            }
+            if (f1.A == 0 && f2.A == 0) {
+                if (f1.B < f2.B) {
+                    return 1;
+                }
+                if (f1.B > f2.B) {
+                    return -1;
+                }
+                return 0;
+            }
+			if (f1.A_B < f2.A_B) {
+				return -1;
+			}
+			if (f1.A_B > f2.A_B) {
+				return 1;
+			}
+			return 0;
+		});
+		long[] pow2 = new long[N];
+		pow2[0] = 1L;
+		for (int i = 1; i < N; i++) {
+            pow2[i] = (pow2[i - 1] * 2L) % MOD;
+        }
+		long ans = 0L;
+		for (int i = 0; i < N; i++) {
+		    if (fishes[i].A == 0 && fishes[i].B == 0) {
+		        ans++;
+		        continue;
+            }
+		    if (fishes[i].B == 0) {
+                int left;
+                {
+                    int ok = -1;
+                    int ng = N;
+                    while (ok + 1 < ng) {
+                        int mid = (ok + ng) / 2;
+                        if (fishes[mid].A >= 0) {
+                            ng = mid;
+                        } else {
+                            ok = mid;
+                        }
+                    }
+                    left = ng;
+                }
+                int right;
+                {
+                    int ng = -1;
+                    int ok = N;
+                    while (ng + 1 < ok) {
+                        int mid = (ok + ng) / 2;
+                        if (fishes[mid].A <= 0) {
+                            ng = mid;
+                        } else {
+                            ok = mid;
+                        }
+                    }
+                    right = ng;
+                }
+                int badCount = Math.max(0, right - left + 1);
+                ans += pow2[N - 1 - badCount];
+            } else if (fishes[i].A == 0) {
+                int left;
+                {
+                    int ok = -1;
+                    int ng = N;
+                    while (ok + 1 < ng) {
+                        int mid = (ok + ng) / 2;
+                        if (fishes[mid].B <= 0) {
+                            ng = mid;
+                        } else {
+                            ok = mid;
+                        }
+                    }
+                    left = ng;
+                }
+                int right;
+                {
+                    int ng = -1;
+                    int ok = N;
+                    while (ng + 1 < ok) {
+                        int mid = (ok + ng) / 2;
+                        if (fishes[mid].B >= 0) {
+                            ng = mid;
+                        } else {
+                            ok = mid;
+                        }
+                    }
+                    right = ng;
+                }
+                int badCount = Math.max(0, right - left + 1);
+                ans += pow2[N - 1 - badCount];
+            } else if (fishes[i].A_B > 0) {
+                int left;
+                {
+                    int ok = -1;
+                    int ng = N;
+                    while (ok + 1 < ng) {
+                        int mid = (ok + ng) / 2;
+                        if (1.0 / fishes[mid].A_B >= -fishes[i].A_B) {
+                            ng = mid;
+                        } else {
+                            ok = mid;
+                        }
+                    }
+                    left = ng;
+                }
+                int right;
+                {
+                    int ng = -1;
+                    int ok = N;
+                    while (ng + 1 < ok) {
+                        int mid = (ok + ng) / 2;
+                        if (1.0 / fishes[mid].A_B <= -fishes[i].A_B) {
+                            ng = mid;
+                        } else {
+                            ok = mid;
+                        }
+                    }
+                    right = ng;
+                }
+                int badCount = Math.max(0, right - left + 1);
+                ans += pow2[N - 1 - badCount];
+            } else {
+                int left;
+                {
+                    int ok = -1;
+                    int ng = N;
+                    while (ok + 1 < ng) {
+                        int mid = (ok + ng) / 2;
+                        if (1.0 / fishes[mid].A_B >= -fishes[i].A_B) {
+                            ng = mid;
+                        } else {
+                            ok = mid;
+                        }
+                    }
+                    left = ng;
+                }
+                int right;
+                {
+                    int ng = -1;
+                    int ok = N;
+                    while (ng + 1 < ok) {
+                        int mid = (ok + ng) / 2;
+                        if (1.0 / fishes[mid].A_B <= -fishes[i].A_B) {
+                            ng = mid;
+                        } else {
+                            ok = mid;
+                        }
+                    }
+                    right = ng;
+                }
+                int badCount = Math.max(0, right - left + 1);
+                ans += pow2[N - 1 - badCount];
+            }
+        }
+		System.out.println(ans / 2);
+	}
+
+	class Fish {
+		long A;
+		long B;
+		double A_B;
+		public Fish(long A, long B) {
+			this.A = A;
+			this.B = B;
+			if (B == 0) {
+				A_B = Double.MAX_VALUE / 3;
+			} else {
+				A_B = 1.0 * A / B;
+			}
+		}
 	}
 
 	class Scanner {
