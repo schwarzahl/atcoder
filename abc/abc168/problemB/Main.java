@@ -19,9 +19,13 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int K = sc.nextInt();
+		String S = sc.next();
+		if (S.length() <= K) {
+			System.out.println(S);
+		} else {
+			System.out.println(S.substring(0, K) + "...");
+		}
 	}
 
 	class Scanner {

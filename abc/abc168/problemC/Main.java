@@ -19,9 +19,15 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int A = sc.nextInt();
+		int B = sc.nextInt();
+		int H = sc.nextInt();
+		int M = sc.nextInt();
+		double a_x = 1.0 * A * Math.sin(Math.PI * 2 * (H * 60 + M) / 720);
+		double b_x = 1.0 * B * Math.sin(Math.PI * 2 * M / 60);
+		double a_y = 1.0 * A * Math.cos(Math.PI * 2 * (H * 60 + M) / 720);
+		double b_y = 1.0 * B * Math.cos(Math.PI * 2 * M / 60);
+		System.out.println(Math.sqrt((a_x - b_x) * (a_x - b_x) + (a_y - b_y) * (a_y - b_y)));
 	}
 
 	class Scanner {

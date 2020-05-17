@@ -20,8 +20,39 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < M; i++) {
+			int A = sc.nextInt();
+			int B = sc.nextInt();
+			if (!map.containsKey(A)) {
+				map.put(A, new ArrayList<>());
+			}
+			if (!map.containsKey(B)) {
+				map.put(B, new ArrayList<>());
+			}
+			map.get(A).add(B);
+			map.get(B).add(A);
+		}
+		int[] ans = new int[N + 1];
+		List<Integer> current = new ArrayList<>();
+		current.add(1);
+		while (!current.isEmpty()) {
+			List<Integer> next = new ArrayList<>();
+			for (int tmp : current) {
+				for (int to : map.get(tmp)) {
+					if (ans[to] == 0) {
+						ans[to] = tmp;
+						next.add(to);
+					}
+				}
+			}
+			current = next;
+		}
+		System.out.println("Yes");
+		for (int i = 2; i <= N; i++) {
+			System.out.println(ans[i]);
+		}
 	}
 
 	class Scanner {
