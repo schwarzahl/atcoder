@@ -19,186 +19,102 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			fishes[i] = new Fish(sc.nextLong(), sc.nextLong());
 		}
-		Arrays.sort(fishes, (f1, f2) -> {
-		    if (f1.B == 0 && f2.B == 0) {
-		        if (f1.A < f2.A) {
-		            return -1;
-                }
-		        if (f1.A > f2.A) {
-		            return 1;
-                }
-		        return 0;
-            }
-            if (f1.A == 0 && f2.A == 0) {
-                if (f1.B < f2.B) {
-                    return 1;
-                }
-                if (f1.B > f2.B) {
-                    return -1;
-                }
-                return 0;
-            }
-			if (f1.A_B < f2.A_B) {
-				return -1;
+		Map<Long, Map<Long, Integer>> map = new HashMap<>();
+		for (Fish fish : fishes) {
+			if (!map.containsKey(fish.A)) {
+				map.put(fish.A, new HashMap<>());
 			}
-			if (f1.A_B > f2.A_B) {
-				return 1;
+			if (!map.get(fish.A).containsKey(fish.B)) {
+				map.get(fish.A).put(fish.B, 0);
 			}
-			return 0;
-		});
-		long[] pow2 = new long[N];
+			int now = map.get(fish.A).get(fish.B);
+			map.get(fish.A).put(fish.B, now + 1);
+		}
+		long[] pow2 = new long[N + 1];
 		pow2[0] = 1L;
-		for (int i = 1; i < N; i++) {
-            pow2[i] = (pow2[i - 1] * 2L) % MOD;
-        }
-		long ans = 0L;
-		for (int i = 0; i < N; i++) {
-		    if (fishes[i].A == 0 && fishes[i].B == 0) {
-		        ans++;
-		        continue;
-            }
-		    if (fishes[i].B == 0) {
-                int left;
-                {
-                    int ok = -1;
-                    int ng = N;
-                    while (ok + 1 < ng) {
-                        int mid = (ok + ng) / 2;
-                        if (fishes[mid].A >= 0) {
-                            ng = mid;
-                        } else {
-                            ok = mid;
-                        }
-                    }
-                    left = ng;
-                }
-                int right;
-                {
-                    int ng = -1;
-                    int ok = N;
-                    while (ng + 1 < ok) {
-                        int mid = (ok + ng) / 2;
-                        if (fishes[mid].A <= 0) {
-                            ng = mid;
-                        } else {
-                            ok = mid;
-                        }
-                    }
-                    right = ng;
-                }
-                int badCount = Math.max(0, right - left + 1);
-                ans += pow2[N - 1 - badCount];
-            } else if (fishes[i].A == 0) {
-                int left;
-                {
-                    int ok = -1;
-                    int ng = N;
-                    while (ok + 1 < ng) {
-                        int mid = (ok + ng) / 2;
-                        if (fishes[mid].B <= 0) {
-                            ng = mid;
-                        } else {
-                            ok = mid;
-                        }
-                    }
-                    left = ng;
-                }
-                int right;
-                {
-                    int ng = -1;
-                    int ok = N;
-                    while (ng + 1 < ok) {
-                        int mid = (ok + ng) / 2;
-                        if (fishes[mid].B >= 0) {
-                            ng = mid;
-                        } else {
-                            ok = mid;
-                        }
-                    }
-                    right = ng;
-                }
-                int badCount = Math.max(0, right - left + 1);
-                ans += pow2[N - 1 - badCount];
-            } else if (fishes[i].A_B > 0) {
-                int left;
-                {
-                    int ok = -1;
-                    int ng = N;
-                    while (ok + 1 < ng) {
-                        int mid = (ok + ng) / 2;
-                        if (1.0 / fishes[mid].A_B >= -fishes[i].A_B) {
-                            ng = mid;
-                        } else {
-                            ok = mid;
-                        }
-                    }
-                    left = ng;
-                }
-                int right;
-                {
-                    int ng = -1;
-                    int ok = N;
-                    while (ng + 1 < ok) {
-                        int mid = (ok + ng) / 2;
-                        if (1.0 / fishes[mid].A_B <= -fishes[i].A_B) {
-                            ng = mid;
-                        } else {
-                            ok = mid;
-                        }
-                    }
-                    right = ng;
-                }
-                int badCount = Math.max(0, right - left + 1);
-                ans += pow2[N - 1 - badCount];
-            } else {
-                int left;
-                {
-                    int ok = -1;
-                    int ng = N;
-                    while (ok + 1 < ng) {
-                        int mid = (ok + ng) / 2;
-                        if (1.0 / fishes[mid].A_B >= -fishes[i].A_B) {
-                            ng = mid;
-                        } else {
-                            ok = mid;
-                        }
-                    }
-                    left = ng;
-                }
-                int right;
-                {
-                    int ng = -1;
-                    int ok = N;
-                    while (ng + 1 < ok) {
-                        int mid = (ok + ng) / 2;
-                        if (1.0 / fishes[mid].A_B <= -fishes[i].A_B) {
-                            ng = mid;
-                        } else {
-                            ok = mid;
-                        }
-                    }
-                    right = ng;
-                }
-                int badCount = Math.max(0, right - left + 1);
-                ans += pow2[N - 1 - badCount];
-            }
-        }
-		System.out.println(ans / 2);
+		for (int i = 1; i <= N; i++) {
+			pow2[i] = (pow2[i - 1] * 2) % MOD;
+		}
+		long ans = 1L;
+		Map<Long, Set<Long>> calced = new HashMap<>();
+		for (long fk : map.keySet()) {
+			for (long sk : map.get(fk).keySet()) {
+				if (calced.containsKey(fk) && calced.get(fk).contains(sk)) {
+					continue;
+				}
+				if (fk == 0 && sk == 0) {
+					continue;
+				}
+				long rfk = fk;
+				long rsk = -sk;
+				if (rfk < 0) {
+					rfk *= -1;
+					rsk *= -1;
+				}
+				if (map.containsKey(rsk) && map.get(rsk).containsKey(rfk)) {
+					ans = (ans * (pow2[map.get(fk).get(sk)] + pow2[map.get(rsk).get(rfk)] - 1)) % MOD;
+					if (!calced.containsKey(fk)) {
+						calced.put(fk, new HashSet<>());
+					}
+					if (!calced.containsKey(rsk)) {
+						calced.put(rsk, new HashSet<>());
+					}
+					calced.get(fk).add(sk);
+					calced.get(rsk).add(rfk);
+				} else {
+					ans = (ans * (pow2[map.get(fk).get(sk)])) % MOD;
+				}
+			}
+		}
+		if (map.containsKey(0) && map.get(0).containsKey(0)) {
+			ans += map.get(0).get(0);
+		}
+		System.out.println((ans + MOD - 1) % MOD);
 	}
 
 	class Fish {
 		long A;
 		long B;
-		double A_B;
+		int level;
 		public Fish(long A, long B) {
-			this.A = A;
-			this.B = B;
+			if (A == 0 && B == 0) {
+				this.A = 0;
+				this.B = 0;
+				this.level = 0;
+				return;
+			}
+			if (A == 0) {
+				this.A = 0;
+				this.B = 1;
+				this.level = 3;
+				return;
+			}
 			if (B == 0) {
-				A_B = Double.MAX_VALUE / 3;
+				this.A = 1;
+				this.B = 0;
+				this.level = 1;
+				return;
+			}
+			long a = Math.abs(A);
+			long b = Math.abs(B);
+			long c = gcd(a, b);
+			this.A = A / c * (B > 0 ? 1 : -1);
+			this.B = B / c * (B > 0 ? 1 : -1);
+			if (this.A > 0) {
+				this.level = 2;
 			} else {
-				A_B = 1.0 * A / B;
+				this.level = 4;
 			}
 		}
+	}
+
+	private long gcd(long a, long b) {
+		while (b > 0) {
+			long c = a % b;
+			a = b;
+			b = c;
+		}
+		return a;
 	}
 
 	class Scanner {
