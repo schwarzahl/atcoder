@@ -20,55 +20,36 @@ public class Main {
 			long B = sc.nextLong();
 			long C = sc.nextLong();
 			long D = sc.nextLong();
-			PriorityQueue<Node> queue = new PriorityQueue<Node>((n1, n2) -> {
-				if (n1.cost < n2.cost) {
-					return -1;
+			{
+				long D_count2A = (A + D - 1) / D;
+				long cost = D * D_count2A;
+				long value = D_count2A;
+				while (value < N) {
+					cost += A;
+					value *= 2L;
 				}
-				if (n1.cost > n2.cost) {
-					return 1;
-				}
-				return 0;
-			});
-			queue.add(new Node(0L, N));
-			Map<Long, Long> minMap = new HashMap<>();
-			while (!queue.isEmpty()) {
-				Node node = queue.poll();
-				if (node.value == 0) {
-					System.out.println(node.cost);
-					break;
-				}
-				{
-					long mod2 = node.value % 2;
-					addQueue(queue, minMap, node.cost + A + D * mod2, (node.value - mod2) / 2);
-					addQueue(queue, minMap, node.cost + A + D * (2 - mod2), (node.value + (2 - mod2)) / 2);
-				}
-				{
-					long mod3 = node.value % 3;
-					addQueue(queue, minMap, node.cost + B + D * mod3, (node.value - mod3) / 3);
-					addQueue(queue, minMap, node.cost + B + D * (3 - mod3), (node.value + (3 - mod3)) / 3);
-				}
-				{
-					long mod5 = node.value % 5;
-					addQueue(queue, minMap, node.cost + C + D * mod5, (node.value - mod5) / 5);
-					addQueue(queue, minMap, node.cost + C + D * (5 - mod5), (node.value + (5 - mod5)) / 5);
-				}
-				boolean overflow = false;
-				long m = 0L;
-				try {
-					m = Math.multiplyExact(D, node.value);
-				} catch (ArithmeticException e) {
-					overflow = true;
-				}
-				if (!overflow) {
-					addQueue(queue, minMap, node.cost + m, 0L);
-				}
+				System.out.println(cost + ":" + value);
 			}
-		}
-	}
-
-	private void addQueue(PriorityQueue<Node> queue, Map<Long, Long> minMap, long cost, long value) {
-		if (!minMap.containsKey(value) || minMap.get(value) > cost) {
-			queue.add(new Node(cost, value));
+			{
+				long D_count2B = (B + D - 1) / D;
+				long cost = D * D_count2B;
+				long value = D_count2B;
+				while (value < N) {
+					cost += A;
+					value *= 3L;
+				}
+				System.out.println(cost + ":" + value);
+			}
+			{
+				long D_count2C = (C + D - 1) / D;
+				long cost = D * D_count2C;
+				long value = D_count2C;
+				while (value < N) {
+					cost += A;
+					value *= 5L;
+				}
+				System.out.println(cost + ":" + value);
+			}
 		}
 	}
 
