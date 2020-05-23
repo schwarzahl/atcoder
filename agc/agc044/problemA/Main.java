@@ -29,19 +29,46 @@ public class Main {
 				}
 				return 0;
 			});
-			queue.add(new Node(0L, 0L));
+			queue.add(new Node(0L, N));
+			Map<Long, Long> minMap = new HashMap<>();
 			while (!queue.isEmpty()) {
 				Node node = queue.poll();
-				if (node.value == N) {
+				if (node.value == 0) {
 					System.out.println(node.cost);
 					break;
 				}
-				queue.add(new Node(node.cost + A, node.value * 2L));
-				queue.add(new Node(node.cost + B, node.value * 3L));
-				queue.add(new Node(node.cost + C, node.value * 5L));
-				queue.add(new Node(node.cost + D, node.value + 1L));
-				queue.add(new Node(node.cost + D, node.value - 1L));
+				{
+					long mod2 = node.value % 2;
+					addQueue(queue, minMap, node.cost + A + D * mod2, (node.value - mod2) / 2);
+					addQueue(queue, minMap, node.cost + A + D * (2 - mod2), (node.value + (2 - mod2)) / 2);
+				}
+				{
+					long mod3 = node.value % 3;
+					addQueue(queue, minMap, node.cost + B + D * mod3, (node.value - mod3) / 3);
+					addQueue(queue, minMap, node.cost + B + D * (3 - mod3), (node.value + (3 - mod3)) / 3);
+				}
+				{
+					long mod5 = node.value % 5;
+					addQueue(queue, minMap, node.cost + C + D * mod5, (node.value - mod5) / 5);
+					addQueue(queue, minMap, node.cost + C + D * (5 - mod5), (node.value + (5 - mod5)) / 5);
+				}
+				boolean overflow = false;
+				long m = 0L;
+				try {
+					m = Math.multiplyExact(D, node.value);
+				} catch (ArithmeticException e) {
+					overflow = true;
+				}
+				if (!overflow) {
+					addQueue(queue, minMap, node.cost + m, 0L);
+				}
 			}
+		}
+	}
+
+	private void addQueue(PriorityQueue<Node> queue, Map<Long, Long> minMap, long cost, long value) {
+		if (!minMap.containsKey(value) || minMap.get(value) > cost) {
+			queue.add(new Node(cost, value));
 		}
 	}
 
