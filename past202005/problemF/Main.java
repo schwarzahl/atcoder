@@ -20,8 +20,35 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		char[][] a = new char[N][N];
+		for (int r = 0; r < N; r++) {
+			a[r] = sc.next().toCharArray();
+		}
+		StringBuilder ans = new StringBuilder();
+		for (int r = 0; r <= (N - 1) / 2; r++) {
+			boolean flug = false;
+			for (int c0 = 0; c0 < N; c0++) {
+				for (int c1 = 0; c1 < N; c1++) {
+					if (a[r][c0] == a[N - 1 - r][c1]) {
+						ans.append(a[r][c0]);
+						flug = true;
+						break;
+					}
+				}
+				if (flug) {
+					break;
+				}
+			}
+			if (!flug) {
+				System.out.println(-1);
+				return;
+			}
+		}
+		System.out.print(ans.toString());
+		if (N % 2 == 1) {
+			ans.setLength(N / 2);
+		}
+		System.out.println(ans.reverse().toString());
 	}
 
 	class Scanner {
