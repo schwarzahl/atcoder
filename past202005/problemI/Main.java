@@ -20,8 +20,40 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int Q = sc.nextInt();
+		int[] r = new int[N + 1];
+		int[] c = new int[N + 1];
+		for (int i = 1; i <= N; i++) {
+			r[i] = i;
+			c[i] = i;
+		}
+		boolean t = false;
+		for (int query = 1; query <= Q; query++) {
+			int q = sc.nextInt();
+			if (q == 3) {
+				t = !t;
+				continue;
+			}
+			int A = sc.nextInt();
+			int B = sc.nextInt();
+			if (q == 4) {
+				if (t) {
+					System.out.println(N * (r[B] - 1) + c[A] - 1);
+				} else {
+					System.out.println(N * (r[A] - 1) + c[B] - 1);
+				}
+				continue;
+			}
+			if (q == (t ? 2 : 1)) {
+				int esc = r[A];
+				r[A] = r[B];
+				r[B] = esc;
+			} else {
+				int esc = c[A];
+				c[A] = c[B];
+				c[B] = esc;
+			}
+		}
 	}
 
 	class Scanner {
