@@ -20,8 +20,27 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int[] c = new int[N];
+		for (int i = 0; i < M; i++) {
+			int a = sc.nextInt();
+			int ok = N;
+			int ng = -1;
+			while (ng + 1 < ok) {
+				int mid = (ng + ok) / 2;
+				if (c[mid] < a) {
+					ok = mid;
+				} else {
+					ng = mid;
+				}
+			}
+			if (0 <= ok && ok < N) {
+				c[ok] = a;
+				System.out.println(ok + 1);
+			} else {
+				System.out.println(-1);
+			}
+		}
 	}
 
 	class Scanner {
