@@ -20,8 +20,37 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int Q = sc.nextInt();
+		boolean[][] graph = new boolean[N + 1][N + 1];
+		int[] colors = new int[N + 1];
+		for (int i = 1; i <= M; i++) {
+			int u = sc.nextInt();
+			int v = sc.nextInt();
+			graph[u][v] = true;
+			graph[v][u] = true;
+		}
+		for (int i = 1; i <= N; i++) {
+			colors[i] = sc.nextInt();
+		}
+		for (int query = 1; query <= Q; query++) {
+			int s = sc.nextInt();
+			if (s == 1) {
+				int x = sc.nextInt();
+				System.out.println(colors[x]);
+				for (int i = 1; i <= N; i++) {
+					if (graph[x][i]) {
+						colors[i] = colors[x];
+					}
+				}
+			} else {
+				// s == 2
+				int x = sc.nextInt();
+				System.out.println(colors[x]);
+				int y = sc.nextInt();
+				colors[x] = y;
+			}
+		}
 	}
 
 	class Scanner {
