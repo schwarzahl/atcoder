@@ -19,9 +19,15 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		String s = sc.next();
+		String t = sc.next();
+		if (s.equals(t)) {
+			System.out.println("same");
+		} else if (s.toUpperCase().equals(t.toUpperCase())) {
+			System.out.println("case-insensitive");
+		} else {
+			System.out.println("different");
+		}
 	}
 
 	class Scanner {

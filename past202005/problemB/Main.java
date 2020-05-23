@@ -2,13 +2,7 @@ package problemB;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,30 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		int Q = sc.nextInt();
+		int[] points = new int[M + 1];
+		boolean[][] solved = new boolean[N + 1][M + 1];
+		Arrays.fill(points, N);
+		for (int i = 1; i <= Q; i++) {
+			int s = sc.nextInt();
+			if (s == 1) {
+				int n = sc.nextInt();
+				int ans = 0;
+				for (int j = 1; j <= M; j++) {
+					if (solved[n][j]) {
+						ans += points[j];
+					}
+				}
+				System.out.println(ans);
+			} else {
+				int n = sc.nextInt();
+				int m = sc.nextInt();
+				// s == 2
+				solved[n][m] = true;
+				points[m]--;
+			}
+		}
 	}
 
 	class Scanner {

@@ -19,9 +19,17 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
+		long A = sc.nextLong();
+		long R = sc.nextLong();
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		for (int i = 1; i < N; i++) {
+			A *= R;
+			if (A > 1000000000L) {
+				System.out.println("large");
+				return;
+			}
+		}
+		System.out.println(A);
 	}
 
 	class Scanner {
