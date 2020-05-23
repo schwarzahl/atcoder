@@ -2,13 +2,7 @@ package problemG;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,45 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int X = sc.nextInt();
+		int Y = sc.nextInt();
+		int[][] ans = new int[401][401];
+		for (int r = 0; r < 401; r++) {
+			Arrays.fill(ans[r], 200000);
+		}
+		for (int i = 0; i < N; i++) {
+			int x = sc.nextInt();
+			int y = sc.nextInt();
+			ans[x + 200][y + 200] = -1;
+		}
+		int[] gm_x = {1, 0, -1, 1, -1, 0};
+		int[] gm_y = {1, 1, 1, 0, 0, -1};
+		Set<Integer> currents = new HashSet<>();
+		currents.add((0 + 200) * 500 + (0 + 200));
+		for (int step = 0; !currents.isEmpty(); step++) {
+			Set<Integer> nexts = new HashSet<>();
+			for (int pos : currents) {
+				int x = (pos / 500) - 200;
+				int y = (pos % 500) - 200;
+				if (ans[x + 200][y + 200] > step) {
+					ans[x + 200][y + 200] = step;
+					for (int dir = 0; dir < gm_x.length; dir++) {
+						int nx = x + gm_x[dir];
+						int ny = y + gm_y[dir];
+						if (-200 <= nx && nx <= 200 && -200 <= ny && ny <= 200) {
+							if (ans[nx + 200][ny + 200] > step + 1) {
+								nexts.add((nx + 200) * 500 + (ny + 200));
+							}
+						}
+					}
+				}
+			}
+			currents = nexts;
+		}
+		if (ans[X + 200][Y + 200] == 200000) {
+			ans[X + 200][Y + 200] = -1;
+		}
+		System.out.println(ans[X + 200][Y + 200]);
 	}
 
 	class Scanner {
