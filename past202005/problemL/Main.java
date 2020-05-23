@@ -2,13 +2,7 @@ package problemL;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,80 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		PriorityQueue<Item> first = new PriorityQueue<Item>((i1, i2) -> {
+			if (i1.time > i2.time) {
+				return -1;
+			}
+			if (i1.time < i2.time) {
+				return 1;
+			}
+			return 0;
+		});
+		PriorityQueue<Item> second = new PriorityQueue<Item>((i1, i2) -> {
+			if (i1.time > i2.time) {
+				return -1;
+			}
+			if (i1.time < i2.time) {
+				return 1;
+			}
+			return 0;
+		});
+		Map<Integer, List<Item>> map = new HashMap<>();
+		int[] index = new int[N];
+		for (int i = 0; i < N; i++) {
+			int K = sc.nextInt();
+			map.put(i, new ArrayList<>());
+			for (int j = 0; j < K; j++) {
+				int T = sc.nextInt();
+				Item item = new Item(T, i);
+				map.get(i).add(item);
+				if (j == 0) {
+					first.add(item);
+				}
+				if (j == 1) {
+					second.add(item);
+				}
+			}
+		}
+		int M = sc.nextInt();
+		for (int i = 0; i < M; i++) {
+			int a = sc.nextInt();
+			if (a == 2) {
+				Item second_max = second.peek();
+				Item first_max = first.peek();
+				if (second_max.time > first_max.time) {
+					second.poll();
+					System.out.println(second_max.time);
+					index[second_max.table]++;
+					if (map.get(second_max.table).size() > index[second_max.table] + 1) {
+						Item third_item = map.get(second_max.table).get(index[second_max.table] + 1);
+						second.add(third_item);
+					}
+					continue;
+				}
+			}
+			Item first_max = first.poll();
+			System.out.println(first_max.time);
+			index[first_max.table]++;
+			if (map.get(first_max.table).size() > index[first_max.table]) {
+				Item second_item = map.get(first_max.table).get(index[first_max.table]);
+				first.add(second_item);
+				second.remove(second_item);
+				if (map.get(first_max.table).size() > index[first_max.table] + 1) {
+					Item third_item = map.get(first_max.table).get(index[first_max.table] + 1);
+					second.add(third_item);
+				}
+			}
+		}
+	}
+
+	class Item {
+		int time;
+		int table;
+		public Item(int time, int table) {
+			this.time = time;
+			this.table = table;
+		}
 	}
 
 	class Scanner {
