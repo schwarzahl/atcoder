@@ -38,9 +38,9 @@ public class Main {
 			int B = sc.nextInt();
 			if (q == 4) {
 				if (t) {
-					System.out.println(N * (r[B] - 1) + c[A] - 1);
+					System.out.println(1L * N * (r[B] - 1) + c[A] - 1);
 				} else {
-					System.out.println(N * (r[A] - 1) + c[B] - 1);
+					System.out.println(1L * N * (r[A] - 1) + c[B] - 1);
 				}
 				continue;
 			}
