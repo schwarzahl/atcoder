@@ -20,8 +20,43 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int Q = sc.nextInt();
+		int[] child = new int[N + 1];
+		int[] parent = new int[N + 1];
+		int[] desk_child = new int[N + 1];
+		int[] desk_leaf = new int[N + 1];
+		for (int i = 1; i <= N; i++) {
+			desk_child[i] = i;
+			desk_leaf[i] = i;
+		}
+		for (int i = 0; i < Q; i++) {
+			int f = sc.nextInt();
+			int t = sc.nextInt();
+			int x = sc.nextInt();
+			int esc = desk_leaf[f];
+			desk_leaf[f] = parent[x];
+			child[desk_leaf[f]] = 0;
+			parent[x] = desk_leaf[t];
+			child[desk_leaf[t]] = x;
+			desk_leaf[t] = esc;
+			if (desk_child[f] == x) {
+				desk_child[f] = 0;
+			}
+			if (desk_child[t] == 0) {
+				desk_child[t] = x;
+			}
+		}
+		int[] ans = new int[N + 1];
+		for (int i = 1; i <= N; i++) {
+			int current = desk_child[i];
+			while (current > 0) {
+				ans[current] = i;
+				current = child[current];
+			}
+		}
+		for (int i = 1; i <= N; i++) {
+			System.out.println(ans[i]);
+		}
 	}
 
 	class Scanner {
