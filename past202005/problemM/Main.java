@@ -2,13 +2,7 @@ package problemM;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,49 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int M = sc.nextInt();
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		for (int i = 0; i < M; i++) {
+			int u = sc.nextInt();
+			int v = sc.nextInt();
+			if (!map.containsKey(u)) {
+				map.put(u, new HashSet<>());
+			}
+			if (!map.containsKey(v)) {
+				map.put(v, new HashSet<>());
+			}
+			map.get(u).add(v);
+			map.get(v).add(u);
+		}
+		int s = sc.nextInt();
+		int K = sc.nextInt();
+		int[] t = new int[K + 1];
+		t[0] = s;
+		for (int i = 1; i <= K; i++) {
+			t[i] = sc.nextInt();
+		}
+		int[][] dist = new int[K + 1][K + 1];
+		for (int i = 0; i <= K; i++) {
+			int start = t[i];
+			Set<Integer> currents = new HashSet<>();
+			currents.add(start);
+			int[] cdist = new int[N + 1];
+			Arrays.fill(cdist, N + 2);
+			for (int step = 0; !currents.isEmpty(); step++) {
+				Set<Integer> nexts = new HashSet<>();
+				for (int current : currents) {
+					if (step < cdist[current]) {
+						cdist[current] = step;
+						nexts.addAll(map.get(current));
+					}
+				}
+				currents = nexts;
+			}
+			for (int j = 0; j <= K; j++) {
+				dist[i][j] = cdist[t[j]];
+			}
+		}
+		// スタート地点および目的地の間の距離は算出済み(dist)
 	}
 
 	class Scanner {
