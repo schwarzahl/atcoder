@@ -55,7 +55,7 @@ public class Main {
 			if (a == 2) {
 				Item second_max = second.peek();
 				Item first_max = first.peek();
-				if (second_max.time > first_max.time) {
+				if (second_max != null && second_max.time > first_max.time) {
 					second.poll();
 					System.out.println(second_max.time);
 					index[second_max.table]++;
