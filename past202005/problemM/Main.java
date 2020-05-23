@@ -57,6 +57,24 @@ public class Main {
 			}
 		}
 		// スタート地点および目的地の間の距離は算出済み(dist)
+		int[][] dp = new int[65536][K + 1];
+		for (int i = 0; i < 65536; i++) {
+			Arrays.fill(dp[i], Integer.MAX_VALUE / 3);
+		}
+		dp[0][0] = 0;
+		for (int i = 0; i < 65536; i++) {
+			for (int from = 0; from <= K; from++) {
+				for (int to = 1; to <= K; to++) {
+					int next = i | (1 << (to - 1));
+					dp[next][to] = Math.min(dp[next][to], dp[i][from] + dist[to][from]);
+				}
+			}
+		}
+		int ans = Integer.MAX_VALUE / 3;
+		for (int j = 0; j <= K; j++) {
+			ans = Math.min(ans, dp[(1 << K) - 1][j]);
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
