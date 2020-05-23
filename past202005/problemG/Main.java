@@ -16,32 +16,32 @@ public class Main {
 		int N = sc.nextInt();
 		int X = sc.nextInt();
 		int Y = sc.nextInt();
-		int[][] ans = new int[401][401];
-		for (int r = 0; r < 401; r++) {
+		int[][] ans = new int[403][403];
+		for (int r = 0; r < 403; r++) {
 			Arrays.fill(ans[r], 200000);
 		}
 		for (int i = 0; i < N; i++) {
 			int x = sc.nextInt();
 			int y = sc.nextInt();
-			ans[x + 200][y + 200] = -1;
+			ans[x + 201][y + 201] = -1;
 		}
 		int[] gm_x = {1, 0, -1, 1, -1, 0};
 		int[] gm_y = {1, 1, 1, 0, 0, -1};
 		Set<Integer> currents = new HashSet<>();
-		currents.add((0 + 200) * 500 + (0 + 200));
+		currents.add((0 + 201) * 500 + (0 + 201));
 		for (int step = 0; !currents.isEmpty(); step++) {
 			Set<Integer> nexts = new HashSet<>();
 			for (int pos : currents) {
-				int x = (pos / 500) - 200;
-				int y = (pos % 500) - 200;
-				if (ans[x + 200][y + 200] > step) {
-					ans[x + 200][y + 200] = step;
+				int x = (pos / 500) - 201;
+				int y = (pos % 500) - 201;
+				if (ans[x + 201][y + 201] > step) {
+					ans[x + 201][y + 201] = step;
 					for (int dir = 0; dir < gm_x.length; dir++) {
 						int nx = x + gm_x[dir];
 						int ny = y + gm_y[dir];
-						if (-200 <= nx && nx <= 200 && -200 <= ny && ny <= 200) {
-							if (ans[nx + 200][ny + 200] > step + 1) {
-								nexts.add((nx + 200) * 500 + (ny + 200));
+						if (-201 <= nx && nx <= 201 && -201 <= ny && ny <= 201) {
+							if (ans[nx + 201][ny + 201] > step + 1) {
+								nexts.add((nx + 201) * 500 + (ny + 201));
 							}
 						}
 					}
@@ -49,10 +49,10 @@ public class Main {
 			}
 			currents = nexts;
 		}
-		if (ans[X + 200][Y + 200] == 200000) {
-			ans[X + 200][Y + 200] = -1;
+		if (ans[X + 201][Y + 201] == 200000) {
+			ans[X + 201][Y + 201] = -1;
 		}
-		System.out.println(ans[X + 200][Y + 200]);
+		System.out.println(ans[X + 201][Y + 201]);
 	}
 
 	class Scanner {
