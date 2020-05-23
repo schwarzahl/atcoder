@@ -2,13 +2,7 @@ package problemH;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,36 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int L = sc.nextInt() * 2;
+		boolean[] isH = new boolean[L + 10];
+		for (int i = 0; i < N; i++) {
+			isH[sc.nextInt() * 2] = true;
+		}
+		int T1 = sc.nextInt();
+		int T2 = sc.nextInt();
+		int T3 = sc.nextInt();
+		int[] dp = new int[L + 10];
+		int[] idp = new int[L + 10];
+		Arrays.fill(dp, Integer.MAX_VALUE / 2);
+		Arrays.fill(idp, Integer.MAX_VALUE / 2);
+		dp[0] = 0;
+		for (int i = 0; i <= L; i++) {
+			int run_i_t = (isH[i] ? T3 : 0) + T1 / 2;
+			int run_i1_t = (isH[i + 1] ? T3 : 0) + T1 / 2;
+			int run_i3_t = (isH[i + 3] ? T3 : 0) + T1 / 2;
+			int run_i7_t = (isH[i + 7] ? T3 : 0) + T1 / 2;
+			idp[i + 1] = Math.min(idp[i + 1], dp[i] + run_i_t);
+			dp[i + 2] = Math.min(dp[i + 2], dp[i] + run_i_t + run_i1_t);
+			idp[i + 2] = Math.min(idp[i + 2], dp[i] + run_i_t + T2 / 2);
+			idp[i + 3] = Math.min(idp[i + 3], dp[i] + run_i_t + T2 * 2 / 2);
+			dp[i + 4] = Math.min(dp[i + 4], dp[i] + run_i_t + T2 * 2 / 2 + run_i3_t);
+			idp[i + 4] = Math.min(idp[i + 4], dp[i] + run_i_t + T2 * 3 / 2);
+			idp[i + 5] = Math.min(idp[i + 5], dp[i] + run_i_t + T2 * 4 / 2);
+			idp[i + 6] = Math.min(idp[i + 6], dp[i] + run_i_t + T2 * 5 / 2);
+			idp[i + 7] = Math.min(idp[i + 7], dp[i] + run_i_t + T2 * 6 / 2);
+			dp[i + 8] = Math.min(dp[i + 8], dp[i] + run_i_t + T2 * 6 / 2 + run_i7_t);
+		}
+		System.out.println(Math.min(dp[L], idp[L]));
 	}
 
 	class Scanner {
