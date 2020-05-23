@@ -20,8 +20,49 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		char[][] map = new char[5][4 * N + 1];
+		for (int r = 0; r < 5; r++) {
+			map[r] = sc.next().toCharArray();
+		}
+		for (int i = 0; i < N; i++) {
+			int o = 1 + i * 4;
+			if (map[0][o+0] == '.') {
+				System.out.print(1);
+				continue;
+			}
+			if (map[0][o+1] == '.') {
+				System.out.print(4);
+				continue;
+			}
+			if (map[2][o+1] == '.') {
+				if (map[2][o+0] == '.') {
+					System.out.print(7);
+				} else {
+					System.out.print(0);
+				}
+				continue;
+			}
+			if (map[3][o+2] == '.') {
+				System.out.print(2);
+				continue;
+			}
+			if (map[3][o+0] == '.') {
+				if (map[1][o+2] == '.') {
+					System.out.print(5);
+				} else if (map[1][o+0] == '.') {
+					System.out.print(3);
+				} else {
+					System.out.print(9);
+				}
+				continue;
+			}
+			if (map[1][o+2] == '.') {
+				System.out.print(6);
+				continue;
+			}
+			System.out.print(8);
+		}
+		System.out.println();
 	}
 
 	class Scanner {
