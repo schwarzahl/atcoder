@@ -2,13 +2,7 @@ package problemA;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -19,9 +13,45 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int T = sc.nextInt();
+		for (int t = 0; t < T; t++) {
+			long N = sc.nextLong();
+			long A = sc.nextLong();
+			long B = sc.nextLong();
+			long C = sc.nextLong();
+			long D = sc.nextLong();
+			PriorityQueue<Node> queue = new PriorityQueue<Node>((n1, n2) -> {
+				if (n1.cost < n2.cost) {
+					return -1;
+				}
+				if (n1.cost > n2.cost) {
+					return 1;
+				}
+				return 0;
+			});
+			queue.add(new Node(0L, 0L));
+			while (!queue.isEmpty()) {
+				Node node = queue.poll();
+				if (node.value == N) {
+					System.out.println(node.cost);
+					break;
+				}
+				queue.add(new Node(node.cost + A, node.value * 2L));
+				queue.add(new Node(node.cost + B, node.value * 3L));
+				queue.add(new Node(node.cost + C, node.value * 5L));
+				queue.add(new Node(node.cost + D, node.value + 1L));
+				queue.add(new Node(node.cost + D, node.value - 1L));
+			}
+		}
+	}
+
+	class Node {
+		long cost;
+		long value;
+		public Node(long cost, long value) {
+			this.cost = cost;
+			this.value = value;
+		}
 	}
 
 	class Scanner {
