@@ -2,13 +2,7 @@ package problemB;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -20,8 +14,49 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[] P = new int[N * N];
+		for (int i = 0; i < N * N; i++) {
+			P[i] = sc.nextInt() - 1;
+		}
+		long ans = 0L;
+		int[][] dist = new int[N + 2][N + 2];
+		for (int r = 0; r < N; r++) {
+			for (int c = 0; c < N; c++) {
+				dist[r + 1][c + 1] = Math.min(Math.min(r, N - r - 1), Math.min(c, N - c - 1));
+			}
+		}
+		boolean[][] isEmpty = new boolean[N][N];
+		for (int i = 0; i < N * N; i++) {
+			int r = P[i] / N;
+			int c = P[i] % N;
+			ans += dist[r + 1][c + 1];
+			isEmpty[r][c] = true;
+			Queue<Integer> queue = new ArrayDeque<>();
+			queue.add(P[i]);
+			while (!queue.isEmpty()) {
+				int current = queue.poll();
+				int cr = current / N;
+				int cc = current % N;
+				int cd = dist[cr + 1][cc + 1] + (isEmpty[cr][cc] ? 0 : 1);
+				if (dist[cr][cc + 1] > cd) {
+					dist[cr][cc + 1] = cd;
+					queue.add((cr - 1) * N + cc);
+				}
+				if (dist[cr + 2][cc + 1] > cd) {
+					dist[cr + 2][cc + 1] = cd;
+					queue.add((cr + 1) * N + cc);
+				}
+				if (dist[cr + 1][cc] > cd) {
+					dist[cr + 1][cc] = cd;
+					queue.add(cr * N + cc - 1);
+				}
+				if (dist[cr + 1][cc + 2] > cd) {
+					dist[cr + 1][cc + 2] = cd;
+					queue.add(cr * N + cc + 1);
+				}
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
