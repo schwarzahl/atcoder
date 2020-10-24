@@ -20,8 +20,26 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[] A = new int[N - 1];
+		int[] B = new int[N - 1];
+		int[] M = new int[N - 1];
+		for (int i = 0; i < N; i++) {
+			A[i] = sc.nextInt();
+			B[i] = sc.nextInt();
+			M[i] = sc.nextInt();
+		}
+		// 両端の先にある頂点数が等しい枝を探す
+		// なければ答えは0
+		{
+
+		}
+		// 上で探した枝の両端にある頂点から探索して
+		// それぞれ枝までの距離を求めておく
+		// その後は「片方についてこの頂点を選べば反対側はここまでOK」みたいな
+		// 範囲が二分探索で多分間に合う範囲で求まるはず
+		{
+			
+		}
 	}
 
 	class Scanner {
