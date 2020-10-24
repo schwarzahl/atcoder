@@ -20,8 +20,18 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int S = sc.nextInt();
+		foo("", N, S, 1);
+	}
+
+	private void foo(String ans, int N, int S, int max) {
+		if (N == 1) {
+			System.out.println(ans + S);
+			return;
+		}
+		for (int i = max; i * N <= S; i++) {
+			foo(ans + i + " ", N - 1, S - i, i);
+		}
 	}
 
 	class Scanner {
