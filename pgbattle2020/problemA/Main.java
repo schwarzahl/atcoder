@@ -20,8 +20,42 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		Map<Long, List<Long>> map = new HashMap<>();
+		for (int i = 1; i < N; i++) {
+			long A = sc.nextLong();
+			long B = sc.nextLong();
+			map.putIfAbsent(A, new ArrayList<>());
+			map.get(A).add(B);
+			map.putIfAbsent(B, new ArrayList<>());
+			map.get(B).add(A);
+		}
+		long ans = 0L;
+		Set<Long> passed = new HashSet<>();
+		Set<Long> rest = new HashSet<>();
+		rest.add(1L + 0L * (N + 1));
+		while (!rest.isEmpty()) {
+			Set<Long> nextRest = new HashSet<>();
+			for (long tmp : rest) {
+				long current = tmp % (N + 1);
+				long prev = tmp / (N + 1);
+				int count = 0;
+				for (long next : map.get(current)) {
+					if (next != prev) {
+						count++;
+						long nextState = next + current * (N + 1);
+						if (!passed.contains(nextState)) {
+							passed.add(nextState);
+							nextRest.add(nextState);
+						}
+					}
+				}
+				if (count == 0) {
+					ans++;
+				}
+			}
+			rest = nextRest;
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
