@@ -2,13 +2,7 @@ package problemC;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -19,9 +13,28 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long N = sc.nextLong();
+		int M = sc.nextInt();
+		long D = sc.nextLong();
+		long[] A = new long[M];
+		for (int i = 0; i < M; i++) {
+			A[i] = sc.nextLong();
+		}
+		Arrays.sort(A);
+		long MOD = 1000000007L;
+		long K = ((N - 1) / D) % MOD;
+		long ans = (((N % MOD) * ((K + 1) % MOD) % MOD) + MOD - (D * ((K * (K + 1) / 2) % MOD) % MOD)) % MOD;
+		Map<Long, Long> maxMap = new HashMap<>();
+		for (long a : A) {
+			long left = 0L;
+			if (maxMap.containsKey(a % D)) {
+				left = maxMap.get(a % D);
+			}
+			long sub = ((((a - left - 1) / D) + 1) * (((N - a) / D) % MOD + 1)) % MOD;
+			ans = (ans + MOD - sub) % MOD;
+			maxMap.put(a % D, a);
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
