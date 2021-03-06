@@ -53,7 +53,7 @@ public class Main {
 
 		for (Space space : spaces) {
 			for (int dir = 0; dir < 4; dir++) {
-				while (space.getScore() < space.getScore(dir) && space.expand(rand.nextInt(4), map));
+				while (space.getScore() < space.getScore(dir) && space.expand(dir, map));
 			}
 		}
 		for (Space space : spaces) {
