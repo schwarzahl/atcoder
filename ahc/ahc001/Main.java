@@ -51,11 +51,13 @@ public class Main {
 			}
 		}
 
+		Arrays.sort(spaces, Comparator.comparingInt(s -> (int)Math.round(1000000 * s.getScore())));
 		for (Space space : spaces) {
 			for (int dir = space.getScore(0) > space.getScore(1) ? 0 : 1; dir < 5; dir++) {
 				while (space.getScore() < space.getScore(dir % 4) && space.expand(dir % 4, map));
 			}
 		}
+		Arrays.sort(spaces, Comparator.comparingInt(s -> s.id));
 		for (Space space : spaces) {
 			System.out.println(String.format("%d %d %d %d", space.left, space.top, space.right, space.bottom));
 		}
