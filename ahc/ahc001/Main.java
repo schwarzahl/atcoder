@@ -104,9 +104,7 @@ public class Main {
 				if (map.getRangeOr(left - 1, top, bottom)) {
 					return false;
 				}
-				for (int y = top; y < bottom; y++) {
-					map.set(left - 1, y, true);
-				}
+				map.setRange(left - 1, top, bottom, true);
 				left--;
 				return true;
 			}
@@ -134,9 +132,7 @@ public class Main {
 				if (map.getRangeOr(right, top, bottom)) {
 					return false;
 				}
-				for (int y = top; y < bottom; y++) {
-					map.set(right, y, true);
-				}
+				map.setRange(right, top, bottom, true);
 				right++;
 				return true;
 			}
@@ -165,9 +161,7 @@ public class Main {
 				if (left + 1 > x) {
 					return false;
 				}
-				for (int y = top; y < bottom; y++) {
-					map.set(left, y, false);
-				}
+				map.setRange(left, top, bottom, false);
 				left++;
 				return true;
 			}
@@ -187,9 +181,7 @@ public class Main {
 				if (right - 1 <= x) {
 					return false;
 				}
-				for (int y = top; y < bottom; y++) {
-					map.set(right - 1, y, false);
-				}
+				map.setRange(right - 1, top, bottom, false);
 				right--;
 				return true;
 			}
@@ -803,6 +795,7 @@ public class Main {
 	interface BitSet {
 		void set(int index, boolean bit);
 		void set(int x, int y, boolean bit);
+		void setRange(int x, int start_y, int end_y, boolean bit);
 		boolean get(int index);
 		boolean get(int x, int y);
 		boolean getRangeOr(int x, int start_y, int end_y);
@@ -837,6 +830,12 @@ public class Main {
 		@Override
 		public void set(int x, int y, boolean bit) {
 			set(x * 10000 + y, bit);
+		}
+		@Override
+		public void setRange(int x, int start_y, int end_y, boolean bit) {
+			for (int y = start_y; y < end_y; y++) {
+				set(x, y, bit);
+			}
 		}
 
 		@Override
