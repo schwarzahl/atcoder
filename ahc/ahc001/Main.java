@@ -39,7 +39,9 @@ public class Main {
 		}
 
 		Random rand = new Random();
+		long count = 0L;
 		while (System.currentTimeMillis() - start_time < 4500) {
+			count++;
 			Space space = spaces[rand.nextInt(n)];
 			if (space.r <= space.getArea()) {
 				int coDir = rand.nextInt(4);
@@ -50,7 +52,7 @@ public class Main {
 				space.expand(rand.nextInt(4), map);
 			}
 		}
-
+		System.err.println(count);
 		for (Space space : spaces) {
 			System.out.println(String.format("%d %d %d %d", space.left, space.top, space.right, space.bottom));
 		}
