@@ -48,9 +48,26 @@ public class Main {
 				}
 			}
 		}
+		Random rand = new Random();
 		while (System.currentTimeMillis() - start_time < 4500) {
 			Arrays.sort(spaces, Comparator.comparingInt(s -> (int) Math.round(1000000 * s.getScore())));
 			for (Space space : spaces) {
+				if (space.r < space.getArea()) {
+					int dir = rand.nextInt(2) * 2;
+					double before = space.getTrueScore();
+					double after = space.getTrueScore(dir, -1);
+					{
+						double after1 = space.getTrueScore(dir + 1, -1);
+						if (after < after1) {
+							after = after1;
+							dir = dir + 1;
+						}
+					}
+					if (before < after) {
+						space.contract(dir, map2id);
+					}
+					continue;
+				}
 				for (int dir = 0; dir < 4; dir++) {
 					Set<Integer> idSet = space.expandCheck(dir, map2id);
 					if (idSet == null) continue;
