@@ -40,19 +40,6 @@ public class Main {
 			}
 		}
 
-		Random rand = new Random();
-		while (System.currentTimeMillis() - start_time < 3500) {
-			Space space = spaces[rand.nextInt(n)];
-			if (space.r <= space.getArea()) {
-				int coDir = rand.nextInt(4);
-				if (space.contract(coDir, map) && space.r > space.getArea()) {
-					while (!space.expand(rand.nextInt(4), map)) ;
-				}
-			} else {
-				space.expand(rand.nextInt(4), map);
-			}
-		}
-
 		int[][] map2id = new int[10000][10000];
 		for (Space space : spaces) {
 			for (int x = space.left; x < space.right; x++) {
