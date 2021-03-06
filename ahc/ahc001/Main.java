@@ -1,12 +1,6 @@
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -17,8 +11,59 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N * 7);
+		int n = sc.nextInt();
+		Space[] spaces = new Space[n];
+		boolean[][] map = new boolean[10000][10000];
+		for (int id = 0; id < n; id++) {
+			int x = sc.nextInt();
+			int y = sc.nextInt();
+			int r = sc.nextInt();
+			spaces[id] = new Space(id, x, y, r);
+			map[x][y] = true;
+		}
+		Arrays.sort(spaces, Comparator.comparingInt(s -> s.x));
+		int left_lim = 0;
+		for (Space space : spaces) {
+			space.left_lim = left_lim;
+			left_lim = space.x + 1;
+		}
+		Arrays.sort(spaces, Comparator.comparingInt(s -> s.id));
+		double score = 0.0;
+		for (Space space : spaces) {
+			int left = space.left_lim;
+			int top = space.y;
+			int right = space.x + 1;
+			int bottom = space.y + 1;
+			if (left >= right) {
+				System.out.println("0 0 1 1");
+				continue;
+			}
+			int dheight = space.r / (right - left);
+			int diff1 = space.r - (right - left) * dheight;
+			int diff2 = (right - left) * (dheight + 1) - space.r;
+			if (diff1 > diff2) {
+				dheight = dheight + 1;
+			}
+			if (space.y + 1 - dheight >= 0) {
+				top = space.y + 1 - dheight;
+			}
+			bottom = Math.min(10000, top + dheight);
+			System.out.println(String.format("%d %d %d %d", left, top, right, bottom));
+		}
+	}
+
+	class Space {
+		int id;
+		int x;
+		int y;
+		int r;
+		int left_lim;
+		public Space(int id, int x, int y, int r) {
+			this.id = id;
+			this.x = x;
+			this.y = y;
+			this.r = r;
+		}
 	}
 
 	class Scanner {
