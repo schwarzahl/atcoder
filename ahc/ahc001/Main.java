@@ -39,6 +39,7 @@ public class Main {
 				queue.add(space);
 			}
 		}
+
 		Random rand = new Random();
 		while (System.currentTimeMillis() - start_time < 3500) {
 			Space space = spaces[rand.nextInt(n)];
@@ -51,6 +52,7 @@ public class Main {
 				space.expand(rand.nextInt(4), map);
 			}
 		}
+
 		int[][] map2id = new int[10000][10000];
 		for (Space space : spaces) {
 			for (int x = space.left; x < space.right; x++) {
@@ -59,25 +61,27 @@ public class Main {
 				}
 			}
 		}
-		Arrays.sort(spaces, Comparator.comparingInt(s -> (int)Math.round(1000000 * s.getScore())));
-		for (Space space : spaces) {
-			for (int dir = 0; dir < 4; dir++) {
-				Set<Integer> idSet = space.expandCheck(dir, map2id);
-				if (idSet == null) continue;
-				double before = space.getTrueScore();
-				double after = space.getTrueScore(dir, +1);
-				for (int id : idSet) {
-					Space target = id2Space.get(id);
-					before += target.getTrueScore();
-					after += target.getTrueScore((dir + 2) % 4, -1);
-				}
-				if (before < after) {
-					space.expand(dir, map2id);
+		while (System.currentTimeMillis() - start_time < 4500) {
+			Arrays.sort(spaces, Comparator.comparingInt(s -> (int) Math.round(1000000 * s.getScore())));
+			for (Space space : spaces) {
+				for (int dir = 0; dir < 4; dir++) {
+					Set<Integer> idSet = space.expandCheck(dir, map2id);
+					if (idSet == null) continue;
+					double before = space.getTrueScore();
+					double after = space.getTrueScore(dir, +1);
 					for (int id : idSet) {
 						Space target = id2Space.get(id);
-						target.contract((dir + 2) % 4, map2id);
+						before += target.getTrueScore();
+						after += target.getTrueScore((dir + 2) % 4, -1);
 					}
-					dir--;
+					if (before < after) {
+						space.expand(dir, map2id);
+						for (int id : idSet) {
+							Space target = id2Space.get(id);
+							target.contract((dir + 2) % 4, map2id);
+						}
+						dir--;
+					}
 				}
 			}
 		}
