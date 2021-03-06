@@ -13,6 +13,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		int n = sc.nextInt();
 		Space[] spaces = new Space[n];
+		Map<Integer, Space> id2Space = new HashMap<>();
 		BitSet map = new LongBit(10000 * 10000);
 		Queue<Space> queue = new PriorityQueue<>(Comparator.comparingInt(s -> (int)Math.round(1000000 * s.getScore())));
 		for (int id = 0; id < n; id++) {
@@ -20,11 +21,12 @@ public class Main {
 			int y = sc.nextInt();
 			int r = sc.nextInt();
 			spaces[id] = new Space(id, x, y, r);
+			id2Space.put(id, spaces[id]);
 			queue.add(spaces[id]);
 			map.set(x, y, true);
 		}
 		long start_time = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start_time < 4500 && !queue.isEmpty()) {
+		while (System.currentTimeMillis() - start_time < 4000 && !queue.isEmpty()) {
 			Space space = queue.poll();
 			if (space.getArea() >= space.r) {
 				continue;
@@ -37,9 +39,8 @@ public class Main {
 				queue.add(space);
 			}
 		}
-
 		Random rand = new Random();
-		while (System.currentTimeMillis() - start_time < 4500) {
+		while (System.currentTimeMillis() - start_time < 4000) {
 			Space space = spaces[rand.nextInt(n)];
 			if (space.r <= space.getArea()) {
 				int coDir = rand.nextInt(4);
@@ -50,11 +51,34 @@ public class Main {
 				space.expand(rand.nextInt(4), map);
 			}
 		}
-
+		int[][] map2id = new int[10000][10000];
+		for (Space space : spaces) {
+			for (int x = space.left; x < space.right; x++) {
+				for (int y = space.top; y < space.bottom; y++) {
+					map2id[x][y] = space.id + 1;
+				}
+			}
+		}
 		Arrays.sort(spaces, Comparator.comparingInt(s -> (int)Math.round(1000000 * s.getScore())));
 		for (Space space : spaces) {
-			for (int dir = space.getScore(0) > space.getScore(1) ? 0 : 1; dir < 5; dir++) {
-				while (space.getScore() < space.getScore(dir % 4) && space.expand(dir % 4, map));
+			for (int dir = 0; dir < 4; dir++) {
+				Set<Integer> idSet = space.expandCheck(dir, map2id);
+				if (idSet == null) continue;
+				double before = space.getTrueScore();
+				double after = space.getTrueScore(dir, +1);
+				for (int id : idSet) {
+					Space target = id2Space.get(id);
+					before += target.getTrueScore();
+					after += target.getTrueScore((dir + 2) % 4, -1);
+				}
+				if (before < after) {
+					space.expand(dir, map2id);
+					for (int id : idSet) {
+						Space target = id2Space.get(id);
+						target.contract((dir + 2) % 4, map2id);
+					}
+					dir--;
+				}
 			}
 		}
 		Arrays.sort(spaces, Comparator.comparingInt(s -> s.id));
@@ -86,16 +110,29 @@ public class Main {
 		public int getArea() {
 			return (right - left) * (bottom - top);
 		}
-		public int getArea(int dir) {
-			int height = bottom - top + (dir % 2 == 1 ? 1 : 0);
-			int width = right - left + (dir % 2 == 0 ? 1 : 0);
+		public int getArea(int dir, int mode) {
+			int height = bottom - top + (dir % 2 == 1 ? mode : 0);
+			int width = right - left + (dir % 2 == 0 ? mode : 0);
 			return height * width;
 		}
 		public double getScore() {
 			return 1.0 * Math.min(r, getArea()) / Math.max(r, getArea());
 		}
-		public double getScore(int dir) {
-			return 1.0 * Math.min(r, getArea(dir)) / Math.max(r, getArea(dir));
+		public double getTrueScore() {
+			double tmp = 1.0 - getScore();
+			return 1.0 - tmp * tmp;
+		}
+		public double getTrueScore(int dir, int mode) {
+			int left = this.left - (dir == 0 ? mode : 0);
+			int top = this.top - (dir == 1 ? mode : 0);
+			int right = this.right + (dir == 2 ? mode : 0);
+			int bottom = this.bottom + (dir == 3 ? mode : 0);
+			if (this.x < left || right <= this.x || this.y < top || bottom <= this.y) {
+				return -10000.0;
+			}
+			int area = (bottom - top) * (right - left);
+			double tmp = 1.0 - 1.0 * Math.min(this.r, area) / Math.max(this.r, area);
+			return 1.0 - tmp * tmp;
 		}
 		public boolean expand(int dir, BitSet map) {
 			if (dir == 0) {
@@ -157,6 +194,84 @@ public class Main {
 			// no reach
 			return false;
 		}
+		public Set<Integer> expandCheck(int dir, int[][] map) {
+			Set<Integer> set = new HashSet<>();
+			if (dir == 0) {
+				// left
+				if (left - 1 < 0) {
+					return null;
+				}
+				for (int y = top; y < bottom; y++) {
+					if (map[left - 1][y] > 0) {
+						set.add(map[left - 1][y] - 1);
+					}
+				}
+			}
+			if (dir == 1) {
+				// top
+				if (top - 1 < 0) {
+					return null;
+				}
+				for (int x = left; x < right; x++) {
+					if (map[x][top - 1] > 0) {
+						set.add(map[x][top - 1] - 1);
+					}
+				}
+			}
+			if (dir == 2) {
+				// right
+				if (right + 1 > 10000) {
+					return null;
+				}
+				for (int y = top; y < bottom; y++) {
+					if (map[right][y] > 0) {
+						set.add(map[right][y] - 1);
+					}
+				}
+			}
+			if (dir == 3) {
+				// bottom
+				if (bottom + 1 > 10000) {
+					return null;
+				}
+				for (int x = left; x < right; x++) {
+					if (map[x][bottom] > 0) {
+						set.add(map[x][bottom] - 1);
+					}
+				}
+			}
+			return set;
+		}
+		public void expand(int dir, int[][] map) {
+			if (dir == 0) {
+				// left
+				for (int y = top; y < bottom; y++) {
+					map[left - 1][y] = id + 1;
+				}
+				left--;
+			}
+			if (dir == 1) {
+				// top
+				for (int x = left; x < right; x++) {
+					map[x][top - 1] = id + 1;
+				}
+				top--;
+			}
+			if (dir == 2) {
+				// right
+				for (int y = top; y < bottom; y++) {
+					map[right][y] = id + 1;
+				}
+				right++;
+			}
+			if (dir == 3) {
+				// bottom
+				for (int x = left; x < right; x++) {
+					map[x][bottom] = id + 1;
+				}
+				bottom++;
+			}
+		}
 		public boolean contract(int dir, BitSet map) {
 			if (dir == 0) {
 				// left
@@ -200,6 +315,44 @@ public class Main {
 			}
 			// no reach
 			return false;
+		}
+		public void contract(int dir, int[][] map) {
+			if (dir == 0) {
+				// left
+				for (int y = top; y < bottom; y++) {
+					if (map[left][y] == id + 1) {
+						map[left][y] = 0;
+					}
+				}
+				left++;
+			}
+			if (dir == 1) {
+				// top
+				for (int x = left; x < right; x++) {
+					if (map[x][top] == id + 1) {
+						map[x][top] = 0;
+					}
+				}
+				top++;
+			}
+			if (dir == 2) {
+				// right
+				for (int y = top; y < bottom; y++) {
+					if (map[right - 1][y] == id + 1) {
+						map[right - 1][y] = 0;
+					}
+				}
+				right--;
+			}
+			if (dir == 3) {
+				// bottom
+				for (int x = left; x < right; x++) {
+					if (map[x][bottom - 1] == id + 1) {
+						map[x][bottom - 1] = 0;
+					}
+				}
+				bottom--;
+			}
 		}
 	}
 
