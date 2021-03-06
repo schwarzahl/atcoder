@@ -14,7 +14,7 @@ public class Main {
 		int n = sc.nextInt();
 		Space[] spaces = new Space[n];
 		boolean[][] map = new boolean[10000][10000];
-		Queue<Space> queue = new PriorityQueue<>(Comparator.comparingInt(s -> 10000 * s.getArea() / s.r));
+		Queue<Space> queue = new PriorityQueue<>(Comparator.comparingInt(s -> (int)Math.round(1000000 * s.getScore())));
 		for (int id = 0; id < n; id++) {
 			int x = sc.nextInt();
 			int y = sc.nextInt();
@@ -227,6 +227,9 @@ public class Main {
 
 		public int getArea() {
 			return (right - left) * (bottom - top);
+		}
+		public double getScore() {
+			return 1.0 * Math.min(r, getArea()) / Math.max(r, getArea());
 		}
 	}
 
