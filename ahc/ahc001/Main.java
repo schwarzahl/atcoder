@@ -13,7 +13,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		int n = sc.nextInt();
 		Space[] spaces = new Space[n];
-		boolean[][] map = new boolean[10000][10000];
+		BitSet map = new LongBit(10000 * 10000);
 		Queue<Space> queue = new PriorityQueue<>(Comparator.comparingInt(s -> (int)Math.round(1000000 * s.getScore())));
 		for (int id = 0; id < n; id++) {
 			int x = sc.nextInt();
@@ -21,7 +21,7 @@ public class Main {
 			int r = sc.nextInt();
 			spaces[id] = new Space(id, x, y, r);
 			queue.add(spaces[id]);
-			map[x][y] = true;
+			map.set(x, y, true);
 		}
 		long start_time = System.currentTimeMillis();
 		while (System.currentTimeMillis() - start_time < 4500 && !queue.isEmpty()) {
@@ -84,19 +84,19 @@ public class Main {
 		public double getScore() {
 			return 1.0 * Math.min(r, getArea()) / Math.max(r, getArea());
 		}
-		public boolean expand(int dir, boolean[][] map) {
+		public boolean expand(int dir, BitSet map) {
 			if (dir == 0) {
 				// left
 				if (left - 1 < 0) {
 					return false;
 				}
 				for (int y = top; y < bottom; y++) {
-					if (map[left - 1][y]) {
+					if (map.get(left - 1, y)) {
 						return false;
 					}
 				}
 				for (int y = top; y < bottom; y++) {
-					map[left - 1][y] = true;
+					map.set(left - 1, y, true);
 				}
 				left--;
 				return true;
@@ -107,12 +107,12 @@ public class Main {
 					return false;
 				}
 				for (int x = left; x < right; x++) {
-					if (map[x][top - 1]) {
+					if (map.get(x, top - 1)) {
 						return false;
 					}
 				}
 				for (int x = left; x < right; x++) {
-					map[x][top - 1] = true;
+					map.set(x, top - 1, true);
 				}
 				top--;
 				return true;
@@ -123,12 +123,12 @@ public class Main {
 					return false;
 				}
 				for (int y = top; y < bottom; y++) {
-					if (map[right][y]) {
+					if (map.get(right, y)) {
 						return false;
 					}
 				}
 				for (int y = top; y < bottom; y++) {
-					map[right][y] = true;
+					map.set(right, y, true);
 				}
 				right++;
 				return true;
@@ -139,12 +139,12 @@ public class Main {
 					return false;
 				}
 				for (int x = left; x < right; x++) {
-					if (map[x][bottom]) {
+					if (map.get(x, bottom)) {
 						return false;
 					}
 				}
 				for (int x = left; x < right; x++) {
-					map[x][bottom] = true;
+					map.set(x, bottom, true);
 				}
 				bottom++;
 				return true;
@@ -152,14 +152,14 @@ public class Main {
 			// no reach
 			return false;
 		}
-		public boolean contract(int dir, boolean[][] map) {
+		public boolean contract(int dir, BitSet map) {
 			if (dir == 0) {
 				// left
 				if (left + 1 > x) {
 					return false;
 				}
 				for (int y = top; y < bottom; y++) {
-					map[left][y] = false;
+					map.set(left, y, false);
 				}
 				left++;
 				return true;
@@ -170,7 +170,7 @@ public class Main {
 					return false;
 				}
 				for (int x = left; x < right; x++) {
-					map[x][top] = false;
+					map.set(x, top, false);
 				}
 				top++;
 				return true;
@@ -181,7 +181,7 @@ public class Main {
 					return false;
 				}
 				for (int y = top; y < bottom; y++) {
-					map[right - 1][y] = false;
+					map.set(right - 1, y, false);
 				}
 				right--;
 				return true;
@@ -192,7 +192,7 @@ public class Main {
 					return false;
 				}
 				for (int x = left; x < right; x++) {
-					map[x][bottom - 1] = false;
+					map.set(x, bottom - 1, false);
 				}
 				bottom--;
 				return true;
@@ -795,7 +795,9 @@ public class Main {
 
 	interface BitSet {
 		void set(int index, boolean bit);
+		void set(int x, int y, boolean bit);
 		boolean get(int index);
+		boolean get(int x, int y);
 		void shiftRight(int num);
 		void shiftLeft(int num);
 		void or(BitSet bitset);
@@ -824,12 +826,20 @@ public class Main {
 				bitArray[segment] &= ~(1L << inIndex);
 			}
 		}
+		@Override
+		public void set(int x, int y, boolean bit) {
+			set(x * 10000 + y, bit);
+		}
 
 		@Override
 		public boolean get(int index) {
 			int segment = index / 64;
 			int inIndex = index % 64;
 			return (bitArray[segment] & (1L << inIndex)) != 0L;
+		}
+		@Override
+		public boolean get(int x, int y) {
+			return get(x * 10000 + y);
 		}
 
 		@Override
