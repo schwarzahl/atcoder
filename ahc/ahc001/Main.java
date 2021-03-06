@@ -843,7 +843,12 @@ public class Main {
 			int start_index = x * 10000 + start_y;
 			int end_index = x * 10000 + end_y;
 			for (int index = start_index; index < end_index; index++) {
-				if (get(index)) {
+				if (index % 64 == 0 && end_index - index > 64) {
+					if (bitArray[index / 64] != 0) {
+						return true;
+					}
+					index += 63;
+				} else if (get(index)) {
 					return true;
 				}
 			}
