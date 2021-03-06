@@ -54,6 +54,11 @@ public class Main {
 		}
 		System.err.println(count);
 		for (Space space : spaces) {
+			for (int dir = 0; dir < 4; dir++) {
+				while (space.getScore() < space.getScore(dir) && space.expand(rand.nextInt(4), map));
+			}
+		}
+		for (Space space : spaces) {
 			System.out.println(String.format("%d %d %d %d", space.left, space.top, space.right, space.bottom));
 		}
 	}
@@ -81,8 +86,16 @@ public class Main {
 		public int getArea() {
 			return (right - left) * (bottom - top);
 		}
+		public int getArea(int dir) {
+			int height = bottom - top + (dir % 2 == 1 ? 1 : 0);
+			int width = right - left + (dir % 2 == 0 ? 1 : 0);
+			return height * width;
+		}
 		public double getScore() {
 			return 1.0 * Math.min(r, getArea()) / Math.max(r, getArea());
+		}
+		public double getScore(int dir) {
+			return 1.0 * Math.min(r, getArea(dir)) / Math.max(r, getArea(dir));
 		}
 		public boolean expand(int dir, BitSet map) {
 			if (dir == 0) {
