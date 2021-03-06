@@ -90,10 +90,8 @@ public class Main {
 				if (left - 1 < 0) {
 					return false;
 				}
-				for (int y = top; y < bottom; y++) {
-					if (map.get(left - 1, y)) {
-						return false;
-					}
+				if (map.getRangeOr(left - 1, top, bottom)) {
+					return false;
 				}
 				for (int y = top; y < bottom; y++) {
 					map.set(left - 1, y, true);
@@ -122,10 +120,8 @@ public class Main {
 				if (right + 1 > 10000) {
 					return false;
 				}
-				for (int y = top; y < bottom; y++) {
-					if (map.get(right, y)) {
-						return false;
-					}
+				if (map.getRangeOr(right, top, bottom)) {
+					return false;
 				}
 				for (int y = top; y < bottom; y++) {
 					map.set(right, y, true);
@@ -798,6 +794,7 @@ public class Main {
 		void set(int x, int y, boolean bit);
 		boolean get(int index);
 		boolean get(int x, int y);
+		boolean getRangeOr(int x, int start_y, int end_y);
 		void shiftRight(int num);
 		void shiftLeft(int num);
 		void or(BitSet bitset);
@@ -840,6 +837,17 @@ public class Main {
 		@Override
 		public boolean get(int x, int y) {
 			return get(x * 10000 + y);
+		}
+		@Override
+		public boolean getRangeOr(int x, int start_y, int end_y) {
+			int start_index = x * 10000 + start_y;
+			int end_index = x * 10000 + end_y;
+			for (int index = start_index; index < end_index; index++) {
+				if (get(index)) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		@Override
