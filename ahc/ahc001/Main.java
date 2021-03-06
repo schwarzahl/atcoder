@@ -14,88 +14,96 @@ public class Main {
 		int n = sc.nextInt();
 		Space[] spaces = new Space[n];
 		boolean[][] map = new boolean[10000][10000];
+		Queue<Space> queue = new ArrayDeque<>();
 		for (int id = 0; id < n; id++) {
 			int x = sc.nextInt();
 			int y = sc.nextInt();
 			int r = sc.nextInt();
 			spaces[id] = new Space(id, x, y, r);
+			queue.add(spaces[id]);
 			map[x][y] = true;
 		}
 		long start_time = System.currentTimeMillis();
-		Random rand = new Random();
-		while (System.currentTimeMillis() - start_time < 4500) {
-			int id = rand.nextInt(n);
-			int dir = rand.nextInt(4);
-			Space space = spaces[id];
-			if (space.getArea() < space.r) {
-				if (dir == 0) {
-					if (space.bottom < 10000) {
-						boolean ok = true;
+		while (System.currentTimeMillis() - start_time < 4500 && !queue.isEmpty()) {
+			Space space = queue.poll();
+			if (space.getArea() >= space.r) {
+				continue;
+			}
+			boolean next = false;
+			{
+				if (space.bottom < 10000) {
+					boolean ok = true;
+					for (int x = space.left; x < space.right; x++) {
+						if (map[x][space.bottom]) {
+							ok = false;
+							break;
+						}
+					}
+					if (ok) {
+						next = true;
 						for (int x = space.left; x < space.right; x++) {
-							if (map[x][space.bottom]) {
-								ok = false;
-								break;
-							}
+							map[x][space.bottom] = true;
 						}
-						if (ok) {
-							for (int x = space.left; x < space.right; x++) {
-								map[x][space.bottom] = true;
-							}
-							space.bottom++;
-						}
+						space.bottom++;
 					}
 				}
-				if (dir == 1) {
-					if (space.top > 0) {
-						boolean ok = true;
+			}
+			{
+				if (space.top > 0) {
+					boolean ok = true;
+					for (int x = space.left; x < space.right; x++) {
+						if (map[x][space.top - 1]) {
+							ok = false;
+							break;
+						}
+					}
+					if (ok) {
+						next = true;
 						for (int x = space.left; x < space.right; x++) {
-							if (map[x][space.top - 1]) {
-								ok = false;
-								break;
-							}
+							map[x][space.top - 1] = true;
 						}
-						if (ok) {
-							for (int x = space.left; x < space.right; x++) {
-								map[x][space.top - 1] = true;
-							}
-							space.top--;
-						}
+						space.top--;
 					}
 				}
-				if (dir == 2) {
-					if (space.right < 10000) {
-						boolean ok = true;
+			}
+			{
+				if (space.right < 10000) {
+					boolean ok = true;
+					for (int y = space.top; y < space.bottom; y++) {
+						if (map[space.right][y]) {
+							ok = false;
+							break;
+						}
+					}
+					if (ok) {
+						next = true;
 						for (int y = space.top; y < space.bottom; y++) {
-							if (map[space.right][y]) {
-								ok = false;
-								break;
-							}
+							map[space.right][y] = true;
 						}
-						if (ok) {
-							for (int y = space.top; y < space.bottom; y++) {
-								map[space.right][y] = true;
-							}
-							space.right++;
-						}
+						space.right++;
 					}
 				}
-				if (dir == 3) {
-					if (space.left > 0) {
-						boolean ok = true;
+			}
+			{
+				if (space.left > 0) {
+					boolean ok = true;
+					for (int y = space.top; y < space.bottom; y++) {
+						if (map[space.left - 1][y]) {
+							ok = false;
+							break;
+						}
+					}
+					if (ok) {
+						next = true;
 						for (int y = space.top; y < space.bottom; y++) {
-							if (map[space.left - 1][y]) {
-								ok = false;
-								break;
-							}
+							map[space.left - 1][y] = true;
 						}
-						if (ok) {
-							for (int y = space.top; y < space.bottom; y++) {
-								map[space.left - 1][y] = true;
-							}
-							space.left--;
-						}
+						space.left--;
 					}
 				}
+			}
+			if (next) {
+				queue.add(space);
 			}
 		}
 		for (Space space : spaces) {
