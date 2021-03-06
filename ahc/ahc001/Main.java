@@ -52,8 +52,8 @@ public class Main {
 		}
 
 		for (Space space : spaces) {
-			for (int dir = 0; dir < 4; dir++) {
-				while (space.getScore() < space.getScore(dir) && space.expand(dir, map));
+			for (int dir = space.getScore(0) > space.getScore(1) ? 0 : 1; dir < 5; dir++) {
+				while (space.getScore() < space.getScore(dir % 4) && space.expand(dir % 4, map));
 			}
 		}
 		for (Space space : spaces) {
