@@ -98,14 +98,9 @@ public class Main {
 				}
 			}
 		}
-		double score = 0.0;
 		for (Space space : spaces) {
-			double tmp = 1.0 * Math.min(space.r, space.getArea()) / Math.max(space.r, space.getArea());
-			double p = 1 - (1.0 - tmp) * (1.0 - tmp);
-			score += p;
 			System.out.println(String.format("%d %d %d %d", space.left, space.top, space.right, space.bottom));
 		}
-		//System.err.println(1000000000.0 * score / n);
 	}
 
 	class Space {
