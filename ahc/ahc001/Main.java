@@ -30,83 +30,14 @@ public class Main {
 				continue;
 			}
 			boolean next = false;
-			{
-				if (space.bottom < 10000) {
-					boolean ok = true;
-					for (int x = space.left; x < space.right; x++) {
-						if (map[x][space.bottom]) {
-							ok = false;
-							break;
-						}
-					}
-					if (ok) {
-						next = true;
-						for (int x = space.left; x < space.right; x++) {
-							map[x][space.bottom] = true;
-						}
-						space.bottom++;
-					}
-				}
-			}
-			{
-				if (space.top > 0) {
-					boolean ok = true;
-					for (int x = space.left; x < space.right; x++) {
-						if (map[x][space.top - 1]) {
-							ok = false;
-							break;
-						}
-					}
-					if (ok) {
-						next = true;
-						for (int x = space.left; x < space.right; x++) {
-							map[x][space.top - 1] = true;
-						}
-						space.top--;
-					}
-				}
-			}
-			{
-				if (space.right < 10000) {
-					boolean ok = true;
-					for (int y = space.top; y < space.bottom; y++) {
-						if (map[space.right][y]) {
-							ok = false;
-							break;
-						}
-					}
-					if (ok) {
-						next = true;
-						for (int y = space.top; y < space.bottom; y++) {
-							map[space.right][y] = true;
-						}
-						space.right++;
-					}
-				}
-			}
-			{
-				if (space.left > 0) {
-					boolean ok = true;
-					for (int y = space.top; y < space.bottom; y++) {
-						if (map[space.left - 1][y]) {
-							ok = false;
-							break;
-						}
-					}
-					if (ok) {
-						next = true;
-						for (int y = space.top; y < space.bottom; y++) {
-							map[space.left - 1][y] = true;
-						}
-						space.left--;
-					}
-				}
+			for (int dir = 0; dir < 4; dir++) {
+				next |= space.expand(dir, map);
 			}
 			if (next) {
 				queue.add(space);
 			}
 		}
-
+/*
 		Random rand = new Random();
 		while (System.currentTimeMillis() - start_time < 4500) {
 			Space space = spaces[rand.nextInt(n)];
@@ -200,6 +131,8 @@ public class Main {
 				}
 			}
 		}
+
+ */
 		for (Space space : spaces) {
 			System.out.println(String.format("%d %d %d %d", space.left, space.top, space.right, space.bottom));
 		}
@@ -211,8 +144,8 @@ public class Main {
 		int y;
 		int r;
 		int left;
-		int right;
 		int top;
+		int right;
 		int bottom;
 		public Space(int id, int x, int y, int r) {
 			this.id = id;
@@ -220,8 +153,8 @@ public class Main {
 			this.y = y;
 			this.r = r;
 			left = x;
-			right = x + 1;
 			top = y;
+			right = x + 1;
 			bottom = y + 1;
 		}
 
@@ -230,6 +163,74 @@ public class Main {
 		}
 		public double getScore() {
 			return 1.0 * Math.min(r, getArea()) / Math.max(r, getArea());
+		}
+		public boolean expand(int dir, boolean[][] map) {
+			if (dir == 0) {
+				// left
+				if (left - 1 < 0) {
+					return false;
+				}
+				for (int y = top; y < bottom; y++) {
+					if (map[left - 1][y]) {
+						return false;
+					}
+				}
+				for (int y = top; y < bottom; y++) {
+					map[left - 1][y] = true;
+				}
+				left--;
+				return true;
+			}
+			if (dir == 1) {
+				// top
+				if (top - 1 < 0) {
+					return false;
+				}
+				for (int x = left; x < right; x++) {
+					if (map[x][top - 1]) {
+						return false;
+					}
+				}
+				for (int x = left; x < right; x++) {
+					map[x][top - 1] = true;
+				}
+				top--;
+				return true;
+			}
+			if (dir == 2) {
+				// right
+				if (right + 1 > 10000) {
+					return false;
+				}
+				for (int y = top; y < bottom; y++) {
+					if (map[right][y]) {
+						return false;
+					}
+				}
+				for (int y = top; y < bottom; y++) {
+					map[right][y] = true;
+				}
+				right++;
+				return true;
+			}
+			if (dir == 3) {
+				// bottom
+				if (bottom + 1 > 10000) {
+					return false;
+				}
+				for (int x = left; x < right; x++) {
+					if (map[x][bottom]) {
+						return false;
+					}
+				}
+				for (int x = left; x < right; x++) {
+					map[x][bottom] = true;
+				}
+				bottom++;
+				return true;
+			}
+			// no reach
+			return false;
 		}
 	}
 
