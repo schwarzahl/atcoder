@@ -21,35 +21,91 @@ public class Main {
 			spaces[id] = new Space(id, x, y, r);
 			map[x][y] = true;
 		}
-		Arrays.sort(spaces, Comparator.comparingInt(s -> s.x));
-		int left_lim = 0;
-		for (Space space : spaces) {
-			space.left_lim = left_lim;
-			left_lim = space.x + 1;
+		long start_time = System.currentTimeMillis();
+		Random rand = new Random();
+		while (System.currentTimeMillis() - start_time < 4500) {
+			int id = rand.nextInt(n);
+			int dir = rand.nextInt(4);
+			Space space = spaces[id];
+			if (space.getArea() < space.r) {
+				if (dir == 0) {
+					if (space.bottom < 10000) {
+						boolean ok = true;
+						for (int x = space.left; x < space.right; x++) {
+							if (map[x][space.bottom]) {
+								ok = false;
+								break;
+							}
+						}
+						if (ok) {
+							for (int x = space.left; x < space.right; x++) {
+								map[x][space.bottom] = true;
+							}
+							space.bottom++;
+						}
+					}
+				}
+				if (dir == 1) {
+					if (space.top > 0) {
+						boolean ok = true;
+						for (int x = space.left; x < space.right; x++) {
+							if (map[x][space.top - 1]) {
+								ok = false;
+								break;
+							}
+						}
+						if (ok) {
+							for (int x = space.left; x < space.right; x++) {
+								map[x][space.top - 1] = true;
+							}
+							space.top--;
+						}
+					}
+				}
+				if (dir == 2) {
+					if (space.right < 10000) {
+						boolean ok = true;
+						for (int y = space.top; y < space.bottom; y++) {
+							if (map[space.right][y]) {
+								ok = false;
+								break;
+							}
+						}
+						if (ok) {
+							for (int y = space.top; y < space.bottom; y++) {
+								map[space.right][y] = true;
+							}
+							space.right++;
+						}
+					}
+				}
+				if (dir == 3) {
+					if (space.left > 0) {
+						boolean ok = true;
+						for (int y = space.top; y < space.bottom; y++) {
+							if (map[space.left - 1][y]) {
+								ok = false;
+								break;
+							}
+						}
+						if (ok) {
+							for (int y = space.top; y < space.bottom; y++) {
+								map[space.left - 1][y] = true;
+							}
+							space.left--;
+						}
+					}
+				}
+			}
 		}
-		Arrays.sort(spaces, Comparator.comparingInt(s -> s.id));
 		double score = 0.0;
 		for (Space space : spaces) {
-			int left = space.left_lim;
-			int top = space.y;
-			int right = space.x + 1;
-			int bottom = space.y + 1;
-			if (left >= right) {
-				System.out.println("0 0 1 1");
-				continue;
-			}
-			int dheight = space.r / (right - left);
-			int diff1 = space.r - (right - left) * dheight;
-			int diff2 = (right - left) * (dheight + 1) - space.r;
-			if (diff1 > diff2) {
-				dheight = dheight + 1;
-			}
-			if (space.y + 1 - dheight >= 0) {
-				top = space.y + 1 - dheight;
-			}
-			bottom = Math.min(10000, top + dheight);
-			System.out.println(String.format("%d %d %d %d", left, top, right, bottom));
+			double tmp = 1.0 * Math.min(space.r, space.getArea()) / Math.max(space.r, space.getArea());
+			double p = 1 - (1.0 - tmp) * (1.0 - tmp);
+			score += p;
+			System.out.println(String.format("%d %d %d %d", space.left, space.top, space.right, space.bottom));
 		}
+		//System.err.println(1000000000.0 * score / n);
 	}
 
 	class Space {
@@ -57,12 +113,23 @@ public class Main {
 		int x;
 		int y;
 		int r;
-		int left_lim;
+		int left;
+		int right;
+		int top;
+		int bottom;
 		public Space(int id, int x, int y, int r) {
 			this.id = id;
 			this.x = x;
 			this.y = y;
 			this.r = r;
+			left = x;
+			right = x + 1;
+			top = y;
+			bottom = y + 1;
+		}
+
+		public int getArea() {
+			return (right - left) * (bottom - top);
 		}
 	}
 
