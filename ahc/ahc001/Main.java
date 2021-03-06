@@ -833,8 +833,15 @@ public class Main {
 		}
 		@Override
 		public void setRange(int x, int start_y, int end_y, boolean bit) {
-			for (int y = start_y; y < end_y; y++) {
-				set(x, y, bit);
+			int start_index = x * 10000 + start_y;
+			int end_index = x * 10000 + end_y;
+			for (int index = start_index; index < end_index; index++) {
+				if (index % 64 == 0 && end_index - index > 64) {
+					bitArray[index / 64] = bit ? -1 : 0;
+					index += 63;
+				} else {
+					set(index, bit);
+				}
 			}
 		}
 
