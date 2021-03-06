@@ -26,7 +26,7 @@ public class Main {
 			map.set(x, y, true);
 		}
 		long start_time = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start_time < 4000 && !queue.isEmpty()) {
+		while (!queue.isEmpty()) {
 			Space space = queue.poll();
 			if (space.getArea() >= space.r) {
 				continue;
@@ -40,7 +40,7 @@ public class Main {
 			}
 		}
 		Random rand = new Random();
-		while (System.currentTimeMillis() - start_time < 4000) {
+		while (System.currentTimeMillis() - start_time < 3500) {
 			Space space = spaces[rand.nextInt(n)];
 			if (space.r <= space.getArea()) {
 				int coDir = rand.nextInt(4);
