@@ -14,7 +14,9 @@ public class Main {
 		int n = sc.nextInt();
 		Space[] spaces = new Space[n];
 		boolean[][] map = new boolean[10000][10000];
-		Queue<Space> queue = new ArrayDeque<>();
+		Queue<Space> queue = new PriorityQueue<>((s1, s2) -> {
+			return 10000 * s1.getArea() / s1.r - 10000 * s2.getArea() / s2.r;
+		});
 		for (int id = 0; id < n; id++) {
 			int x = sc.nextInt();
 			int y = sc.nextInt();
