@@ -65,6 +65,9 @@ public class Main {
 					if (idSet == null) continue;
 					double before = space.getTrueScore();
 					double after = space.getTrueScore(dir, +1);
+					if (before > after) {
+						continue;
+					}
 					for (int id : idSet) {
 						Space target = id2Space.get(id);
 						before += target.getTrueScore();
