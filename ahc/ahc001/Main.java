@@ -70,14 +70,25 @@ public class Main {
 					}
 					for (int id : idSet) {
 						Space target = id2Space.get(id);
-						before += target.getTrueScore();
-						after += target.getTrueScore((dir + 2) % 4, -1);
+						double afterScore = target.getTrueScore((dir + 2) % 4, -1);
+						Set<Integer> set = null;
+						if (afterScore > 0) {
+							set = target.expandCheck(dir, map2id);
+						}
+						if (set == null || !set.isEmpty()) {
+							before += target.getTrueScore();
+							after += afterScore;
+						}
 					}
 					if (before < after) {
 						space.expand(dir, map2id);
 						for (int id : idSet) {
 							Space target = id2Space.get(id);
 							target.contract((dir + 2) % 4, map2id);
+							Set<Integer> set = target.expandCheck(dir, map2id);
+							if (set != null && set.isEmpty()) {
+								target.expand(dir, map2id);
+							}
 						}
 						dir--;
 					}
