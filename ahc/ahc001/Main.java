@@ -14,43 +14,64 @@ public class Main {
 		int n = sc.nextInt();
 		Space[] spaces = new Space[n];
 		BitSet map = new LongBit(10000 * 10000);
-		Queue<Space> queue = new PriorityQueue<>(Comparator.comparingInt(s -> (int)Math.round(1000000 * s.getScore())));
+		Queue<Space> queue = new PriorityQueue<>(Comparator.comparingInt(s -> (int)Math.round(1000000.0 * s.rate * s.getScore())));
 		for (int id = 0; id < n; id++) {
 			int x = sc.nextInt();
 			int y = sc.nextInt();
 			int r = sc.nextInt();
 			spaces[id] = new Space(id, x, y, r);
-			queue.add(spaces[id]);
-			map.set(x, y, true);
+			spaces[id].rate = 1.0;
+			spaces[id].prevRate = 1.0;
 		}
+		double maxScore = 0.0;
 		long start_time = System.currentTimeMillis();
-		while (!queue.isEmpty()) {
-			Space space = queue.poll();
-			boolean next = false;
-			double maxScore = space.getTrueScore();
-			int offset = 0;
-			for (int dir = 0; dir < 4; dir++) {
-				double score = space.getTrueScore(dir, +1);
-				if (maxScore < score) {
-					maxScore = score;
-					offset = dir;
-				}
-			}
-			for (int i = 0; i < 4; i++) {
-				int dir = (i + offset) % 4;
-				if (space.getTrueScore() < space.getTrueScore(dir, +1)) {
-					next |= space.expand(dir, map);
-				}
-			}
-			if (next) {
+		while (System.currentTimeMillis() - start_time < 4500) {
+			map = new LongBit(10000 * 10000);
+			for (Space space : spaces) {
+				space.left = space.x;
+				space.top = space.y;
+				space.right = space.x + 1;
+				space.bottom = space.y + 1;
+				space.dir = 0;
 				queue.add(space);
+				map.set(space.x, space.y, true);
+			}
+			while (!queue.isEmpty()) {
+				Space space = queue.poll();
+				boolean next = false;
+				for (int i = 0; i < 4 && !next; i++) {
+					space.dir = (space.dir + 1) % 4;
+					if (space.getTrueScore() < space.getTrueScore(space.dir, +1)) {
+						next |= space.expand(space.dir, map);
+					}
+				}
+				if (next) {
+					queue.add(space);
+				}
+			}
+			double score = 0.0;
+			StringBuilder sb = new StringBuilder();
+			for (Space space : spaces) {
+				score += space.getTrueScore();
+				sb.append(String.format("%d %d %d %d\n", space.left, space.top, space.right, space.bottom));
+			}
+			if (maxScore < score) {
+				maxScore = score;
+				for (Space space : spaces) {
+					space.prevRate = space.rate;
+					space.rate *= space.getTrueScore();
+				}
+			} else {
+				for (Space space : spaces) {
+					space.rate = space.prevRate;
+				}
 			}
 		}
 
 		boolean modified = true;
 		while (modified) {
 			modified = false;
-			Arrays.sort(spaces, Comparator.comparingInt(s -> (int) Math.round(1000000 * s.getScore())));
+			Arrays.sort(spaces, Comparator.comparingInt(s -> (int) Math.round(1000000.0 * s.getScore())));
 			for (Space space : spaces) {
 				for (int dir = 0; dir < 4; dir++) {
 					double before = space.getTrueScore();
@@ -99,6 +120,9 @@ public class Main {
 		int top;
 		int right;
 		int bottom;
+		int dir;
+		double rate;
+		double prevRate;
 		public Space(int id, int x, int y, int r) {
 			this.id = id;
 			this.x = x;
