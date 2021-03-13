@@ -20,10 +20,9 @@ public class Main {
 			int y = sc.nextInt();
 			int r = sc.nextInt();
 			spaces[id] = new Space(id, x, y, r);
-			spaces[id].rate = 1.0;
-			spaces[id].prevRate = 1.0;
 		}
 		double maxScore = 0.0;
+		String maxString = "";
 		long start_time = System.currentTimeMillis();
 		while (System.currentTimeMillis() - start_time < 4500) {
 			map = new LongBit(10000 * 10000);
@@ -49,66 +48,58 @@ public class Main {
 					queue.add(space);
 				}
 			}
+
+			boolean modified = true;
+			while (modified && System.currentTimeMillis() - start_time < 4500) {
+				modified = false;
+				Arrays.sort(spaces, Comparator.comparingInt(s -> (int) Math.round(1000000.0 * s.getScore())));
+				for (Space space : spaces) {
+					for (int dir = 0; dir < 4; dir++) {
+						double before = space.getTrueScore();
+						double after = space.getTrueScore(dir, +1);
+						if (before > after) {
+							continue;
+						}
+						List<Space> hitList = new ArrayList<>();
+						for (Space target : spaces) {
+							if (space.id == target.id) continue;
+							if (space.hit(target, dir)) {
+								hitList.add(target);
+							}
+						}
+						for (Space target : hitList) {
+							double afterScore = target.getTrueScore((dir + 2) % 4, -1);
+							if (afterScore <= 0 || !target.expandCheck(dir, map)) {
+								before += target.getTrueScore();
+								after += afterScore;
+							}
+						}
+						if (before < after) {
+							for (Space target : hitList) {
+								target.contract((dir + 2) % 4, map);
+								target.expand(dir, map);
+							}
+							space.expand(dir, map);
+							dir--;
+							modified = true;
+						}
+					}
+				}
+			}
+			Arrays.sort(spaces, Comparator.comparingInt(s -> s.id));
 			double score = 0.0;
 			StringBuilder sb = new StringBuilder();
 			for (Space space : spaces) {
 				score += space.getTrueScore();
 				sb.append(String.format("%d %d %d %d\n", space.left, space.top, space.right, space.bottom));
+				space.rate *= space.getScore();
 			}
 			if (maxScore < score) {
 				maxScore = score;
-				for (Space space : spaces) {
-					space.prevRate = space.rate;
-					space.rate *= space.getTrueScore();
-				}
-			} else {
-				for (Space space : spaces) {
-					space.rate = space.prevRate;
-				}
+				maxString = sb.toString();
 			}
 		}
-
-		boolean modified = true;
-		while (modified) {
-			modified = false;
-			Arrays.sort(spaces, Comparator.comparingInt(s -> (int) Math.round(1000000.0 * s.getScore())));
-			for (Space space : spaces) {
-				for (int dir = 0; dir < 4; dir++) {
-					double before = space.getTrueScore();
-					double after = space.getTrueScore(dir, +1);
-					if (before > after) {
-						continue;
-					}
-					List<Space> hitList = new ArrayList<>();
-					for (Space target : spaces) {
-						if (space.id == target.id) continue;
-						if (space.hit(target, dir)) {
-							hitList.add(target);
-						}
-					}
-					for (Space target : hitList) {
-						double afterScore = target.getTrueScore((dir + 2) % 4, -1);
-						if (afterScore <= 0 || !target.expandCheck(dir, map)) {
-							before += target.getTrueScore();
-							after += afterScore;
-						}
-					}
-					if (before < after) {
-						for (Space target : hitList) {
-							target.contract((dir + 2) % 4, map);
-							target.expand(dir, map);
-						}
-						space.expand(dir, map);
-						dir--;
-						modified = true;
-					}
-				}
-			}
-		}
-		Arrays.sort(spaces, Comparator.comparingInt(s -> s.id));
-		for (Space space : spaces) {
-			System.out.println(String.format("%d %d %d %d", space.left, space.top, space.right, space.bottom));
-		}
+		System.out.print(maxString);
 	}
 
 	class Space {
@@ -122,7 +113,6 @@ public class Main {
 		int bottom;
 		int dir;
 		double rate;
-		double prevRate;
 		public Space(int id, int x, int y, int r) {
 			this.id = id;
 			this.x = x;
@@ -132,6 +122,8 @@ public class Main {
 			top = y;
 			right = x + 1;
 			bottom = y + 1;
+			dir = 0;
+			rate = 1.0;
 		}
 
 		private int getLength(int dir) {
