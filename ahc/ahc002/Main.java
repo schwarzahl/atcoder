@@ -31,15 +31,33 @@ public class Main {
 				p[i][j] = sc.nextInt();
 			}
 		}
+		boolean[] b = new boolean[2500];
+		b[t[si][sj]] = true;
 		StringBuilder sb = new StringBuilder();
-		while (si < 49 && sj < 49) {
-			if (t[si][sj] != t[si+1][sj]) {
-				sb.append('D');
-				si++;
-			} else {
-				sb.append('R');
-				sj++;
+		while (true) {
+			int[] di = new int[]{-1, +1, 0, 0};
+			int[] dj = new int[]{0, 0, -1, +1};
+			char[] dc = new char[]{'U', 'D', 'L', 'R'};
+			int max = -1;
+			int maxDir = -1;
+			for (int dir = 0; dir < 4; dir++) {
+				int next_i = si + di[dir];
+				int next_j = sj + dj[dir];
+				if (next_i < 0 || 50 <= next_i || next_j < 0 || 50 <= next_j || b[t[next_i][next_j]]) {
+					continue;
+				}
+				if (max < p[next_i][next_j]) {
+					max = p[next_i][next_j];
+					maxDir = dir;
+				}
 			}
+			if (maxDir == -1) {
+				break;
+			}
+			sb.append(dc[maxDir]);
+			si += di[maxDir];
+			sj += dj[maxDir];
+			b[t[si][sj]] = true;
 		}
 		System.out.println(sb);
 	}
