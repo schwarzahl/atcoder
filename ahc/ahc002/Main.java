@@ -17,9 +17,31 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int si = sc.nextInt();
+		int sj = sc.nextInt();
+		int[][] t = new int[50][50];
+		for (int i = 0; i < 50; i++) {
+			for (int j = 0; j < 50; j++) {
+				t[i][j] = sc.nextInt();
+			}
+		}
+		int[][] p = new int[50][50];
+		for (int i = 0; i < 50; i++) {
+			for (int j = 0; j < 50; j++) {
+				p[i][j] = sc.nextInt();
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		while (si < 49 && sj < 49) {
+			if (t[si][sj] != t[si+1][sj]) {
+				sb.append('D');
+				si++;
+			} else {
+				sb.append('R');
+				sj++;
+			}
+		}
+		System.out.println(sb);
 	}
 
 	class Scanner {
