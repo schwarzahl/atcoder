@@ -38,16 +38,24 @@ public class Main {
 			int[] di = new int[]{-1, +1, 0, 0};
 			int[] dj = new int[]{0, 0, -1, +1};
 			char[] dc = new char[]{'U', 'D', 'L', 'R'};
-			int max = -1;
+			int max = 0;
 			int maxDir = -1;
 			for (int dir = 0; dir < 4; dir++) {
-				int next_i = si + di[dir];
-				int next_j = sj + dj[dir];
-				if (next_i < 0 || 50 <= next_i || next_j < 0 || 50 <= next_j || b[t[next_i][next_j]]) {
-					continue;
+				int tmp = 0;
+				int tmp_i = si;
+				int tmp_j = sj;
+				while (true) {
+					int next_i = tmp_i + di[dir];
+					int next_j = tmp_j + dj[dir];
+					if (next_i < 0 || 50 <= next_i || next_j < 0 || 50 <= next_j || b[t[next_i][next_j]] || t[tmp_i][tmp_j] == t[next_i][next_j]) {
+						break;
+					}
+					tmp_i = next_i;
+					tmp_j = next_j;
+					tmp += p[tmp_i][tmp_j];
 				}
-				if (max < p[next_i][next_j]) {
-					max = p[next_i][next_j];
+				if (max < tmp) {
+					max = tmp;
 					maxDir = dir;
 				}
 			}
