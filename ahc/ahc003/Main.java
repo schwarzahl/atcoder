@@ -17,9 +17,117 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int[][] h = new int[30][30];
+		int[][] v = new int[30][30];
+		for (int r = 0; r < 30; r++) {
+			for (int c = 0; c < 30; c++) {
+				h[r][c] = 1000000;
+				v[r][c] = 1000000;
+			}
+		}
+		for (int case_i = 0; case_i < 1000; case_i++) {
+			int si = sc.nextInt();
+			int sj = sc.nextInt();
+			int ti = sc.nextInt();
+			int tj = sc.nextInt();
+			Path[][] memo = new Path[30][30];
+			Path path = calcShortestPath(si, sj, ti, tj, h, v, memo);
+			System.out.println(path.command);
+			System.out.flush();
+			int dist = sc.nextInt();
+			changeDist(si, sj, ti, tj, path, dist, h, v);
+		}
+	}
+
+	class Path {
+		int length;
+		String command;
+		public Path() {
+			this.length = 0;
+			this.command = "";
+		}
+	}
+
+	private Path calcShortestPath(int si, int sj, int ti, int tj, int[][] h, int[][] v, Path[][] memo) {
+		if (si == ti && sj == tj) {
+			return new Path();
+		}
+		if (memo[si][sj] != null) {
+			return memo[si][sj];
+		}
+		Path minPath = new Path();
+		minPath.length = 50000000; // > 30 * 1000000;
+		if (si < ti) {
+			Path nextPath = calcShortestPath(si + 1, sj, ti, tj, h, v, memo);
+			int addLength = v[si][sj] + nextPath.length;
+			if (minPath.length > addLength) {
+				minPath.length = addLength;
+				minPath.command = "D" + nextPath.command;
+			}
+		}
+		if (si > ti) {
+			Path nextPath = calcShortestPath(si - 1, sj, ti, tj, h, v, memo);
+			int addLength = v[si - 1][sj] + nextPath.length;
+			if (minPath.length > addLength) {
+				minPath.length = addLength;
+				minPath.command = "U" + nextPath.command;
+			}
+		}
+
+		if (sj < tj) {
+			Path nextPath = calcShortestPath(si, sj + 1, ti, tj, h, v, memo);
+			int addLength = h[si][sj] + nextPath.length;
+			if (minPath.length > addLength) {
+				minPath.length = addLength;
+				minPath.command = "R" + nextPath.command;
+			}
+		}
+		if (sj > tj) {
+			Path nextPath = calcShortestPath(si, sj - 1, ti, tj, h, v, memo);
+			int addLength = h[si][sj - 1] + nextPath.length;
+			if (minPath.length > addLength) {
+				minPath.length = addLength;
+				minPath.command = "L" + nextPath.command;
+			}
+		}
+		memo[si][sj] = minPath;
+		return minPath;
+	}
+	private void changeDist(int si, int sj, int ti, int tj, Path output, int dist, int[][] h, int[][] v) {
+		int unknownPathCount = output.length / 1000000;
+		int knownPathLength = output.length - unknownPathCount * 1000000;
+		int unknownPathLength = dist - knownPathLength;
+		if (unknownPathCount > 0) {
+			int baseDist = unknownPathLength / unknownPathCount;
+			if (0 < baseDist && baseDist < 1000000 / 30) {
+				for (char c : output.command.toCharArray()) {
+					if (c == 'D') {
+						if (v[si][sj] == 1000000) {
+							v[si][sj] = baseDist;
+						}
+						si++;
+					}
+					if (c == 'U') {
+						si--;
+						if (v[si][sj] == 1000000) {
+							v[si][sj] = baseDist;
+						}
+					}
+					if (c == 'R') {
+						if (h[si][sj] == 1000000) {
+							h[si][sj] = baseDist;
+						}
+						sj++;
+					}
+					if (c == 'L') {
+						sj--;
+						if (h[si][sj] == 1000000) {
+							h[si][sj] = baseDist;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	class Scanner {
