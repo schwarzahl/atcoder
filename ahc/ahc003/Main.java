@@ -21,8 +21,8 @@ public class Main {
 		int[][] v = new int[30][30];
 		for (int r = 0; r < 30; r++) {
 			for (int c = 0; c < 30; c++) {
-				h[r][c] = 1000000;
-				v[r][c] = 1000000;
+				h[r][c] = 1;
+				v[r][c] = 1;
 			}
 		}
 		for (int case_i = 0; case_i < 1000; case_i++) {
@@ -42,9 +42,11 @@ public class Main {
 	class Path {
 		int length;
 		String command;
+		int unknownPathCount;
 		public Path() {
 			this.length = 0;
 			this.command = "";
+			this.unknownPathCount = 0;
 		}
 	}
 
@@ -63,6 +65,10 @@ public class Main {
 			if (minPath.length > addLength) {
 				minPath.length = addLength;
 				minPath.command = "D" + nextPath.command;
+				minPath.unknownPathCount = nextPath.unknownPathCount;
+				if (v[si][sj] == 1) {
+					minPath.unknownPathCount++;
+				}
 			}
 		}
 		if (si > ti) {
@@ -71,6 +77,10 @@ public class Main {
 			if (minPath.length > addLength) {
 				minPath.length = addLength;
 				minPath.command = "U" + nextPath.command;
+				minPath.unknownPathCount = nextPath.unknownPathCount;
+				if (v[si - 1][sj] == 1) {
+					minPath.unknownPathCount++;
+				}
 			}
 		}
 
@@ -80,6 +90,10 @@ public class Main {
 			if (minPath.length > addLength) {
 				minPath.length = addLength;
 				minPath.command = "R" + nextPath.command;
+				minPath.unknownPathCount = nextPath.unknownPathCount;
+				if (h[si][sj] == 1) {
+					minPath.unknownPathCount++;
+				}
 			}
 		}
 		if (sj > tj) {
@@ -88,40 +102,43 @@ public class Main {
 			if (minPath.length > addLength) {
 				minPath.length = addLength;
 				minPath.command = "L" + nextPath.command;
+				minPath.unknownPathCount = nextPath.unknownPathCount;
+				if (h[si][sj - 1] == 1) {
+					minPath.unknownPathCount++;
+				}
 			}
 		}
 		memo[si][sj] = minPath;
 		return minPath;
 	}
 	private void changeDist(int si, int sj, int ti, int tj, Path output, int dist, int[][] h, int[][] v) {
-		int unknownPathCount = output.length / 1000000;
-		int knownPathLength = output.length - unknownPathCount * 1000000;
+		int knownPathLength = output.length - output.unknownPathCount * 1;
 		int unknownPathLength = dist - knownPathLength;
-		if (unknownPathCount > 0) {
-			int baseDist = unknownPathLength / unknownPathCount;
+		if (output.unknownPathCount > 0) {
+			int baseDist = unknownPathLength / output.unknownPathCount;
 			if (0 < baseDist && baseDist < 1000000 / 30) {
 				for (char c : output.command.toCharArray()) {
 					if (c == 'D') {
-						if (v[si][sj] == 1000000) {
+						if (v[si][sj] == 1) {
 							v[si][sj] = baseDist;
 						}
 						si++;
 					}
 					if (c == 'U') {
 						si--;
-						if (v[si][sj] == 1000000) {
+						if (v[si][sj] == 1) {
 							v[si][sj] = baseDist;
 						}
 					}
 					if (c == 'R') {
-						if (h[si][sj] == 1000000) {
+						if (h[si][sj] == 1) {
 							h[si][sj] = baseDist;
 						}
 						sj++;
 					}
 					if (c == 'L') {
 						sj--;
-						if (h[si][sj] == 1000000) {
+						if (h[si][sj] == 1) {
 							h[si][sj] = baseDist;
 						}
 					}
