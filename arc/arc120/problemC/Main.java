@@ -2,13 +2,7 @@ package problemC;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -29,25 +23,44 @@ public class Main {
 			B[i] = sc.nextInt();
 		}
 		long ans = 0L;
-		for (int i = 0; i < N; i++) {
-			int prev = A[i];
-			boolean impossible = true;
-			for (int j = 0; i + j < N; j++) {
-				if (prev + j == B[i]) {
-					impossible = false;
-					break;
+		boolean[] A_fixed = new boolean[N];
+		boolean[] B_fixed = new boolean[N];
+		{
+			Map<Integer, Queue<Integer>> map = new HashMap<>();
+			for (int i = 0; i < N; i++) {
+				map.putIfAbsent(A[i] + i, new ArrayDeque());
+				map.get(A[i] + i).add(i);
+				if (map.containsKey(B[i] + i) && !map.get(B[i] + i).isEmpty()) {
+					int A_index = map.get(B[i] + i).poll();
+					ans += i - A_index;
+					A_fixed[A_index] = true;
+					B_fixed[i] = true;
 				}
-				ans++;
-				int esc = prev;
-				prev = A[i + j + 1];
-				A[i + j + 1] = esc - 1;
 			}
-			if (impossible) {
+		}
+		{
+			Map<Integer, Queue<Integer>> map = new HashMap<>();
+			for (int i = N - 1; i >= 0; i--) {
+				int move_count = i - (N - 1);
+				if (!A_fixed[i]) {
+					map.putIfAbsent(A[i] + move_count, new ArrayDeque());
+					map.get(A[i] + move_count).add(i);
+				}
+				if (!B_fixed[i] && map.containsKey(B[i] + move_count) && !map.get(B[i] + move_count).isEmpty()) {
+					int A_index = map.get(B[i] + move_count).poll();
+					ans += A_index - i;
+					A_fixed[A_index] = true;
+					B_fixed[i] = true;
+				}
+			}
+		}
+		for (int i = 0; i < N; i++) {
+			if (!A_fixed[i] || !B_fixed[i]) {
 				System.out.println(-1);
 				return;
 			}
 		}
-		System.out.println(ans);
+		System.out.println(ans / 2);
 	}
 
 	class Scanner {
