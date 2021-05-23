@@ -19,9 +19,45 @@ public class Main {
 
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		int H = sc.nextInt();
+		int W = sc.nextInt();
+		char[][] map = new char[H][W];
+		for (int i = 0; i < H; i++) {
+			String S = sc.next();
+			for (int j = 0; j < W; j++) {
+				map[i][j] = S.charAt(j);
+			}
+		}
+		long MOD = 998244353L;
+		long ans = 1L;
+		for (int sum_ij = 0; sum_ij <= H + W - 2; sum_ij++) {
+			boolean isExistBlue = false;
+			boolean isExistRed = false;
+			boolean isExistNone = false;
+			for (int i = 0; i <= sum_ij ; i++) {
+			    int j = sum_ij - i;
+			    if (i < 0 || H <= i || j < 0 || W <= j) {
+			        continue;
+                }
+				if (map[i][j] == 'B') {
+					isExistBlue = true;
+				}
+				if (map[i][j] == 'R') {
+					isExistRed = true;
+				}
+				if (map[i][j] == '.') {
+					isExistNone = true;
+				}
+			}
+			if (isExistBlue && isExistRed) {
+				ans = 0;
+				break;
+			}
+			if (isExistNone && !isExistBlue && !isExistRed) {
+				ans = (ans * 2) % MOD;
+			}
+		}
+		System.out.println(ans);
 	}
 
 	class Scanner {
