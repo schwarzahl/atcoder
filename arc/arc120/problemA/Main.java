@@ -20,8 +20,21 @@ public class Main {
 	private void solve() {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		System.out.println(N);
-		System.err.println(Main.class.getPackage().getName());
+		long max = 0;
+		long sum = 0;
+		long ans = 0;
+		for (int i = 0; i < N; i++) {
+			long A = sc.nextLong();
+			sum += A;
+			if (max < A) {
+				ans -= max * i;
+				max = A;
+				ans += max * i;
+			}
+			max = Math.max(max, A);
+			ans += sum + max;
+			System.out.println(ans);
+		}
 	}
 
 	class Scanner {
